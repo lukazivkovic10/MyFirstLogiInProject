@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-signup',
@@ -9,6 +10,18 @@ export class SignupComponent {
   type: string = "password";
   isText: boolean = false;
   eyeIcon: string = "fa-eye";
+  signUpForm!: FormGroup;
+  constructor(private fb: FormBuilder) {};
+
+  ngOnInit(): void
+  {
+    this.signUpForm = this.fb.group({
+      Surname: ['',Validators.required],
+      name: ['',Validators.required],
+      mail: ['',Validators.required],
+      password: ['',Validators.required]
+    })
+  }
 
   hideShowPassword()
   {

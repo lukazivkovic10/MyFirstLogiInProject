@@ -14,31 +14,40 @@
     <p class="title">
         Registracija
       </p>
+      <form [formGroup]="signUpForm">
+<!--Ime in Priimek-->
     <div class="columns">
         <div class="column">
-            <div class="field">
-                <p class="control has-icons-left has-icons-right">
-                  <input class="input is-medium" type="text" placeholder="Ime">
+            <div class="field has-addons">
+                <p class="control is-expanded has-icons-left">
+                  <input formControlName="name" class="input is-medium" type="text" placeholder="Ime">
                   <span class="icon is-small is-left">
                     <i class="fas fa-user"></i>
                   </span>
                 </p>
+                <div *ngIf="signUpForm.controls['name'].dirty && signUpForm.hasError('required','name')" class="column is-half">
+                  <small *ngIf="signUpForm.controls['name'].dirty && signUpForm.hasError('required','name')" class="notification is-danger">*Ime je zahtevano!</small>
+                </div>
               </div>
         </div>
         <div class="column">
-            <div class="field">
-                <p class="control has-icons-left has-icons-right">
-                  <input class="input is-medium" type="text" placeholder="Priimek">
+            <div class="field has-addons">
+                <p class="control is-expanded has-icons-left">
+                  <input formControlName="Surname" class="input is-medium" type="text" placeholder="Priimek">
                   <span class="icon is-small is-left">
                     <i class="fas fa-signature"></i>
                   </span>
                 </p>
+                <div *ngIf="signUpForm.controls['Surname'].dirty && signUpForm.hasError('required','Surname')" class="column is-half">
+                  <small *ngIf="signUpForm.controls['Surname'].dirty && signUpForm.hasError('required','Surname')" class="notification is-danger">*Priimek je zahtevano!</small>
+                </div>
               </div>
         </div>
     </div>
-    <div class="field">
-        <p class="control has-icons-left has-icons-right">
-          <input class="input is-medium" type="email" placeholder="Email@mail.si">
+<!--Mail-->
+    <div class="field has-addons">
+        <p class="control is-expanded has-icons-left has-icons-right">
+          <input formControlName="mail" class="input is-medium" type="mail" placeholder="elektronskapošta@mail.si">
           <span class="icon is-small is-left">
             <i class="fas fa-envelope"></i>
           </span>
@@ -46,20 +55,28 @@
             <i class="fas fa-check"></i>
           </span>
         </p>
+      <div *ngIf="signUpForm.controls['mail'].dirty && signUpForm.hasError('required','mail')" class="column is-one-fifth">
+        <small *ngIf="signUpForm.controls['mail'].dirty && signUpForm.hasError('required','mail')" class="notification is-danger">*Elektronska pošta je zahtevana!</small>
       </div>
+      </div>
+<!--Geslo-->
       <div class="field has-addons">
         <p class="control is-expanded">
-          <input class="input is-medium" [type]="type" placeholder="Geslo">
+          <input formControlName="password" class="input is-medium" [type]="type" placeholder="Geslo">
         </p>
         <p class="control">
             <a (click)="hideShowPassword()" class="button is-medium fas {{eyeIcon}}"></a>
         </p>
+        <div *ngIf="signUpForm.controls['password'].dirty && signUpForm.hasError('required','password')" class="column is-one-fifth">
+        <small *ngIf="signUpForm.controls['password'].dirty && signUpForm.hasError('required','password')" class="notification is-danger">*Geslo je zahtevana!</small>
       </div>
+      </div>
+<!--Gumb Registracija in tekst za prijavo-->
       <div class="field">
     <div class = "columns">
         <div class = "column is-one-fifth">
         <p class="control" routerLink="/signup">
-          <button class="button is-warning is-medium is-fullwidth">
+          <button [disabled]="signUpForm.invalid" class="button is-warning is-medium is-fullwidth">
             Registracija
           </button>
         </p>
@@ -72,6 +89,7 @@
       </div>
     </div>
 </div>
+</form>
 </div>
 </div>
 </section>

@@ -11,33 +11,50 @@
 <section class="section is-medium">
 <div class="container is-fluid">
 <div class="box">
+<!--FORM-->
+<form [formGroup]="loginForm">
+<!--NASLOV-->
     <div class="field">
         <p class="title">
             Prijava
           </p>
-        <p class="control has-icons-left has-icons-right">
-          <input class="input is-medium" type="email" placeholder="Email@mail.si">
+          </div>
+<!--MAIL-->
+    <div class="field has-addons">
+        <p class="control is-expanded has-icons-right has-icons-left">
+          <input formControlName="mail" class="input is-medium" type="email" placeholder="elektronskapošta@mail.com">
           <span class="icon is-small is-left">
             <i class="fas fa-envelope"></i>
           </span>
           <span class="icon is-small is-right">
             <i class="fas fa-check"></i>
           </span>
-        </p>
-      </div>
+          </p>
+          <!--Če je mail polje prazno in je error se spremeni div v clolumn is-one-fifth-->
+          <div *ngIf="loginForm.controls['mail'].dirty && loginForm.hasError('required','mail')" class="column is-one-fifth">
+            <small *ngIf="loginForm.controls['mail'].dirty && loginForm.hasError('required','mail')" class="notification is-danger">*Elektronska pošta je zahtevana!</small>
+          </div>
+        </div>
+<!--GESLO-->
       <div class="field has-addons">
         <p class="control is-expanded">
-          <input class="input is-medium" [type]="type" placeholder="Geslo">
+          <input formControlName="password" class="input is-medium" [type]="type" placeholder="Geslo">
         </p>
         <p class="control">
             <a (click)="hideShowPassword()" class="button is-medium fas {{eyeIcon}}"></a>
         </p>
+        <!--Če je password polje prazno in je error se spremeni div v clolumn is-one-fifth-->
+        <div *ngIf="loginForm.controls['password'].dirty && loginForm.hasError('required','password')" class="column is-one-fifth">
+          <small *ngIf="loginForm.controls['password'].dirty && loginForm.hasError('required','password')" class="notification is-danger">*Geslo je zahtevana!</small>
+      </div>
       </div>
       <div class="field">
+<!--PRIJAVA GUMB & REGISTRACIJA-->
+<div class="field">
     <div class = "columns">
         <div class = "column is-one-fifth">
         <p class="control" routerLink="/login">
-          <button class="button is-info is-medium is-fullwidth">
+          <button [disabled]="loginForm.invalid" class="button is-info is-medium is-fullwidth">
             Prijava
           </button>
         </p>
@@ -50,6 +67,8 @@
       </div>
     </div>
 </div>
+</div>
+</form>
 </div>
 </div>
 </section>
