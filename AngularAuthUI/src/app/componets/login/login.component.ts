@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,8 @@ export class LoginComponent {
   isText: boolean = false;
   eyeIcon: string = "fa-eye";
   loginForm!: FormGroup;
-  constructor(private fb: FormBuilder) {};
+  isSite: boolean = true;
+  constructor(private fb: FormBuilder, private router: Router) {};
 
   ngOnInit(): void
   {
