@@ -1,1 +1,77 @@
-<p>signup works!</p>
+<section class="hero is-warning">
+    <div class="hero-body">
+      <p class="title">
+        MyFirstLogiInProject
+      </p>
+      <p class="subtitle">
+        Registracija
+      </p>
+    </div>
+  </section>
+<section class="section is-medium">
+<div class="container is-fluid">
+<div class="box">
+    <p class="title">
+        Registracija
+      </p>
+    <div class="columns">
+        <div class="column">
+            <div class="field">
+                <p class="control has-icons-left has-icons-right">
+                  <input class="input is-medium" type="text" placeholder="Ime">
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-user"></i>
+                  </span>
+                </p>
+              </div>
+        </div>
+        <div class="column">
+            <div class="field">
+                <p class="control has-icons-left has-icons-right">
+                  <input class="input is-medium" type="text" placeholder="Priimek">
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-signature"></i>
+                  </span>
+                </p>
+              </div>
+        </div>
+    </div>
+    <div class="field">
+        <p class="control has-icons-left has-icons-right">
+          <input class="input is-medium" type="email" placeholder="Email@mail.si">
+          <span class="icon is-small is-left">
+            <i class="fas fa-envelope"></i>
+          </span>
+          <span class="icon is-small is-right">
+            <i class="fas fa-check"></i>
+          </span>
+        </p>
+      </div>
+      <div class="field has-addons">
+        <p class="control is-expanded">
+          <input class="input is-medium" [type]="type" placeholder="Geslo">
+        </p>
+        <p class="control">
+            <a (click)="hideShowPassword()" class="button is-medium fas {{eyeIcon}}"></a>
+        </p>
+      </div>
+      <div class="field">
+    <div class = "columns">
+        <div class = "column is-one-fifth">
+        <p class="control" routerLink="/signup">
+          <button class="button is-warning is-medium is-fullwidth">
+            Registracija
+          </button>
+        </p>
+    </div>
+    <div class = "column my-auto">
+        <p class="control" >
+            <b>Že imaš račun?</b>
+            <a id="forget" routerLink="/login"> Prijava </a>
+          </p>
+      </div>
+    </div>
+</div>
+</div>
+</div>
+</section>
