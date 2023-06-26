@@ -1,13 +1,50 @@
+<!--Hero-->
 <section class="hero is-warning">
     <div class="hero-body">
       <p class="title">
+        <span class="icons">
+          <i class="fas fa-brands fa-github"></i>
+        </span>
+        <a href="https://github.com/lukazivkovic10/MyFirstLogiInProject">
         MyFirstLogiInProject
+      </a>
       </p>
       <p class="subtitle">
         Registracija
       </p>
     </div>
   </section>
+
+  <!--BreadCrumb-->
+  <nav class="breadcrumb" aria-label="breadcrumbs">
+    <ul>
+      <li>
+        <a routerLink="/">
+        <span class="icon is-small">
+          <i class="fas fa-home" aria-hidden="true"></i>
+        </span>
+        Home
+      </a>
+    </li>
+      <li>
+        <a routerLink="/login">
+          <span class="icon is-small">
+            <i class="fas fa-right-to-bracket" aria-hidden="true"></i>
+          </span>
+          Prijava
+        </a>
+      </li>
+      <li>
+        <a routerLink="/signup">
+          <span class="icon is-small">
+            <i class="fas fa-id-card" aria-hidden="true"></i>
+          </span>
+          Registracija
+        </a>
+      </li>
+    </ul>
+  </nav>
+
 <section class="section is-medium">
 <div class="container is-fluid">
 <div class="box">
@@ -26,20 +63,20 @@
                   </span>
                 </p>
                 <div *ngIf="signUpForm.controls['name'].dirty && signUpForm.hasError('required','name')" class="column is-half">
-                  <small *ngIf="signUpForm.controls['name'].dirty && signUpForm.hasError('required','name')" class="notification is-danger">*Ime je zahtevano!</small>
+                  <small *ngIf="signUpForm.controls['name'].dirty && signUpForm.hasError('required','name')" class="notification is-danger">*Zahtevano!</small>
                 </div>
               </div>
         </div>
         <div class="column">
             <div class="field has-addons">
-                <p class="control is-expanded has-icons-left">
+                <p class="control is-expanded has-icons-left ">
                   <input formControlName="Surname" class="input is-medium" type="text" placeholder="Priimek">
                   <span class="icon is-small is-left">
                     <i class="fas fa-signature"></i>
                   </span>
                 </p>
-                <div *ngIf="signUpForm.controls['Surname'].dirty && signUpForm.hasError('required','Surname')" class="column is-half">
-                  <small *ngIf="signUpForm.controls['Surname'].dirty && signUpForm.hasError('required','Surname')" class="notification is-danger">*Priimek je zahtevano!</small>
+                <div *ngIf="signUpForm.controls['Surname'].dirty && signUpForm.hasError('required','Surname')" class="column is half">
+                  <small *ngIf="signUpForm.controls['Surname'].dirty && signUpForm.hasError('required','Surname')" class="notification is-danger">*Zahtevano!</small>
                 </div>
               </div>
         </div>
@@ -47,28 +84,31 @@
 <!--Mail-->
     <div class="field has-addons">
         <p class="control is-expanded has-icons-left has-icons-right">
-          <input formControlName="mail" class="input is-medium" type="mail" placeholder="elektronskapošta@mail.si">
+          <input formControlName="mail" class="input is-medium" type="mail" placeholder="ElektronskaPošta@mail.si">
           <span class="icon is-small is-left">
-            <i class="fas fa-envelope"></i>
+            <i class="fas fa-inbox"></i>
           </span>
           <span class="icon is-small is-right">
             <i class="fas fa-check"></i>
           </span>
         </p>
       <div *ngIf="signUpForm.controls['mail'].dirty && signUpForm.hasError('required','mail')" class="column is-one-fifth">
-        <small *ngIf="signUpForm.controls['mail'].dirty && signUpForm.hasError('required','mail')" class="notification is-danger">*Elektronska pošta je zahtevana!</small>
+        <small *ngIf="signUpForm.controls['mail'].dirty && signUpForm.hasError('required','mail')" class="notification is-danger">*Zahtevano!</small>
       </div>
       </div>
 <!--Geslo-->
       <div class="field has-addons">
-        <p class="control is-expanded">
+        <p class="control is-expanded has-icons-left">
           <input formControlName="password" class="input is-medium" [type]="type" placeholder="Geslo">
+          <span class="icon is-small is-left">
+            <i class="fas fa-key"></i>
+          </span>
         </p>
         <p class="control">
             <a (click)="hideShowPassword()" class="button is-medium fas {{eyeIcon}}"></a>
         </p>
         <div *ngIf="signUpForm.controls['password'].dirty && signUpForm.hasError('required','password')" class="column is-one-fifth">
-        <small *ngIf="signUpForm.controls['password'].dirty && signUpForm.hasError('required','password')" class="notification is-danger">*Geslo je zahtevana!</small>
+        <small *ngIf="signUpForm.controls['password'].dirty && signUpForm.hasError('required','password')" class="notification is-danger">*Zahtevano!</small>
       </div>
       </div>
 <!--Gumb Registracija in tekst za prijavo-->

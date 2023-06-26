@@ -1,13 +1,52 @@
+
+<!--Hero-->
 <section class="hero is-info">
     <div class="hero-body ">
       <p class="title">
+        <span class="icons">
+          <i class="fas fa-brands fa-github"></i>
+        </span>
+        <a href="https://github.com/lukazivkovic10/MyFirstLogiInProject">
         MyFirstLogiInProject
+      </a>
       </p>
       <p class="subtitle">
         Prijava
       </p>
     </div>
   </section>
+
+  <!--BreadCrumb-->
+  <nav class="breadcrumb" aria-label="breadcrumbs">
+    <ul>
+      <li>
+        <a routerLink="/">
+        <span class="icon is-small">
+          <i class="fas fa-home" aria-hidden="true"></i>
+        </span>
+        Home
+      </a>
+    </li>
+      <li>
+        <a routerLink="/login">
+          <span class="icon is-small">
+            <i class="fas fa-right-to-bracket" aria-hidden="true"></i>
+          </span>
+          Prijava
+        </a>
+      </li>
+      <li>
+        <a routerLink="/signup">
+          <span class="icon is-small">
+            <i class="fas fa-id-card" aria-hidden="true"></i>
+          </span>
+          Registracija
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+<!--Form-->
 <section class="section is-medium">
 <div class="container is-fluid">
 <div class="box">
@@ -22,30 +61,33 @@
 <!--MAIL-->
     <div class="field has-addons">
         <p class="control is-expanded has-icons-right has-icons-left">
-          <input formControlName="mail" class="input is-medium" type="email" placeholder="elektronskapošta@mail.com">
+          <input formControlName="mail" class="input is-medium" type="email" placeholder="ElektronskaPošta@mail.si">
           <span class="icon is-small is-left">
-            <i class="fas fa-envelope"></i>
+            <i class="fas fa-inbox"></i>
           </span>
           <span class="icon is-small is-right">
             <i class="fas fa-check"></i>
           </span>
           </p>
           <!--Če je mail polje prazno in je error se spremeni div v clolumn is-one-fifth-->
-          <div *ngIf="loginForm.controls['mail'].dirty && loginForm.hasError('required','mail')" class="column is-one-fifth">
-            <small *ngIf="loginForm.controls['mail'].dirty && loginForm.hasError('required','mail')" class="notification is-danger">*Elektronska pošta je zahtevana!</small>
+          <div *ngIf="loginForm.controls['mail'].dirty && loginForm.hasError('required','mail')" class="column">
+            <small *ngIf="loginForm.controls['mail'].dirty && loginForm.hasError('required','mail')" class="notification is-danger">*Zahtevano!</small>
           </div>
         </div>
 <!--GESLO-->
       <div class="field has-addons">
-        <p class="control is-expanded">
+        <p class="control is-expanded has-icons-left">
           <input formControlName="password" class="input is-medium" [type]="type" placeholder="Geslo">
+          <span class="icon is-small is-left">
+            <i class="fas fa-key"></i>
+          </span>
         </p>
         <p class="control">
             <a (click)="hideShowPassword()" class="button is-medium fas {{eyeIcon}}"></a>
         </p>
-        <!--Če je password polje prazno in je error se spremeni div v clolumn is-one-fifth-->
-        <div *ngIf="loginForm.controls['password'].dirty && loginForm.hasError('required','password')" class="column is-one-fifth">
-          <small *ngIf="loginForm.controls['password'].dirty && loginForm.hasError('required','password')" class="notification is-danger">*Geslo je zahtevana!</small>
+        <!--Če je password polje prazno in je error se spremeni div v clolumn-->
+        <div *ngIf="loginForm.controls['password'].dirty && loginForm.hasError('required','password')" class="column">
+          <small *ngIf="loginForm.controls['password'].dirty && loginForm.hasError('required','password')" class="notification is-danger">*Zahtevano!</small>
       </div>
       </div>
       <div class="field">
@@ -59,7 +101,7 @@
           </button>
         </p>
     </div>
-    <div class = "column my-auto">
+    <div class = "column my-auto is-mobile">
         <p class="control" >
             <b>Še nimaš računa?</b>
             <a id="forget" routerLink="/signup"> Registracija </a>
