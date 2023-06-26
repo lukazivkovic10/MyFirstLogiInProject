@@ -22,15 +22,15 @@
           </span>
         </p>
       </div>
-      <div class="field">
+      <div class="field is-grouped">
         <p class="control has-icons-left has-icons-right">
-          <input class="input is-medium" type="password" placeholder="Geslo">
-          <span class="icon is-small is-left">
+          <span class="icon is-left">
             <i class="fas fa-lock"></i>
           </span>
-          <span class="icon is-small is-right">
-            <i class="fas fa-eye"></i>
-          </span>
+          <input class="input is-medium" [type]="type" placeholder="Geslo">
+        </p>
+        <p class="control">
+            <a (click)="hideShowPassword()" class="button is-medium fas {{eyeIcon}}"></a>
         </p>
       </div>
       <div class="field">
