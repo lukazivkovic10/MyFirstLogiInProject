@@ -1,5 +1,9 @@
+import { group } from '@angular/animations';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import ValidateForm from 'src/app/helper/validateform';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -11,14 +15,14 @@ export class SignupComponent {
   isText: boolean = false;
   eyeIcon: string = "fa-eye";
   signUpForm!: FormGroup;
-  constructor(private fb: FormBuilder) {};
+  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) {};
 
   ngOnInit(): void
   {
     this.signUpForm = this.fb.group({
-      Surname: ['',Validators.required],
-      name: ['',Validators.required],
-      mail: ['',Validators.required],
+      Firstname: ['',Validators.required],
+      Lastname: ['',Validators.required],
+      email: ['',Validators.required],
       password: ['',Validators.required]
     })
   }
@@ -29,4 +33,29 @@ export class SignupComponent {
     this.isText ? this.eyeIcon = "fa-eye-slash" : this.eyeIcon = "fa-eye"; //Če je true naredi icon v eye-slash drugace pa icon v fa-eye
     this.isText ? this.type = "text" : this.type = "password"; //to pa če je true spremeni type v text drugače pa v password
   };
+
+
+  onSignup()
+  {
+    if(this.signUpForm.valid)
+    {
+    //Pošlje v Db
+    this.auth.signUp(this.signUpForm.value)
+    .subscribe({
+      next:(res=>{
+        alert(res.message);
+        this.signUpForm.reset();
+        this.router.navigate(['login']);
+      }),
+      error:(err=>{
+        alert(err?.error.message)
+      })
+    })
+
+    console.log(this.signUpForm.value)
+    }else{
+      ValidateForm.validateAllFormFields(this.signUpForm);
+    }
+
+  }
 }

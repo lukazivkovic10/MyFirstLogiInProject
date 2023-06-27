@@ -43,7 +43,7 @@ namespace AngularAuthAPI.Controllers
         {
             if(userObj == null)//Preveri če je userObj prazen
             {
-                return BadRequest();
+                return BadRequest(new { Message = "Ti Šment nekaj je šlo narobe!" });
             }
 
             await _authContext.Users.AddAsync(userObj);//Doda podatke

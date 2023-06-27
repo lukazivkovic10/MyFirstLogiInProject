@@ -16,36 +16,29 @@
     </div>
   </section>
 
-  <!--BreadCrumb-->
-  <nav class="breadcrumb" aria-label="breadcrumbs">
-    <ul>
-      <li>
-        <a routerLink="/">
-        <span class="icon is-small">
-          <i class="fas fa-home" aria-hidden="true"></i>
-        </span>
-        Home
-      </a>
-    </li>
-      <li>
-        <a class="has-text-grey" routerLink="/login">
-          <span class="icon is-small">
-            <i class="fas fa-right-to-bracket" aria-hidden="true"></i>
-          </span>
-          Prijava
+  <!--Navbar-->
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div id="navbarBasicExample" class="navbar-menu">
+      <div class="navbar-start">
+        <a class="navbar-item" routerLink="/home">
+          Home
         </a>
-      </li>
-      <li>
-        <a routerLink="/signup">
-          <span class="icon is-small">
-            <i class="fas fa-id-card" aria-hidden="true"></i>
-          </span>
-          Registracija
-        </a>
-      </li>
-    </ul>
+        </div>
+      </div>
+  
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="buttons">
+            <a class="button is-primary">
+                Prijava
+              </a>
+            <a class="button is-light" routerLink="/signup">
+              <strong>Registracija</strong>
+            </a>
+          </div>
+        </div>
+      </div>
   </nav>
-
 <!--Form-->
 <section class="section is-medium">
 <div class="container is-fluid">
@@ -61,7 +54,7 @@
 <!--MAIL-->
     <div class="field has-addons">
         <p class="control is-expanded has-icons-right has-icons-left">
-          <input formControlName="mail" class="input is-medium" type="email" placeholder="ElektronskaPošta@mail.si">
+          <input formControlName="email" class="input is-medium" type="email" placeholder="ElektronskaPošta@mail.si">
           <span class="icon is-small is-left">
             <i class="fas fa-inbox"></i>
           </span>
@@ -70,8 +63,8 @@
           </span>
           </p>
           <!--Če je mail polje prazno in je error se spremeni div v clolumn is-one-fifth-->
-          <div *ngIf="loginForm.controls['mail'].dirty && loginForm.hasError('required','mail')" class="column">
-            <small *ngIf="loginForm.controls['mail'].dirty && loginForm.hasError('required','mail')" class="notification is-danger">*Zahtevano!</small>
+          <div *ngIf="loginForm.controls['email'].dirty && loginForm.hasError('required','email')" class="column">
+            <small *ngIf="loginForm.controls['email'].dirty && loginForm.hasError('required','email')" class="notification is-danger">*Zahtevano!</small>
           </div>
         </div>
 <!--GESLO-->
@@ -96,7 +89,7 @@
     <div class = "columns">
         <div class = "column is-one-fifth">
         <p class="control" routerLink="/login">
-          <button [disabled]="loginForm.invalid" class="button is-info is-medium is-fullwidth">
+          <button (click)="onLogin()" class="button is-info is-medium is-fullwidth">
             Prijava
           </button>
         </p>

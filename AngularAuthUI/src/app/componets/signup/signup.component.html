@@ -15,35 +15,30 @@
     </div>
   </section>
 
-  <!--BreadCrumb-->
-  <nav class="breadcrumb" aria-label="breadcrumbs">
-    <ul>
-      <li>
-        <a routerLink="/">
-        <span class="icon is-small">
-          <i class="fas fa-home" aria-hidden="true"></i>
-        </span>
-        Home
-      </a>
-    </li>
-      <li>
-        <a routerLink="/login">
-          <span class="icon is-small">
-            <i class="fas fa-right-to-bracket" aria-hidden="true"></i>
-          </span>
-          Prijava
+  <!--Navbar-->
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div id="navbarBasicExample" class="navbar-menu">
+      <div class="navbar-start">
+        <a class="navbar-item" routerLink="/home">
+          Home
         </a>
-      </li>
-      <li>
-        <a routerLink="/signup" class="has-text-grey">
-          <span class="icon is-small">
-            <i class="fas fa-id-card" aria-hidden="true"></i>
-          </span>
-          Registracija
-        </a>
-      </li>
-    </ul>
+        </div>
+      </div>
+  
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="buttons">
+            <a class="button is-primary" routerLink="/login">
+                Prijava
+              </a>
+            <a class="button is-light">
+              <strong>Registracija</strong>
+            </a>
+          </div>
+        </div>
+      </div>
   </nav>
+
 
 <section class="section is-medium">
 <div class="container is-fluid">
@@ -51,32 +46,33 @@
     <p class="title">
         Registracija
       </p>
-      <form [formGroup]="signUpForm">
+
+<form [formGroup]="signUpForm">
 <!--Ime in Priimek-->
     <div class="columns">
         <div class="column">
             <div class="field has-addons">
                 <p class="control is-expanded has-icons-left">
-                  <input formControlName="name" class="input is-medium" type="text" placeholder="Ime">
+                  <input formControlName="Firstname" class="input is-medium" type="text" placeholder="Ime">
                   <span class="icon is-small is-left">
                     <i class="fas fa-user"></i>
                   </span>
                 </p>
-                <div *ngIf="signUpForm.controls['name'].dirty && signUpForm.hasError('required','name')" class="column is-half">
-                  <small *ngIf="signUpForm.controls['name'].dirty && signUpForm.hasError('required','name')" class="notification is-danger">*Zahtevano!</small>
+                <div *ngIf="signUpForm.controls['Firstname'].dirty && signUpForm.hasError('required','Firstname')" class="column is-half">
+                  <small *ngIf="signUpForm.controls['Firstname'].dirty && signUpForm.hasError('required','Firstname')" class="notification is-danger">*Zahtevano!</small>
                 </div>
               </div>
         </div>
         <div class="column">
             <div class="field has-addons">
                 <p class="control is-expanded has-icons-left ">
-                  <input formControlName="Surname" class="input is-medium" type="text" placeholder="Priimek">
+                  <input formControlName="Lastname" class="input is-medium" type="text" placeholder="Priimek">
                   <span class="icon is-small is-left">
                     <i class="fas fa-signature"></i>
                   </span>
                 </p>
-                <div *ngIf="signUpForm.controls['Surname'].dirty && signUpForm.hasError('required','Surname')" class="column is half">
-                  <small *ngIf="signUpForm.controls['Surname'].dirty && signUpForm.hasError('required','Surname')" class="notification is-danger">*Zahtevano!</small>
+                <div *ngIf="signUpForm.controls['Lastname'].dirty && signUpForm.hasError('required','Lastname')" class="column is half">
+                  <small *ngIf="signUpForm.controls['Lastname'].dirty && signUpForm.hasError('required','Lastname')" class="notification is-danger">*Zahtevano!</small>
                 </div>
               </div>
         </div>
@@ -84,7 +80,7 @@
 <!--Mail-->
     <div class="field has-addons">
         <p class="control is-expanded has-icons-left has-icons-right">
-          <input formControlName="mail" class="input is-medium" type="mail" placeholder="ElektronskaPošta@mail.si">
+          <input formControlName="email" class="input is-medium" type="mail" placeholder="ElektronskaPošta@mail.si">
           <span class="icon is-small is-left">
             <i class="fas fa-inbox"></i>
           </span>
@@ -92,8 +88,8 @@
             <i class="fas fa-check"></i>
           </span>
         </p>
-      <div *ngIf="signUpForm.controls['mail'].dirty && signUpForm.hasError('required','mail')" class="column is-one-fifth">
-        <small *ngIf="signUpForm.controls['mail'].dirty && signUpForm.hasError('required','mail')" class="notification is-danger">*Zahtevano!</small>
+      <div *ngIf="signUpForm.controls['email'].dirty && signUpForm.hasError('required','email')" class="column is-one-fifth">
+        <small *ngIf="signUpForm.controls['email'].dirty && signUpForm.hasError('required','email')" class="notification is-danger">*Zahtevano!</small>
       </div>
       </div>
 <!--Geslo-->
@@ -116,7 +112,7 @@
     <div class = "columns">
         <div class = "column is-one-fifth">
         <p class="control" routerLink="/signup">
-          <button [disabled]="signUpForm.invalid" class="button is-warning is-medium is-fullwidth">
+          <button (click)="onSignup()" class="button is-warning is-medium is-fullwidth">
             Registracija
           </button>
         </p>
