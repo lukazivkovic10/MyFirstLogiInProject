@@ -1,8 +1,12 @@
 ﻿using AngularAuthAPI.Context;
+using AngularAuthAPI.Helper;
 using AngularAuthAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace AngularAuthAPI.Controllers
 {
@@ -45,10 +49,62 @@ namespace AngularAuthAPI.Controllers
             {
                 return BadRequest(new { Message = "Ti Šment nekaj je šlo narobe!" });
             }
+            //Preveri email če ze obstaja
+            if(await CheckEmailExistAsync(userObj.Email))
+            {
+                return BadRequest(new { Message = "Elektronska pošta ze v uporabi" });
+            }
+            //Preveri obliko email če je veljaven
+            var mail = CheckEmailBody(userObj.Email);
+            if (!string.IsNullOrEmpty(mail))
+            {
+                return BadRequest(new { Message = mail.ToString() });
+            }
 
+            //Preveri moč gesla
+            var pass = CheckPasswordStrength(userObj.Password);
+            if(!string.IsNullOrEmpty(pass)) 
+            {
+                return BadRequest(new {Message = pass.ToString() });
+            }
+
+            userObj.Password = PasswordHasher.HashPassword(userObj.Password);//Heshira geslo
             await _authContext.Users.AddAsync(userObj);//Doda podatke
             await _authContext.SaveChangesAsync();//Shrani podatke
             return Ok(new {Message = "User Registered!"});//Vrne OK(200)
+        }
+
+        private async Task<bool> CheckEmailExistAsync(string email)
+        {
+            return await _authContext.Users.AnyAsync(x => x.Email == email);
+        }
+
+        private string CheckEmailBody(string email)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (!Regex.IsMatch(email, "[@,.]"))
+            {
+                sb.Append("Ni veljavna elektronska pošta." + Environment.NewLine);
+            }
+            return sb.ToString();
+        }
+
+        private string CheckPasswordStrength(string password)
+        {
+            StringBuilder sb = new StringBuilder();
+            if(password.Length < 8)
+            {
+                sb.Append("Minimalna velikost gesla je 8."+Environment.NewLine);
+            }
+            if(!(Regex.IsMatch(password,"[a-z]") && Regex.IsMatch(password,"[A-Z]") && Regex.IsMatch(password, "[0-9]")))
+            {
+                sb.Append("Geslo bi naj vsebovalo vsaj eno malo črko[a-z], eno veliko črko[A-Z] in eno številko[0-9]" + Environment.NewLine);
+            }
+            if(!Regex.IsMatch(password, "[<,>,@,!,#,$,%,&,/,(,),=,?,*,¨,.,,,-,|,€,\\],\\,\\[,{,},<,>]"))
+            {
+                sb.Append("Geslo bi naj vsebovalo vsaj eno posebno črko [<,>,@,!,#,$,%,&,/,(,),=,?,*,¨,.,,,-,|,€,\\],\\,\\[,{,},<,>]." + Environment.NewLine);
+            }
+            return sb.ToString();
         }
     }
 }
