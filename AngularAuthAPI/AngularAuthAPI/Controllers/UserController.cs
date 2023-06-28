@@ -41,7 +41,7 @@ namespace AngularAuthAPI.Controllers
                         .FirstOrDefaultAsync(x => x.Email == userObj.Email);//Preveri če vnešeni podatki obstajajo in so shranjeni v DB
                     if (user == null)//če vrnjen prazno/null
                     {
-                        return NotFound(new { Message = "Napačni podatki!" });//Vrne Not Found(Error: 404)
+                        return NotFound(new { Message = "Napačni epoštni naslov!" });//Vrne Not Found(Error: 404)
                     }
                     else
                     {
@@ -94,9 +94,9 @@ namespace AngularAuthAPI.Controllers
         private string CheckEmailBody(string email)
         {
             StringBuilder sb = new StringBuilder();
-            if (!Regex.IsMatch(email, "[@,.]"))
+            if (!Regex.IsMatch(email, "[@]") && !Regex.IsMatch(email, "[@]"))
             {
-                sb.Append("Ni veljavna elektronska pošta." + Environment.NewLine);
+                sb.Append("Ni veljavna elektronska pošta.");
             }
             return sb.ToString();
         }
