@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import ValidateForm from 'src/app/helper/validateform';
 import { AuthService } from 'src/app/services/auth.service';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-signup',
@@ -15,7 +16,8 @@ export class SignupComponent {
   isText: boolean = false;
   eyeIcon: string = "fa-eye";
   signUpForm!: FormGroup;
-  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) {};
+  errText:string = "";
+  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router,private toast: NgToastService) {};
 
   ngOnInit(): void
   {
@@ -34,7 +36,6 @@ export class SignupComponent {
     this.isText ? this.type = "text" : this.type = "password"; //to pa če je true spremeni type v text drugače pa v password
   };
 
-
   onSignup()
   {
     if(this.signUpForm.valid)
@@ -45,13 +46,13 @@ export class SignupComponent {
       next:(res=>{
         alert(res.message);
         this.signUpForm.reset();
+        this.toast.success({detail:"USPEH", summary:res.message, duration: 5000});
         this.router.navigate(['login']);
       }),
       error:(err=>{
-        alert(err?.error.message)
+        this.toast.error({detail:"NAPAKA", summary:err?.error.message, duration: 7000});
       })
     })
-
     console.log(this.signUpForm.value)
     }else{
       ValidateForm.validateAllFormFields(this.signUpForm);

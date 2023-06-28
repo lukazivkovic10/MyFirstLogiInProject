@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { RouterModule, Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
+import { NgToastModule } from 'ng-angular-popup';
 
 //Components
 import { AppComponent } from './app.component';
@@ -25,6 +26,7 @@ import { HomeComponent } from './componets/home/home.component';
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
+    NgToastModule,
     HttpClientModule,
     RouterModule.forRoot([
       {

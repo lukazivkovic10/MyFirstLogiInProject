@@ -4,6 +4,8 @@ using AngularAuthAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -20,6 +22,12 @@ namespace AngularAuthAPI.Controllers
             _authContext = appDbContext;
         }
 
+        [HttpGet("userList")]
+        public ActionResult<IEnumerable<User>> GetUsers()
+        {
+            return Ok(_authContext.Users);
+        }
+
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody] User userObj)
         {
@@ -30,14 +38,18 @@ namespace AngularAuthAPI.Controllers
                 else
                 {
                     var user = await _authContext.Users
-                        .FirstOrDefaultAsync(x => x.Email == userObj.Email && x.Password == userObj.Password);//Preveri če vnešeni podatki obstajajo in so shranjeni v DB
+                        .FirstOrDefaultAsync(x => x.Email == userObj.Email);//Preveri če vnešeni podatki obstajajo in so shranjeni v DB
                     if (user == null)//če vrnjen prazno/null
                     {
-                        return NotFound(new { Message = "User Not Found!" });//Vrne Not Found(Error: 404)
+                        return NotFound(new { Message = "Uporabnik ne obstaja!" });//Vrne Not Found(Error: 404)
                     }
                     else
                     {
-                        return Ok(new { Message = "Login Success!" });//Vrne OK(200)
+                    if(!PasswordHasher.VerifyPassword(userObj.Password,user.Password))
+                    {
+                        return BadRequest(new { Message = "Geslo ni pravilno" });
+                    }else
+                        return Ok(new { Message = "Prijava uspela!" });//Vrne OK(200)
                     }
                 }
         }
@@ -71,7 +83,7 @@ namespace AngularAuthAPI.Controllers
             userObj.Password = PasswordHasher.HashPassword(userObj.Password);//Heshira geslo
             await _authContext.Users.AddAsync(userObj);//Doda podatke
             await _authContext.SaveChangesAsync();//Shrani podatke
-            return Ok(new {Message = "User Registered!"});//Vrne OK(200)
+            return Ok(new {Message = "Uporabnik registriran!"});//Vrne OK(200)
         }
 
         private async Task<bool> CheckEmailExistAsync(string email)

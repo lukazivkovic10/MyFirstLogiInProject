@@ -1,5 +1,32 @@
-<!--Hero-->
-<section class="hero is-dark">
+<!--Navbar-->
+<section class="hero is-danger">
+  <div class="hero-head">
+  <nav class="navbar is-transparent is-fixed-top">
+      <div class="navbar-menu is-active">
+        <div class="navbar-end">
+        <div class="buttons">
+        <span class="button is-stati is-danger">
+          <span class="icons">
+            <i class="fas fa-home"></i>
+          </span>
+          <p>Home</p>
+        </span>
+      </div>
+        </div>
+        <div class="navbar-item">
+          <div class="buttons">
+            <button class="button is-primary" routerLink="/login">
+                Prijava
+              </button>
+            <button class="button is-grey-lighter" routerLink="/signup">
+              <strong>Registracija</strong>
+            </button>
+          </div>
+        </div>
+      </div>
+  </nav>
+  </div>
+  <!--Hero-->
     <div class="hero-body">
       <p class="title">
         <span class="icons">
@@ -15,29 +42,45 @@
     </div>
   </section>
 
-  <!--Navbar-->
-  <nav class="navbar" role="navigation" aria-label="main navigation">
-    <div id="navbarBasicExample" class="navbar-menu">
-      <div class="navbar-start">
-        <a class="navbar-item">
-          Home
-        </a>
-        </div>
-      </div>
-  
-      <div class="navbar-end">
-        <div class="navbar-item">
-          <div class="buttons">
-            <a class="button is-primary" routerLink="/login">
-                Prijava
-              </a>
-            <a class="button is-light" routerLink="/signup">
-              <strong>Registracija</strong>
-            </a>
-          </div>
-        </div>
-      </div>
-  </nav>
+<section class="section is-large">
+  <div class="container is-fluid">
+<table class="table is-striped is-bordered is-narrow is-fullwidth is-hoverable">
+   <thead>
+       <tr>
+          <th class="has-text-danger" scope="col" >
+            <span class="icons">
+              <i class="fas fa-hashtag"></i>
+            </span>
+          </th>
+          <th class="has-text-danger" scope="col">
+            <span class="icons">
+              <i class="fas fa-user"></i>
+            </span>
+            Ime
+          </th>
+          <th class="has-text-danger" scope="col">
+            <span class="icons">
+              <i class="fas fa-signature"></i>
+            </span>
+            Priimek
+          </th>
+          <th class="has-text-danger" scope="col">
+            <span class="icons">
+              <i class="fas fa-solid fa-inbox"></i>
+            </span>
+            Elektronski naslov
+          </th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr *ngFor="let user of users; let i= index">
+          <td >{{i+1}}</td>
+          <td>{{user.firstName}}</td>
+          <td>{{user.lastName}}</td>
+          <td>{{user.email}}</td>
+      </tr>
 
-  <section class="section is-large">
-  </section>
+  </tbody>
+</table>
+</div>
+</section>

@@ -19,4 +19,9 @@ export class AuthService {
   {
     return this.http.post<any>(`${this.baseUrl}authenticate`,loginObj);
   }
+  user:any;
+  getAll()
+  {
+    return this.http.get(`${this.baseUrl}userList`);
+  }
 }

@@ -1,7 +1,33 @@
-
-<!--Hero-->
+<!--Navbar-->
 <section class="hero is-info">
-    <div class="hero-body ">
+  <div class="hero-head">
+  <nav class="navbar is-transparent is-fixed-top">
+      <div class="navbar-menu is-active">
+        <div class="navbar-end">
+        <div class="buttons">
+        <button class="button is-info" routerLink="/home">
+          <span class="icons">
+            <i class="fas fa-home"></i>
+          </span>
+          <p>Home</p>
+        </button>
+      </div>
+        </div>
+        <div class="navbar-item">
+          <div class="buttons">
+            <button class="button is-primary">
+                Prijava
+              </button>
+            <button class="button is-grey-lighter" routerLink="/signup">
+              <strong>Registracija</strong>
+            </button>
+          </div>
+        </div>
+      </div>
+  </nav>
+  </div>
+  <!--Hero-->
+    <div class="hero-body">
       <p class="title">
         <span class="icons">
           <i class="fas fa-brands fa-github"></i>
@@ -16,29 +42,6 @@
     </div>
   </section>
 
-  <!--Navbar-->
-  <nav class="navbar" role="navigation" aria-label="main navigation">
-    <div id="navbarBasicExample" class="navbar-menu">
-      <div class="navbar-start">
-        <a class="navbar-item" routerLink="/home">
-          Home
-        </a>
-        </div>
-      </div>
-  
-      <div class="navbar-end">
-        <div class="navbar-item">
-          <div class="buttons">
-            <a class="button is-primary">
-                Prijava
-              </a>
-            <a class="button is-light" routerLink="/signup">
-              <strong>Registracija</strong>
-            </a>
-          </div>
-        </div>
-      </div>
-  </nav>
 <!--Form-->
 <section class="section is-medium">
 <div class="container is-fluid">
@@ -89,7 +92,7 @@
     <div class = "columns">
         <div class = "column is-one-fifth">
         <p class="control" routerLink="/login">
-          <button (click)="onLogin()" class="button is-info is-medium is-fullwidth">
+          <button (click)="onLogin();" class="button is-info is-medium is-fullwidth">
             Prijava
           </button>
         </p>
