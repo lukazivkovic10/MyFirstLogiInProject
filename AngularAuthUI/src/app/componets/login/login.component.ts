@@ -39,10 +39,9 @@ export class LoginComponent {
     this.auth.login(this.loginForm.value)
     .subscribe({
       next:(res=>{
-        alert(res.message)
         this.loginForm.reset();
-        this.toast.success({detail:"USPEH", summary:res.message, duration: 5000, position: 'topCenter'});
-        this.route.navigate(['dashboard']);
+        this.toast.success({detail:"DOBRODOŠLI V PROGRAM",summary:res.message, duration: 5000, position: 'topCenter'});
+        this.route.navigate(['home']);
       }),
       error:(err)=>{
         this.toast.error({detail:"NAPAKA", summary:err?.error.message, duration: 5000});

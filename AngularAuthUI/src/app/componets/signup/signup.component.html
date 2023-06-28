@@ -117,7 +117,7 @@
     <div class = "columns">
         <div class = "column is-one-fifth">
         <p class="control" routerLink="/signup">
-          <button (click)="onSignup()" class="button is-warning is-medium is-fullwidth">
+          <button [disabled]="signUpForm.invalid" (click)="onSignup()" class="button is-warning is-medium is-fullwidth">
             Registracija
           </button>
         </p>

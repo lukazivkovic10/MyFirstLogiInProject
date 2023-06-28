@@ -33,7 +33,7 @@ namespace AngularAuthAPI.Controllers
         {
                 if (userObj.Email == null || userObj.Password == null)
                 {
-                    return BadRequest(new { Message = "Bad Request" });//Vrne Bad Request(Error: 400)
+                    return BadRequest(new { Message = "Prazna zahtevana polja!" });//Vrne Bad Request(Error: 400)
                 }
                 else
                 {
@@ -41,7 +41,7 @@ namespace AngularAuthAPI.Controllers
                         .FirstOrDefaultAsync(x => x.Email == userObj.Email);//Preveri če vnešeni podatki obstajajo in so shranjeni v DB
                     if (user == null)//če vrnjen prazno/null
                     {
-                        return NotFound(new { Message = "Uporabnik ne obstaja!" });//Vrne Not Found(Error: 404)
+                        return NotFound(new { Message = "Napačni podatki!" });//Vrne Not Found(Error: 404)
                     }
                     else
                     {
@@ -59,7 +59,7 @@ namespace AngularAuthAPI.Controllers
         {
             if(userObj == null)//Preveri če je userObj prazen
             {
-                return BadRequest(new { Message = "Ti Šment nekaj je šlo narobe!" });
+                return BadRequest(new { Message = "Prazna zahtevana polja!" });
             }
             //Preveri email če ze obstaja
             if(await CheckEmailExistAsync(userObj.Email))
