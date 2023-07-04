@@ -1,1 +1,14 @@
-<p>list-search works!</p>
+<div class="box">
+    <form [formGroup]="searchForm">
+        <div class="field has-addons">
+            <div class="control">
+                <input class="input"formControlName="search" type="text" placeholder="Iskanje">
+            </div>
+            <p class="control">
+                <button (click)="onSearch();" class="button is-info">
+                    Išči
+                </button>
+            </p>
+        </div>
+    </form>
+</div>
