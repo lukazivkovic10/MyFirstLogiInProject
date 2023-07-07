@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Immutable;
 using System.Data.SqlClient;
 using System.Reflection.Metadata.Ecma335;
 using ToDoListAPI.Models;
@@ -18,11 +19,15 @@ namespace ToDoListAPI.Controllers
             _config = config;
         }
 
-        [HttpGet("IskanjeVseh")]
+        [HttpGet("ItemsList")]
         public async Task<ActionResult<List<Items>>> GetAllItems()
         {
             using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             IEnumerable<Items> items = await SelectAllItems(connection);
+            if(items==null)
+            {
+                return BadRequest();
+            }
             return Ok(items);
         }
 

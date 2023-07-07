@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-list-search',
@@ -7,16 +8,15 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./list-search.component.css']
 })
 export class ListSearchComponent implements OnInit  {
-  searchForm!: FormGroup;
-  constructor(private fb: FormBuilder) {};
-  ngOnInit(): void {
-    this.searchForm = this.fb.group({
-      search: ['']
+  constructor(private auth: AuthService) {};
+
+  public items:any = [];
+
+  ngOnInit() 
+  {
+    this.auth.GetAllItems()
+    .subscribe(res=>{
+      this.items = res;
     })
   }
-
-  onSearch(){
-    console.log(this.searchForm.value);
-  }
-
 }

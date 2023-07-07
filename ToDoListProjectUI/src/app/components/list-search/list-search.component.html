@@ -1,19 +1,30 @@
 <div class="box">
-    <form [formGroup]="searchForm">
-        <div class="field has-addons">
-            <div class="control has-icons-left">
-                <input class="input"formControlName="search" type="text" placeholder="Ime to-do seznama">
-                <div class="icons">
-                    <span class="icon is-medium is-right">
-                        <i class="fas fa-magnifying-glass"></i>
-                    </span>
-                </div>
-            </div>
-            <p class="control">
-                <button (click)="onSearch();" class="button is-rounded is-info">
-                    Išči
-                </button>
-            </p>
-        </div>
-    </form>
+           <div class="card">
+            <table class="table is-striped is-bordered is-narrow is-fullwidth is-hoverable">
+                <thead>
+                    <tr>
+                        <th>
+                            #
+                        </th>
+                        <th>
+                            Tag
+                        </th>
+                        <th>
+                            Ime
+                        </th>
+                        <th>
+                            Desc
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let Item of items; let i = index">
+                    <td>{{i+1}}</td>
+                    <td>{{Item.tag}}</td>
+                    <td>{{Item.itemName}}</td>
+                    <td>{{Item.itemDesc}}</td>
+                    </tr>
+                </tbody>
+            </table>
+           </div>
 </div>
