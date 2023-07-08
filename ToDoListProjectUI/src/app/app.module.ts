@@ -10,6 +10,9 @@ import { HomeComponent } from './components/home/home.component';
 import { ListDisplayComponent } from './components/list-display/list-display.component';
 import { ListSearchComponent } from './components/list-search/list-search.component';
 import { ListComponent } from './components/list/list.component';
+import { ModelContentComponent } from './components/model-content/model-content.component';
+import { ModelContentEditComponent } from './components/model-content-edit/model-content-edit.component';
+import { ModelContentDeleteComponent } from './components/model-content-delete/model-content-delete.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +20,10 @@ import { ListComponent } from './components/list/list.component';
     HomeComponent,
     ListDisplayComponent,
     ListSearchComponent,
-    ListComponent
+    ListComponent,
+    ModelContentComponent,
+    ModelContentEditComponent,
+    ModelContentDeleteComponent
   ],
   imports: [
     BrowserModule,

@@ -1,1 +1,54 @@
-
+ <!--Ustvari-->
+ <button (click)="modelOpenCreate()" class="button is-rounded is-primary">Ustvari</button>
+ <div class="modal is-active" *ngIf="showModalCreate">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Ustvari To-Do</p>
+            <button (click)="modelCloseCreate()" class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <app-model-content></app-model-content>
+        </section>
+        <footer class="modal-card-foot">
+            <button class="button is-success">Ustvari</button>
+            <button (click)="modelCloseCreate()" class="button">Opusti</button>
+        </footer>
+    </div>
+</div>
+<!--Uredi-->
+<button (click)="modelOpenEdit()" class="button is-rounded is-warning">Uredi</button>
+<div class="modal is-active" *ngIf="showModalEdit">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Uredi To-Do</p>
+            <button (click)="modelCloseEdit()" class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <app-model-content-edit></app-model-content-edit>
+        </section>
+        <footer class="modal-card-foot">
+            <button class="button is-success">Ustvari</button>
+            <button (click)="modelCloseEdit()" class="button">Opusti</button>
+        </footer>
+    </div>
+</div>
+<!--Izbrisi-->
+<button (click)="modelOpenDelete()" class="button is-rounded is-danger">Izbriši</button>
+<div class="modal is-active" *ngIf="showModalDelete">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Izbriši To-Do</p>
+            <button (click)="modelCloseDelete()" class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <app-model-content-delete></app-model-content-delete>
+        </section>
+        <footer class="modal-card-foot">
+            <button class="button is-success">Ustvari</button>
+            <button (click)="modelCloseDelete()" class="button">Opusti</button>
+        </footer>
+    </div>
+</div>

@@ -14,4 +14,10 @@ export class AuthService {
   {
     return this.http.get(`${this.baseUrl}ItemsList`);
   }
+
+  SearchItem(ItemTag:string)
+  {
+    console.log(`${this.baseUrl}IskanjeLista`+ItemTag.search);
+    return this.http.get(`${this.baseUrl}IskanjeLista`+ItemTag.search);
+  }
 }

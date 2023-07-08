@@ -8,12 +8,31 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./list-search.component.css']
 })
 export class ListSearchComponent implements OnInit  {
-  constructor(private auth: AuthService) {};
-
+  constructor(private auth: AuthService,private fb: FormBuilder) {};
+  searchForm!: FormGroup;
   public items:any = [];
 
   ngOnInit() 
   {
+    this.searchForm = this.fb.group({
+      search: ['']
+    }),
+    this.auth.GetAllItems()
+    .subscribe(res=>{
+      this.items = res;
+    })
+  }
+
+  onSearch(){
+    this.auth.SearchItem(this.searchForm.value)
+    .subscribe(
+      res=>{
+        this.items = res;
+      }
+    )
+  }
+  
+  showAll(){
     this.auth.GetAllItems()
     .subscribe(res=>{
       this.items = res;
