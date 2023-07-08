@@ -1,1 +1,27 @@
-<p>model-content-delete works!</p>
+<div class="container is-fluid">
+    <div class="form" [formGroup]="deleteForm">
+        <div class="columns">
+            <div class="column">
+                <div class="field has-addons">
+                    <p class="control is-expanded has-icons-left">
+                        <input class="input"formControlName="tag" type="text" placeholder="Tag to do lista">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-at"></i>
+                        </span>
+                    </p>
+                  </div>
+            </div>
+            <div class="column">
+                <div class="field">
+                    <p class="control is-expanded has-icons-left">
+                        <input class="input"formControlName="ItemName" type="text" placeholder="Ime">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-signature"></i>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <button (click)="onDelete()" class="button is-warning">Izbrisi</button>
+    </div>
+</div>

@@ -4,7 +4,7 @@
             <div class="column">
                 <div class="field has-addons">
                     <p class="control is-expanded has-icons-left">
-                        <input class="input"formControlName="Tag" type="text" placeholder="Tag to do lista">
+                        <input class="input"formControlName="tag" type="text" placeholder="Tag to do lista">
                         <span class="icon is-small is-left">
                             <i class="fas fa-at"></i>
                         </span>
@@ -27,5 +27,6 @@
                 <textarea class="textarea has-fixed-size"formControlName="ItemDesc" type="text" placeholder="Opis"></textarea>
             </p>
         </div>
+        <button [disabled]="createForm.invalid" (click)="onCreate()" class="button is-success">Ustvari</button>
     </div>
 </div>

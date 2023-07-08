@@ -10,10 +10,6 @@
         <section class="modal-card-body">
             <app-model-content></app-model-content>
         </section>
-        <footer class="modal-card-foot">
-            <button class="button is-success">Ustvari</button>
-            <button (click)="modelCloseCreate()" class="button">Opusti</button>
-        </footer>
     </div>
 </div>
 <!--Uredi-->
@@ -28,10 +24,6 @@
         <section class="modal-card-body">
             <app-model-content-edit></app-model-content-edit>
         </section>
-        <footer class="modal-card-foot">
-            <button class="button is-success">Ustvari</button>
-            <button (click)="modelCloseEdit()" class="button">Opusti</button>
-        </footer>
     </div>
 </div>
 <!--Izbrisi-->
@@ -47,7 +39,7 @@
             <app-model-content-delete></app-model-content-delete>
         </section>
         <footer class="modal-card-foot">
-            <button class="button is-success">Ustvari</button>
+            <button class="button is-danger">Izbriši</button>
             <button (click)="modelCloseDelete()" class="button">Opusti</button>
         </footer>
     </div>

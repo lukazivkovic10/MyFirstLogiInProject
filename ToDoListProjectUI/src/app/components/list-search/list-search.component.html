@@ -38,10 +38,15 @@
         </p>
             <div class="card" *ngFor="let Item of items">
                 <div class="card-content">
-                    <div class="content">
+                    <div class="content" *ngIf="Item.itemStatus=='1'">
                             <span class="tag is-rounded is-link is-small">{{Item.tag}}</span>
                             <h3 class="title is-link">{{Item.itemName}}</h3>
                             <h5 class="subtitle is-4">{{Item.itemDesc}}</h5>
+                    </div>
+                    <div class="content" *ngIf="Item.itemStatus=='0'">
+                        <span class="tag is-rounded is-dark is-small">{{Item.tag}}</span><br>
+                        <s class="title is-link ">{{Item.itemName}}</s><br>
+                        <s class="subtitle is-4 ">{{Item.itemDesc}}</s>
                     </div>
                 </div>
             </div>

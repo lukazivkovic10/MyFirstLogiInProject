@@ -17,7 +17,22 @@ export class AuthService {
 
   SearchItem(ItemTag:string)
   {
-    console.log(`${this.baseUrl}IskanjeLista`+ItemTag.search);
     return this.http.get(`${this.baseUrl}IskanjeLista`+ItemTag.search);
+  }
+
+  CreateItem(createObj:any)
+  {
+    return this.http.post(`${this.baseUrl}Ustvarjanje`,createObj);
+  }
+
+  UpdateItem(updateObj:any)
+  {
+    return this.http.put(`${this.baseUrl}Update`,updateObj);
+  }
+
+  DeleteItem(deleteObj:any)
+  {
+    console.log(`${this.baseUrl}SoftDelete`+deleteObj.ItemName);
+    return this.http.delete(`${this.baseUrl}SoftDelete`,deleteObj.ItemName);
   }
 }

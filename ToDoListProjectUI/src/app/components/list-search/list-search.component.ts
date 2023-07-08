@@ -31,7 +31,7 @@ export class ListSearchComponent implements OnInit  {
       }
     )
   }
-  
+
   showAll(){
     this.auth.GetAllItems()
     .subscribe(res=>{

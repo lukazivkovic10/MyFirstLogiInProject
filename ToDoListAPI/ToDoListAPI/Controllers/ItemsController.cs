@@ -44,16 +44,16 @@ namespace ToDoListAPI.Controllers
         public async Task<ActionResult<List<Items>>> CreateItem(Items items)
         {
             using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var item = await connection.ExecuteAsync("insert into Items (Tag, ItemName, ItemDesc) values (@Tag, @ItemName, @ItemDesc)", items);
+            var item = await connection.ExecuteAsync("if not exists (select * from items where ItemName = @ItemName and Tag = @Tag) insert into Items (Tag, ItemName, ItemDesc) values (@Tag, @ItemName, @ItemDesc)", items);
             return Ok(item);
         }
 
-        [HttpPut("Posodobitev")]
+        [HttpPut("Update")]
 
         public async Task<ActionResult<List<Items>>> UpdateItem(Items items)
         {
             using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            await connection.ExecuteAsync("update Items set ItemName = @ItemName, ItemDesc = @ItemDesc where Tag = @Tag", items);
+            await connection.ExecuteAsync("update Items set ItemName = @ItemName, ItemDesc = @ItemDesc where Tag = @Tag and ItemName = @ItemName", items);
             return Ok(await SelectAllItems(connection));
         }
 

@@ -1,1 +1,32 @@
-<p>model-content-edit works!</p>
+<div class="container is-fluid">
+    <div class="form" [formGroup]="updateForm">
+        <div class="columns">
+            <div class="column">
+                <div class="field has-addons">
+                    <p class="control is-expanded has-icons-left">
+                        <input class="input"formControlName="tag" type="text" placeholder="Tag to do lista">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-at"></i>
+                        </span>
+                    </p>
+                  </div>
+            </div>
+            <div class="column">
+                <div class="field">
+                    <p class="control is-expanded has-icons-left">
+                        <input class="input"formControlName="ItemName" type="text" placeholder="Ime">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-signature"></i>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <p class="control is-expended">
+                <textarea class="textarea has-fixed-size"formControlName="ItemDesc" type="text" placeholder="Opis"></textarea>
+            </p>
+        </div>
+        <button (click)="onUpdate()" class="button is-warning">Uredi</button>
+    </div>
+</div>

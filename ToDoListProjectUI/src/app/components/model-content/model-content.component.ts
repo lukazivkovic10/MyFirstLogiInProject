@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-model-content',
@@ -9,7 +10,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class ModelContentComponent implements OnInit{
   createForm!: FormGroup;
-  constructor(private auth: AuthService,private fb: FormBuilder) 
+  constructor(private auth: AuthService,private fb: FormBuilder, private router: Router)
   { };
   ngOnInit() {
     this.createForm = this.fb.group({
@@ -17,5 +18,20 @@ export class ModelContentComponent implements OnInit{
       ItemName: ['',Validators.required],
       ItemDesc: ['',Validators.required]
     })
+  }
+  onCreate()
+  {
+    if(this.createForm.valid)
+    {
+      this.auth.CreateItem(this.createForm.value)
+      .subscribe({
+        next:(
+          res=>{
+            this.createForm.reset();
+            window.location.reload();
+          }
+        )
+      })
+    }
   }
 }
