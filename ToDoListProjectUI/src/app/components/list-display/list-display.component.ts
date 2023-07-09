@@ -1,6 +1,5 @@
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
-import { ListSearchComponent } from '../list-search/list-search.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({

@@ -25,30 +25,79 @@
 </div>
 <!--Prikaz-->
 <div class="content">
-    <div class="box">
         <p class="control has-icons">
             <button (click)="showAll()" class="button is-warning">
                 <div class="icons">
                     <span class="icon is-medium is-right">
-                        <i class="fas fa-bars"></i>
+                        <i class="fas fa-folder-tree"></i>
                     </span>
                     <small>Prikaz vseh</small>
                 </div>
             </button>
         </p>
-            <div class="card" *ngFor="let Item of items">
-                <div class="card-content">
-                    <div class="content" *ngIf="Item.itemStatus=='1'">
-                            <span class="tag is-rounded is-link is-small">{{Item.tag}}</span>
-                            <h3 class="title is-link">{{Item.itemName}}</h3>
-                            <h5 class="subtitle is-4">{{Item.itemDesc}}</h5>
+        <div *ngFor="let Item of items">
+            <!--Pusta-->
+            <div class="box" *ngIf="Item.itemStatus=='1' && Item.active=='1'">
+                <div class="field has-addons">
+                    <div class="tags has-addons">
+                        <span class="tag is-rounded is-medium">
+                            <div class="icons">
+                                <i class="fas fa-tag"></i>
+                            </div>
+                        </span>
+                    <span class="tag is-rounded is-link is-medium">
+                        {{Item.tag}}
+                    </span>
                     </div>
-                    <div class="content" *ngIf="Item.itemStatus=='0'">
-                        <span class="tag is-rounded is-dark is-small">{{Item.tag}}</span><br>
-                        <s class="title is-link ">{{Item.itemName}}</s><br>
-                        <s class="subtitle is-4 ">{{Item.itemDesc}}</s>
+                    <button (click)="doneCurrent(Item)" class="tag is-medium is-success is-rounded">
+                        <div class="icons">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </button>
+                </div>
+                <h3 class="title is-2">{{Item.itemName}}</h3>
+                <h5 class="subtitle is-5">{{Item.itemDesc}}</h5>
+            </div>
+            <!--Soft Izbrisana-->
+            <div class="box" style="background-color: hsl(0, 0%, 96%);" *ngIf="Item.itemStatus=='0'">
+                <div class="field">
+                    <div class="tags has-addons">
+                    <span class="tag is-rounded is-white is-medium">
+                        <div class="icons">
+                            <i class="fas fa-tag"></i>
+                        </div>
+                    </span>
+                    <span class="tag is-rounded is-dark is-medium">
+                        {{Item.tag}}
+                    </span>
                     </div>
                 </div>
+                <h3 class="title has-text-grey-light is-2"><s>{{Item.itemName}}</s></h3>
+                <h5 class="subtitle has-text-grey-lighter is-5"><s>{{Item.itemDesc}}</s></h5>
             </div>
-    </div>
+            <!--Narejena-->
+            <div class="box"style="background-color: #48c78e;" *ngIf="Item.itemStatus=='1' && Item.active=='0'">
+                <div class="field has-addons">
+                    <div class="tags has-addons">
+                        <span class="tag is-rounded is-medium">
+                            <div class="icons">
+                                <i class="fas fa-tag"></i>
+                            </div>
+                        </span>
+                    <span class="tag is-rounded is-white is-medium">
+                        {{Item.tag}}/OPRAVLJENO
+                    </span>
+                    </div>
+                    <button (click)="notDoneCurrent(Item)" class="tag is-medium is-danger is-rounded">
+                        <div class="icons">
+                            <i class="fas fa-solid fa-xmark"></i>
+                        </div>
+                    </button>
+                </div>
+                <div class="field">
+                    <h3 class="title has-text-white is-2">{{Item.itemName}}</h3>
+                    <h5 class="subtitle has-text-white is-5">{{Item.itemDesc}}</h5>
+                </div>
+            </div>
+        </div>
 </div>

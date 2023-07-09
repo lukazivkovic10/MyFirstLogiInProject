@@ -1,5 +1,5 @@
 <div class="container is-fluid">
-    <div class="form" [formGroup]="deleteForm">
+    <div class="form" [formGroup]="updateForm">
         <div class="columns">
             <div class="column">
                 <div class="field has-addons">
@@ -22,6 +22,11 @@
                 </div>
             </div>
         </div>
-        <button (click)="onDelete()" class="button is-warning">Izbrisi</button>
+        <div class="field">
+            <p class="control is-expended">
+                <textarea class="textarea has-fixed-size"formControlName="ItemDesc" type="text" placeholder="Opis"></textarea>
+            </p>
+        </div>
+        <button [disabled]="updateForm.invalid" (click)="onUpdate()" class="button is-warning">Uredi</button>
     </div>
 </div>

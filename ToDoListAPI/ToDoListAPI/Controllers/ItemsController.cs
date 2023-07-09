@@ -57,17 +57,25 @@ namespace ToDoListAPI.Controllers
             return Ok(await SelectAllItems(connection));
         }
 
-        [HttpDelete("Opravljeno")]
+        [HttpPut("Opravljeno")]
 
-        public async Task<ActionResult<List<Items>>> DoneItem(string ItemName)
+        public async Task<ActionResult<List<Items>>> DoneItem(Items items)
         {
             using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            await connection.ExecuteAsync("update Items set Active = '0' where ItemName = @ItemName",
-                new { ItemName = ItemName });
+            await connection.ExecuteAsync("update Items set Active = '0' where ItemName = @ItemName and Tag = @Tag", items);
             return Ok(await SelectAllItems(connection));
         }
 
-        [HttpDelete("SoftDelete,{ItemName}")]
+        [HttpPut("NiOpravljeno")]
+
+        public async Task<ActionResult<List<Items>>> NotDoneItem(Items items)
+        {
+            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            await connection.ExecuteAsync("update Items set Active = '1' where ItemName = @ItemName and Tag = @Tag", items);
+            return Ok(await SelectAllItems(connection));
+        }
+
+        [HttpDelete("SoftDelete{ItemName}")]
 
         public async Task<ActionResult<List<Items>>> SoftDeleteItem(string ItemName)
         {
@@ -79,7 +87,7 @@ namespace ToDoListAPI.Controllers
 
         private static async Task<IEnumerable<Items>> SelectAllItems(SqlConnection connection)
         {
-            return await connection.QueryAsync<Items>("select * from Items");
+            return await connection.QueryAsync<Items>("select * from Items order by Tag");
         }
     }
 }

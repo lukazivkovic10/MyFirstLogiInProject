@@ -28,6 +28,7 @@ export class ListSearchComponent implements OnInit  {
     .subscribe(
       res=>{
         this.items = res;
+        this.searchForm.reset();
       }
     )
   }
@@ -36,6 +37,33 @@ export class ListSearchComponent implements OnInit  {
     this.auth.GetAllItems()
     .subscribe(res=>{
       this.items = res;
+      console.log(this.items)
     })
+  }
+
+  doneCurrent(current:any)
+  {
+      console.log(current)
+      this.auth.DoneItem(current)
+      .subscribe({
+        next:(
+          res=>{
+            window.location.reload();
+          }
+        )
+      })
+  }
+
+  notDoneCurrent(Ncurrent:any)
+  {
+      console.log(Ncurrent)
+      this.auth.NotDoneItem(Ncurrent)
+      .subscribe({
+        next:(
+          res=>{
+            window.location.reload();
+          }
+        )
+      })
   }
 }

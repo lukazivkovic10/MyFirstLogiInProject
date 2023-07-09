@@ -32,7 +32,16 @@ export class AuthService {
 
   DeleteItem(deleteObj:any)
   {
-    console.log(`${this.baseUrl}SoftDelete`+deleteObj.ItemName);
-    return this.http.delete(`${this.baseUrl}SoftDelete`,deleteObj.ItemName);
+    return this.http.delete(`${this.baseUrl}SoftDelete`+deleteObj.ItemName);
+  }
+
+  DoneItem(doneObj:any)
+  {
+    return this.http.put(`${this.baseUrl}Opravljeno`,doneObj);
+  }
+
+  NotDoneItem(NdoneObj:any)
+  {
+    return this.http.put(`${this.baseUrl}NiOpravljeno`,NdoneObj);
   }
 }
