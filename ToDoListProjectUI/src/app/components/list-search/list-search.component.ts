@@ -37,7 +37,13 @@ export class ListSearchComponent implements OnInit  {
     this.auth.GetAllItems()
     .subscribe(res=>{
       this.items = res;
-      console.log(this.items)
+    })
+  }
+
+  showAllDone(){
+    this.auth.GetAllDoneItems()
+    .subscribe(res=>{
+      this.items = res;
     })
   }
 
