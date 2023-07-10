@@ -1,10 +1,15 @@
 <div class="container is-fluid">
+    <div class="box" style="color: hsl(348, 100%, 61%);" *ngFor="let error of errors">
+        <strong>{{error.errorCode}}</strong>
+        <h5>{{error.codeName}}</h5>
+        <small>{{error.codeDesc}}</small>
+    </div>
     <div class="form" [formGroup]="createForm">
         <div class="columns">
             <div class="column">
                 <div class="field has-addons">
                     <p class="control is-expanded has-icons-left">
-                        <input class="input"formControlName="tag" type="text" placeholder="Tag to do lista">
+                        <input class="input"formControlName="tag" type="text" placeholder="Ime seznama opravil">
                         <span class="icon is-small is-left">
                             <i class="fas fa-at"></i>
                         </span>
@@ -14,7 +19,7 @@
             <div class="column">
                 <div class="field">
                     <p class="control is-expanded has-icons-left">
-                        <input class="input"formControlName="ItemName" type="text" placeholder="Ime">
+                        <input class="input"formControlName="ItemName" type="text" placeholder="Ime opravila">
                         <span class="icon is-small is-left">
                             <i class="fas fa-signature"></i>
                         </span>
@@ -24,7 +29,7 @@
         </div>
         <div class="field">
             <p class="control is-expended">
-                <textarea class="textarea has-fixed-size"formControlName="ItemDesc" type="text" placeholder="Opis"></textarea>
+                <textarea class="textarea has-fixed-size"formControlName="ItemDesc" type="text" placeholder="Opis opravila"></textarea>
             </p>
         </div>
         <button [disabled]="createForm.invalid" (click)="onCreate()" class="button is-success">Ustvari</button>

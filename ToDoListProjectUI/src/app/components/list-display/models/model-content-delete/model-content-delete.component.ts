@@ -9,6 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class ModelContentDeleteComponent {
   deleteForm!: FormGroup;
+  public errors:any = [];
   constructor(private auth: AuthService,private fb: FormBuilder) 
   { };
   ngOnInit() {
@@ -26,6 +27,7 @@ export class ModelContentDeleteComponent {
       .subscribe({
         next:(
           res=>{
+            this.errors = res;
             this.deleteForm.reset();
             window.location.reload();
           }

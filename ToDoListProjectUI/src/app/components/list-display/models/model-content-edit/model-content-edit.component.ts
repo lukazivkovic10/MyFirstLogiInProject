@@ -10,6 +10,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class ModelContentEditComponent {
   updateForm!: FormGroup;
+  public errors:any = [];
   constructor(private auth: AuthService,private fb: FormBuilder, private router: Router) 
   { };
   ngOnInit() {
@@ -28,8 +29,8 @@ export class ModelContentEditComponent {
       .subscribe({
         next:(
           res=>{
+            this.errors = res;
             this.updateForm.reset();
-            window.location.reload();
           }
         )
       })

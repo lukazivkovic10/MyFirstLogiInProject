@@ -4,6 +4,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CommonModule } from '@angular/common';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
@@ -26,10 +29,13 @@ import { ModelContentDeleteComponent } from './components/list-display/models/mo
     ModelContentDeleteComponent
   ],
   imports: [
+    CommonModule,
+    BrowserAnimationsModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
+    ToastrModule.forRoot(),
     RouterModule.forRoot([
       {
         path: 'home',

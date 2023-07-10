@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -8,7 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./list-search.component.css']
 })
 export class ListSearchComponent implements OnInit  {
-  constructor(private auth: AuthService,private fb: FormBuilder) {};
+  constructor(private auth: AuthService,private fb: FormBuilder,private toastr: ToastrService) {};
   searchForm!: FormGroup;
   public items:any = [];
 
@@ -37,7 +38,13 @@ export class ListSearchComponent implements OnInit  {
     this.auth.GetAllItems()
     .subscribe(res=>{
       this.items = res;
-      console.log(this.items)
+    })
+  }
+
+  showAllDone(){
+    this.auth.GetAllDoneItems()
+    .subscribe(res=>{
+      this.items = res;
     })
   }
 

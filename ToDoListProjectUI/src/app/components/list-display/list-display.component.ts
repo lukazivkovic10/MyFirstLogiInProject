@@ -11,6 +11,7 @@ export class ListDisplayComponent implements OnInit {
   showModalCreate: boolean = false;
   showModalEdit: boolean = false;
   showModalDelete: boolean = false;
+
   constructor(private auth: AuthService) 
   { };
 
@@ -25,6 +26,7 @@ export class ListDisplayComponent implements OnInit {
   modelCloseCreate() 
   {
     this.showModalCreate = false;
+    window.location.reload();
   }
 
   modelOpenDelete() 
@@ -35,6 +37,7 @@ export class ListDisplayComponent implements OnInit {
   modelCloseDelete() 
   {
     this.showModalDelete = false;
+    window.location.reload();
   }
 
   modelOpenEdit() 
@@ -45,5 +48,6 @@ export class ListDisplayComponent implements OnInit {
   modelCloseEdit() 
   {
     this.showModalEdit = false;
+    window.location.reload();
   }
 }

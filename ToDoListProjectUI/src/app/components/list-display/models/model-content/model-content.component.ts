@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-model-content',
@@ -10,7 +11,8 @@ import { Router } from '@angular/router';
 })
 export class ModelContentComponent implements OnInit{
   createForm!: FormGroup;
-  constructor(private auth: AuthService,private fb: FormBuilder, private router: Router)
+  public errors:any = [];
+  constructor(private auth: AuthService,private fb: FormBuilder, private router: Router,private toastr: ToastrService)
   { };
   ngOnInit() {
     this.createForm = this.fb.group({
@@ -27,6 +29,7 @@ export class ModelContentComponent implements OnInit{
       .subscribe({
         next:(
           res=>{
+            this.errors = res;
             this.createForm.reset();
             window.location.reload();
           }

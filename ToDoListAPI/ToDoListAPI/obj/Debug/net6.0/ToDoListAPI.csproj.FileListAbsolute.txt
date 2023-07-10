@@ -38,3 +38,7 @@ C:\Users\Luka\ToDoListProject\ToDoListAPI\ToDoListAPI\obj\Debug\net6.0\refint\To
 C:\Users\Luka\ToDoListProject\ToDoListAPI\ToDoListAPI\obj\Debug\net6.0\ToDoListAPI.pdb
 C:\Users\Luka\ToDoListProject\ToDoListAPI\ToDoListAPI\obj\Debug\net6.0\ToDoListAPI.genruntimeconfig.cache
 C:\Users\Luka\ToDoListProject\ToDoListAPI\ToDoListAPI\obj\Debug\net6.0\ref\ToDoListAPI.dll
+C:\Users\Luka\ToDoListProject\ToDoListAPI\ToDoListAPI\bin\Debug\net6.0\CoreApiResponse.dll
+C:\Users\Luka\ToDoListProject\ToDoListAPI\ToDoListAPI\bin\Debug\net6.0\Microsoft.DotNet.PlatformAbstractions.dll
+C:\Users\Luka\ToDoListProject\ToDoListAPI\ToDoListAPI\bin\Debug\net6.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\Luka\ToDoListProject\ToDoListAPI\ToDoListAPI\bin\Debug\net6.0\Newtonsoft.Json.dll
