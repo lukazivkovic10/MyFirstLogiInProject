@@ -15,11 +15,6 @@ export class AuthService {
     return this.http.get(`${this.baseUrl}ItemsList`);
   }
 
-  GetAllDoneItems()
-  {
-    return this.http.get(`${this.baseUrl}PrikazOpravljenih`);
-  }
-
   SearchItem(ItemTag:string)
   {
     return this.http.get(`${this.baseUrl}IskanjeLista`+ItemTag.search);

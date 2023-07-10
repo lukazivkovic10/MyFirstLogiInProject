@@ -4,7 +4,7 @@
         <form [formGroup]="searchForm">
             <div class="field has-addons">
                 <div class="control has-icons-left">
-                    <input class="input"formControlName="search" type="text" placeholder="Ime seznama opravil">
+                    <input class="input"formControlName="search" type="text" placeholder="Ime to-do seznama">
                     <div class="icons">
                         <span class="icon is-medium is-right">
                             <i class="fas fa-magnifying-glass"></i>
@@ -25,7 +25,6 @@
 </div>
 <!--Prikaz-->
 <div class="content">
-    <div class="block">
         <p class="control has-icons">
             <button (click)="showAll()" class="button is-warning">
                 <div class="icons">
@@ -35,16 +34,7 @@
                     <small>Prikaz vseh</small>
                 </div>
             </button>
-            <button (click)="showAllDone()" class="button is-warning">
-                <div class="icons">
-                    <span class="icon is-medium is-right">
-                        <i class="fas fa-folder-tree"></i>
-                    </span>
-                    <small>Prikaz vseh</small>
-                </div>
-            </button>
         </p>
-    </div>
         <div *ngFor="let Item of items">
             <!--Pusta-->
             <div class="box" *ngIf="Item.itemStatus=='1' && Item.active=='1'">
@@ -100,19 +90,13 @@
                     </div>
                     <button (click)="notDoneCurrent(Item)" class="tag is-medium is-danger is-rounded">
                         <div class="icons">
-                            <i class="fas  fa-xmark"></i>
+                            <i class="fas fa-solid fa-xmark"></i>
                         </div>
                     </button>
                 </div>
                 <div class="field">
                     <h3 class="title has-text-white is-2">{{Item.itemName}}</h3>
                     <h5 class="subtitle has-text-white is-5">{{Item.itemDesc}}</h5>
-                    <small style="color: white;">
-                        <div class="icons">
-                            <i class="fas fa-calendar-check"></i>
-                        </div>
-                        Opravilo je bilo opravljeno!
-                    </small>
                 </div>
             </div>
         </div>

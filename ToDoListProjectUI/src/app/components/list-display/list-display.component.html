@@ -18,12 +18,7 @@
     </div>
 </div>
 <!--Uredi-->
-<button (click)="modelOpenEdit()" class="button is-rounded is-warning">
-    <div class="icons is-medium">
-            <i class="fas fa-square-pen"></i>
-    </div>
-    Uredi
-</button>
+<button (click)="modelOpenEdit()" class="button is-rounded is-warning">Uredi</button>
 <div class="modal is-active" *ngIf="showModalEdit">
     <div class="modal-background"></div>
     <div class="modal-card">
@@ -37,12 +32,7 @@
     </div>
 </div>
 <!--Izbrisi-->
-<button (click)="modelOpenDelete()" class="button is-rounded is-danger">
-    <div class="icons">
-        <i class="far fa-calendar-xmark"></i>
-    </div>
-    Izbriši
-</button>
+<button (click)="modelOpenDelete()" class="button is-rounded is-danger">Izbriši</button>
 <div class="modal is-active" *ngIf="showModalDelete">
     <div class="modal-background"></div>
     <div class="modal-card">
