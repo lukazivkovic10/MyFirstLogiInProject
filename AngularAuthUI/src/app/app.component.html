@@ -1,18 +1,28 @@
 
-<router-outlet routerLink="/login"></router-outlet>
-<ng-toast></ng-toast>
 <!doctype html>
 <html lang="en">
 <body>
-</body>
-<footer class="footer">
+  <header>
+    <app-hero></app-hero>
+  </header>
+  <section class="section" id="hero">
+    <app-navbar></app-navbar>
+  </section>
+  <div class="page-container">
+  <section class="section" id="body">
+    <div class="container">
+      <router-outlet routerLink="/login"></router-outlet>
+      <ng-toast></ng-toast>
+    </div>
+  </section>
+  <footer class="footer">
     <div class="content has-text-centered">
       <p>
         <span class="icon">
           <i class="fas fa-brands fa-github"></i>
         </span>
         <a href="https://github.com/lukazivkovic10/MyFirstLogiInProject">MyFirstLoginProject</a>
-        <strong> by Luka</strong>
+        <strong> by Luka Živković</strong>
       </p>
         <h3>Links</h3>
       <p>
@@ -22,5 +32,7 @@
       <a class="" routerLink="/signup"><strong>Registracija</strong></a>
     </p>
   </div>
-</footer>
+  </footer>
+</div>
+</body>
 </html>

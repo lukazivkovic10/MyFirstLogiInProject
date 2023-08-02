@@ -21,8 +21,9 @@ export class LoginComponent {
     this.loginForm = this.fb.group({
       Firstname: [''],
       Lastname: [''],
-      email: ['',Validators.required],
-      password: ['',Validators.required]
+      email: ['',Validators.compose([Validators.required,Validators.email])],
+      password: ['',Validators.required],
+      token: ['']
     })
   }
 
@@ -40,8 +41,9 @@ export class LoginComponent {
     .subscribe({
       next:(res=>{
         this.loginForm.reset();
-        this.toast.success({detail:"DOBRODOŠLI V PROGRAM",summary:res.message, duration: 5000, position: 'topCenter'});
-        this.route.navigate(['home']);
+        this.auth.storeToken(res.token);
+        this.toast.success({detail:"DOBRODOŠLI V PROGRAM",summary:res.message, duration: 5000});
+        this.route.navigate(['dashboard']);
       }),
       error:(err)=>{
         this.toast.error({detail:"NAPAKA", summary:err?.error.message, duration: 5000});

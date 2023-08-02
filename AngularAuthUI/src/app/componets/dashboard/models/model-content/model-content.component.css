@@ -1,0 +1,35 @@
+.options {
+    display: flex;
+    position: relative;
+    padding: 0.35rem;
+    border-radius: 5px;
+    color: hsl(0, 0%, 21%);
+    width: 100px;
+    background-color: hsl(0, 0%, 96%);
+  }
+  
+  .options * {
+    z-index: 2;
+  }
+  
+  .options-container input[type="radio"] {
+    display: none;
+  }
+  
+  .Active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    width: 50px;
+    color: hsl(0, 0%, 21%);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: color 0.15s ease-in;
+  }
+  
+  .options-container input[type="radio"]:checked + label {
+    background-color: hsl(0, 0%, 86%);
+  }
+  
+  

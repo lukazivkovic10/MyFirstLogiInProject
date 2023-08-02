@@ -1,1 +1,116 @@
-<h1>dashboard works!</h1>
+<body>
+    <header>
+        <app-search></app-search>
+    </header>
+    <div class="page-container">
+        <div class="content">
+            <div class="block py-2">
+                <div class="buttons">
+                    <a *ngIf="clickedDone==true" class="tag is-success is-medium is-rounded">
+                        <div (click)="showAllDone()" class="icons">
+                            <span class="icon is-medium is-right">
+                                <i class="fas fa-folder-tree"></i>
+                            </span>
+                            <small>Prikaz vseh dokončanih</small>
+                        </div>
+                        <button (click)="showAll()" class="delete py-1"></button>
+                    </a>
+                    <a *ngIf="clickedDone==false" class="tag has-background-grey-lighter has-text-grey is-medium is-rounded">
+                        <div (click)="showAllDone()" class="icons">
+                            <span class="icon is-medium is-right">
+                                <i class="fas fa-folder-tree"></i>
+                            </span>
+                            <small>Prikaz vseh dokončanih</small>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            <div class="py-1" *ngFor="let item of items.data">
+                    <!--Pusta-->
+                    <div class="box" *ngIf="item.itemStatus==1 && item.active==1">
+                        <div class="field has-addons">
+                            <div class="tags has-addons">
+                                <span class="tag is-rounded is-medium">
+                                    <div class="icons">
+                                        <i class="fas fa-tag"></i>
+                                    </div>
+                                </span>
+                            <span class="tag is-rounded is-link is-medium">
+                                {{item.tag}}
+                            </span>
+                            </div>
+                            <button (click)="doneCurrent(item)" class="tag is-medium is-success is-rounded">
+                                <div class="icons">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="field">
+                            <h3 class="title is-2">{{item.itemName}}</h3>
+                            <h5 class="subtitle is-5">{{item.itemDesc}}</h5>
+                        </div>
+                    </div>
+                    <!--Soft Izbrisana-->
+                    <div class="box" style="background-color: hsl(0, 0%, 96%);" *ngIf="item.itemStatus==0">
+                        <div class="field">
+                            <div class="tags has-addons">
+                            <span class="tag is-rounded is-white is-medium">
+                                <div class="icons">
+                                    <i class="fas fa-tag"></i>
+                                </div>
+                            </span>
+                            <span class="tag is-rounded is-dark is-medium">
+                                {{item.tag}}
+                            </span>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <h3 class="title has-text-grey-light is-2"><s>{{item.itemName}}</s></h3>
+                            <h5 class="subtitle has-text-grey-lighter is-5"><s>{{item.itemDesc}}</s></h5>
+                        </div>
+                    </div>
+                    <!--Narejena-->
+                    <div class="box"style="background-color: #48c78e;" *ngIf="item.itemStatus==1 && item.active==0">
+                        <div class="columns">
+                            <div class="column is-four-fifths">
+                                <div class="field has-addons">
+                                    <div class="tags has-addons">
+                                        <span class="tag is-rounded is-medium">
+                                            <div class="icons">
+                                                <i class="fas fa-tag"></i>
+                                            </div>
+                                        </span>
+                                    <span class="tag is-rounded is-white is-medium">
+                                        {{item.tag}}/OPRAVLJENO
+                                    </span>
+                                    </div>
+                                    <button (click)="notDoneCurrent(item)" class="tag is-medium is-danger is-rounded">
+                                        <div class="icons">
+                                            <i class="fas  fa-xmark"></i>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="column has-icons-left">
+                                <div class="icons" style="color: white;">
+                                    <i class="fas fa-calendar-check"></i>
+                                    <small style="color: white;">
+                                        Opravilo je bilo opravljeno!
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <h3 class="title has-text-white is-2">
+                                <i class="fas fa-check"></i>
+                                {{item.itemName}}
+                            </h3>
+                            <h5 class="subtitle has-text-white is-5">{{item.itemDesc}}</h5>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</body>

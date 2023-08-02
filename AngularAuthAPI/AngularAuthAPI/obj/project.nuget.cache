@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "+0q6rWAJZ/ExcP+qN0KcBCrRrNVRWg9roGlBA7lvK/8048udy4995VXObfS1QlN7WCjL0oskw7SRrIZWcOUPGg==",
+  "dgSpecHash": "2WHyFOdOOMnkdQChY2d03YvBcdV4glLOHFu6SFj7pMrF9OPrHKgBP3YWK0u+u+bEowFxBKtZQ7gAxEPNWSyEdg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Luka\\MyFirstLoginProject\\AngularAuthAPI\\AngularAuthAPI\\AngularAuthAPI.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Luka\\.nuget\\packages\\dapper\\2.0.143\\dapper.2.0.143.nupkg.sha512",
     "C:\\Users\\Luka\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\Luka\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.19\\microsoft.aspnetcore.authentication.jwtbearer.6.0.19.nupkg.sha512",
     "C:\\Users\\Luka\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\6.0.19\\microsoft.aspnetcore.cryptography.internal.6.0.19.nupkg.sha512",
