@@ -1,3 +1,6 @@
+
+# Project Title
+
 # MyFirstLogiInProject
 1. Naredi GIT PROJEKT - MyFirstLogiInProject
     a. Deli celotno zadevo z mano, tako kot si v prejšnji nalogi na gitu
@@ -16,9 +19,8 @@
         1) Lahko se prikaže nato še toaster Dobrodošli v programu
     
   3. Dopolnilne naloge (2. 8. 2023):
-     a. Pod TO DO-ji dodaj datum nastanka (naj bo kot metadata, se lahko prikaže kasneje če bo potrebno), rok poteka opravila
-     b. Opravila se naj obarvajo rdeče ko preteče rok
-     c. Naredi gumb, ki bo ustvaril seznam opravil, pod katerega bodo spadala opravila
-     d. Naredi filtre za rok opravila, tag, naslov, seznam opravil
-     e. Pri registraciji in prijavi hashaj geslo kar takoj preden pošlješ na API, da podatki ne bodo vidni v payloadu na browserju
-     
+     -  Pod TO DO-ji dodaj datum nastanka (naj bo kot metadata, se lahko prikaže kasneje če bo potrebno), rok poteka opravila
+     -  Opravila se naj obarvajo rdeče ko preteče rok
+     -  Naredi gumb, ki bo ustvaril seznam opravil, pod katerega bodo spadala opravila
+     -  Naredi filtre za rok opravila, tag, naslov, seznam opravil
+     -  Pri registraciji in prijavi hashaj geslo kar takoj preden pošlješ na API, da podatki ne bodo vidni v payloadu na browserju
