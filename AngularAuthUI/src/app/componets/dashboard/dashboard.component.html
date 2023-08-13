@@ -1,113 +1,228 @@
 <body>
-    <header>
-        <app-search></app-search>
-    </header>
     <div class="page-container">
-        <div class="content">
-            <div class="block py-2">
-                <div class="buttons">
-                    <a *ngIf="clickedDone==true" class="tag is-success is-medium is-rounded">
-                        <div (click)="showAllDone()" class="icons">
-                            <span class="icon is-medium is-right">
-                                <i class="fas fa-folder-tree"></i>
-                            </span>
-                            <small>Prikaz vseh dokončanih</small>
-                        </div>
-                        <button (click)="showAll()" class="delete py-1"></button>
-                    </a>
-                    <a *ngIf="clickedDone==false" class="tag has-background-grey-lighter has-text-grey is-medium is-rounded">
-                        <div (click)="showAllDone()" class="icons">
-                            <span class="icon is-medium is-right">
-                                <i class="fas fa-folder-tree"></i>
-                            </span>
-                            <small>Prikaz vseh dokončanih</small>
-                        </div>
-                    </a>
-                </div>
+        <div class="content py-2">
+            <div class="sb">
+                <app-search></app-search>
             </div>
+                <div class="navbar">
+                    <div class="navbar-start">
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link has-icons-left">
+                                <span class="icon">
+                                    <i class="fa-solid fa-filter"></i>
+                                </span>
+                                Filtri
+                            </a>
+                            <div class="navbar-dropdown is-rounded">
+                                <div class="navbar-item">
+                                    <input type="checkbox" id="done" (change)="onDoneCheckboxChange()">
+                                    <p>Dokončano</p>
+                                </div>
+                                <div class="navbar-item">
+                                    <input type="checkbox" id="hide" (change)="onHideNotDoneCheckboxChange()">
+                                    <p>Ne dokončano</p>
+                                </div>
+                                <div class="navbar-item">
+                                    <input type="checkbox" id="deleted" (change)="onHideDeletedCheckboxChange()">
+                                    <p>Izbrisano</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="navbar-end">
+                        <div class="navbar-item">
+                            <a (click)="modelOpenTags()">
+                                Oznake
+                            </a>
+                            <div *ngIf="showModalTags">
+                                <app-model-tags *ngIf="showModalTags" (close)="modelCloseTags()"></app-model-tags>
+                            </div>
+                        </div>
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link has-icons-left">
+                                <span class="icon">
+                                    <i class="fa-solid fa-list-check"></i>
+                                </span>
+                                Opravila
+                            </a>
+                            <div class="navbar-dropdown is-right is-rounded">
+                                <div class="navbar-item">
+                                    <!--Ustvari-->
+                                    <button (click)="modelOpenCreate()" class="button is-rounded is-primary">
+                                        <div class="icon is-large">
+                                            <i class="far fa-calendar-plus"></i>
+                                        </div>
+                                    </button>
+                                     <div *ngIf="showModalCreate">
+                                                <app-model-content *ngIf="showModalCreate" (close)="modelCloseCreate()"></app-model-content>
+                                     </div>
+                                </div>
+                                <div class="navbar-item">
+                                    <!--Uredi-->
+                                    <button (click)="modelOpenEdit()" class="button is-rounded is-warning">
+                                        <div class="icon is-large">
+                                            <i class="fas fa-square-pen"></i>
+                                        </div>
+                                    </button>
+                                    <div *ngIf="showModalEdit">
+                                        <app-model-content-edit *ngIf="showModalEdit" (close)="modelCloseEdit()"></app-model-content-edit>
+                                    </div>
+                                </div>
+                                <div class="navbar-item">
+                                    <!--Izbrisi-->
+                                    <button (click)="modelOpenDelete()" class="button is-rounded is-danger">
+                                        <div class="icon is-large is-right">
+                                            <i class="far fa-calendar-minus"></i>
+                                        </div>
+                                    </button>
+                                    <div  *ngIf="showModalDelete">
+                                        <app-model-content-delete *ngIf="showModalDelete" (close)="modelCloseDelete()"></app-model-content-delete>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="searchData.search!''" class="tag is-link is-medium is-rounded">
+                    {{searchData.search}}
+                    <button (click)="showAll()" class="delete py-1"></button>
+                </div>
         </div>
         <div class="content">
             <div class="py-1" *ngFor="let item of items.data">
+                <h1 class="tittle" *ngIf="item.tag!=savedTag">
+                    <hr class="bold">
+                    {{item.tag}}
+                    {{saveTag(item.tag)}}
+                    <hr class="solid">
+                </h1>
                     <!--Pusta-->
-                    <div class="box" *ngIf="item.itemStatus==1 && item.active==1">
-                        <div class="field has-addons">
-                            <div class="tags has-addons">
-                                <span class="tag is-rounded is-medium">
-                                    <div class="icons">
-                                        <i class="fas fa-tag"></i>
+                    <span *ngIf="item.itemStatus==1 && item.active==1">
+                        <div class="box">
+                            <div class="field">
+                                <h3 class="title is-2">
+                                    {{item.itemName}}
+                                    <button (click)="doneCurrent(item)" class="tag is-medium is-success is-rounded">
+                                        <div class="icons">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                    </button>
+                                </h3>
+                                <hr class="solid">
+                                <h5 class="subtitle is-5">{{item.itemDesc}}</h5>
+                            </div>
+                            <hr class="slim">
+                            <div class="field">
+                                <div class="columns">
+                                    <div class="column">
+                                        <p>Opraviti je treba do: <b>{{item.completeDate | date:'HH:mm dd.MM.yyyy'}}</b></p>
                                     </div>
-                                </span>
-                            <span class="tag is-rounded is-link is-medium">
-                                {{item.tag}}
-                            </span>
-                            </div>
-                            <button (click)="doneCurrent(item)" class="tag is-medium is-success is-rounded">
-                                <div class="icons">
-                                    <i class="fas fa-check"></i>
+                                    <div class="column">
+                                        <div class="tags has-addons">
+                                            <span class="tag is-rounded is-small">
+                                                <div class="icons">
+                                                    <i class="fas fa-tag"></i>
+                                                </div>
+                                            </span>
+                                        <span class="tag is-rounded is-link is-small">
+                                            {{item.tag}}
+                                        </span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </button>
+                            </div>
                         </div>
-                        <div class="field">
-                            <h3 class="title is-2">{{item.itemName}}</h3>
-                            <h5 class="subtitle is-5">{{item.itemDesc}}</h5>
-                        </div>
-                    </div>
+                    </span>
                     <!--Soft Izbrisana-->
-                    <div class="box" style="background-color: hsl(0, 0%, 96%);" *ngIf="item.itemStatus==0">
-                        <div class="field">
-                            <div class="tags has-addons">
-                            <span class="tag is-rounded is-white is-medium">
-                                <div class="icons">
-                                    <i class="fas fa-tag"></i>
-                                </div>
-                            </span>
-                            <span class="tag is-rounded is-dark is-medium">
-                                {{item.tag}}
-                            </span>
-                            </div>
-                        </div>
+                    <div class="box" style="background-color: hsl(0, 0%, 96%);" *ngIf="!hideDeleted &&item.itemStatus==0">
                         <div class="field">
                             <h3 class="title has-text-grey-light is-2"><s>{{item.itemName}}</s></h3>
+                            <hr class="solid">
                             <h5 class="subtitle has-text-grey-lighter is-5"><s>{{item.itemDesc}}</s></h5>
                         </div>
-                    </div>
-                    <!--Narejena-->
-                    <div class="box"style="background-color: #48c78e;" *ngIf="item.itemStatus==1 && item.active==0">
-                        <div class="columns">
-                            <div class="column is-four-fifths">
-                                <div class="field has-addons">
+                        <hr class="slim">
+                        <div class="field">
+                            <div class="columns">
+                                <div class="column">
                                     <div class="tags has-addons">
-                                        <span class="tag is-rounded is-medium">
+                                        <span class="tag is-rounded is-small">
                                             <div class="icons">
                                                 <i class="fas fa-tag"></i>
                                             </div>
                                         </span>
-                                    <span class="tag is-rounded is-white is-medium">
-                                        {{item.tag}}/OPRAVLJENO
+                                    <span class="tag is-rounded is-dark is-small">
+                                        <s>{{item.tag}}</s>
                                     </span>
                                     </div>
-                                    <button (click)="notDoneCurrent(item)" class="tag is-medium is-danger is-rounded">
-                                        <div class="icons">
-                                            <i class="fas  fa-xmark"></i>
-                                        </div>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="column has-icons-left">
-                                <div class="icons" style="color: white;">
-                                    <i class="fas fa-calendar-check"></i>
-                                    <small style="color: white;">
-                                        Opravilo je bilo opravljeno!
-                                    </small>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <!--Narejena-->
+                    <div class="box"style="background-color: #48c78e;" *ngIf="item.itemStatus==1 && item.active==0">
                         <div class="field">
                             <h3 class="title has-text-white is-2">
                                 <i class="fas fa-check"></i>
                                 {{item.itemName}}
+                                <button (click)="notDoneCurrent(item)" class="tag is-medium is-danger is-rounded">
+                                    <div class="icons">
+                                        <i class="fas  fa-xmark"></i>
+                                    </div>
+                                </button>
                             </h3>
-                            <h5 class="subtitle has-text-white is-5">{{item.itemDesc}}</h5>
+                            <hr class="solid">
+                            <h4 class="subtitle has-text-white is-4">{{item.itemDesc}}</h4>
+                        </div>
+                        <hr class="slim">
+                        <div class="field">
+                            <div class="columns">
+                                <div class="column">
+                                    <small style="color: white;">Opravljeno je bilo do: {{item.completeDate | date:'HH:mm dd.MM.yyyy'}}</small>
+                                </div>
+                                <div class="column">
+                                    <div class="tags has-addons">
+                                        <span class="tag is-rounded is-dark is-small has-text-success">
+                                            <div class="icons">
+                                                <i class="fas fa-tag"></i>
+                                            </div>
+                                        </span>
+                                    <span class="tag is-rounded is-whites is-small has-text-success">
+                                        {{item.tag}}
+                                    </span>
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Ne Dokončano-->
+                    <div class="box" style="background-color: hsl(348, 100%, 61%);" *ngIf="!hideNotDone && item.itemStatus == 2 && item.active != 0">
+                        <div class="field">
+                            <h3 class="title has-text-white is-2">
+                                <i class="fas fa-xmark"></i>
+                                {{item.itemName}}
+                            </h3>
+                            <hr class="solid">
+                            <h4 class="subtitle has-text-white is-4">{{item.itemDesc}}</h4>
+                        </div>
+                        <hr class="slim">
+                        <div class="field">
+                            <div class="columns">
+                                <div class="column">
+                                    <small style="color: white;">Opraviti bi bilo treba do: {{item.completeDate | date:'HH:mm dd.MM.yyyy'}}</small>
+                                </div>
+                                <div class="column">
+                                    <div class="tags has-addons">
+                                        <span class="tag is-rounded is-dark is-small has-text-danger">
+                                            <div class="icons">
+                                                <i class="fas fa-tag"></i>
+                                            </div>
+                                        </span>
+                                    <span class="tag is-rounded is-whites is-small has-text-danger">
+                                        {{item.tag}}
+                                    </span>
+                                    </div>  
+                                </div>
+                            </div>
                         </div>
                     </div>
             </div>

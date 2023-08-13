@@ -50,7 +50,7 @@ export class AuthService {
 
   GetAllItems()
   {
-    return this.http.get(`${this.baseUrl}IskanjeLista`);
+    return this.http.get(`${this.baseUrl}IskanjeListaVseh`);
   }
 
   GetAllDoneItems()
@@ -72,7 +72,16 @@ export class AuthService {
   {
     return this.http.put(`${this.baseUrl}Update`,updateObj);
   }
+  
+  UpdateItemDate(updateObj:any)
+  {
+    return this.http.put(`${this.baseUrl}UpdateDate`,updateObj);
+  }
 
+  UpdateItemStatus(updateObj:any)
+  {
+    return this.http.put(`${this.baseUrl}UpdateStatus`,updateObj);
+  }
   DoneItem(doneObj:any)
   {
     return this.http.put(`${this.baseUrl}Opravljeno`,doneObj);
@@ -81,5 +90,20 @@ export class AuthService {
   NotDoneItem(NdoneObj:any)
   {
     return this.http.put(`${this.baseUrl}NiOpravljeno`,NdoneObj);
+  }
+
+  GetTags()
+  {
+    return this.http.get(`${this.baseUrl}VseTags`);
+  }
+
+  CreateTags(createObj: any)
+  {
+    return this.http.post(`${this.baseUrl}UstvarjanjeTag`, createObj);
+  }
+  
+  DeleteTag(DeleteTagObj: any)
+  {
+    return this.http.put(`${this.baseUrl}IzbrisTag`,DeleteTagObj);
   }
 }

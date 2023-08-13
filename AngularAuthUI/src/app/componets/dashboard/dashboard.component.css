@@ -1,4 +1,36 @@
 .page-container {
-    position: relative;
-    min-height: 100vh;
-  }
+  position: relative;
+  min-height: 100vh;
+}
+
+hr.solid
+{
+border-top: 2px solid hsl(0, 0%, 86%);
+border-radius: 5px;
+}
+
+hr.slim
+{
+border-top: 1px solid hsl(0, 0%, 86%);
+border-radius: 5px;
+}
+
+hr.bold
+{
+border-top: 4px solid hsl(0, 0%, 71%);
+border-radius: 5px;
+}
+
+.sb
+{
+width: 90px;
+padding: 5px;
+position: relative;
+transition: 1.5s;
+border-color: #485fc7;
+}
+
+.sb:hover
+{
+width: 250px;
+}

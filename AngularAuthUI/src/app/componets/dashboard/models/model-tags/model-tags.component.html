@@ -1,0 +1,41 @@
+<div class="modal is-active">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Oznake</p>
+        <button (click)="modelCloseTags()" class="delete" aria-label="close"></button>
+      </header>
+      <section class="modal-card-body">
+        <div class="section">
+            <div class="field" [formGroup]="tagCreateForm">
+                <div class="box">
+                    <div class="columns">
+                        <div class="column is-10">
+                            <input formControlName="tagName"  class="input" type="text" placeholder="Ime oznake">
+                        </div>
+                        <div class="column">
+                            <button (click)="onCreate()" class="button is-success">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <div class="box" *ngFor="let tag of tags.data">
+                    <div class="columns">
+                        <div class="column is-10">
+                            {{tag.tagName}}
+                        </div>
+                        <div class="column">
+                            <button (click)="onDelete(tag)" class="button is-danger">x</button>
+                        </div>
+                    </div>
+                </div>   
+            </div>
+        </div>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button is-warning" (click)="modelCloseTags()">Zapri</button>
+      </footer>
+    </div>
+  </div>
+  

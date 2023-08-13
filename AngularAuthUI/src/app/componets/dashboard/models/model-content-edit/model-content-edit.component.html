@@ -2,7 +2,12 @@
     <div class="modal-background"></div>
     <div class="modal-card">
         <header class="modal-card-head">
-            <p class="modal-card-title">Uredi To-Do</p>
+            <div class="modal-card-title">
+                <div class="icon is-large">
+                    <i class="fas fa-square-pen"></i>
+                </div>
+                Uredi opravilo
+            </div>
             <button (click)="modelCloseEdit()" class="delete" aria-label="close"></button>
         </header>
         <section class="modal-card-body">
@@ -13,38 +18,66 @@
                     <small>{{error.codeDesc}}</small>
                 </div>
                 <div class="form" [formGroup]="updateForm">
-                    <div class="columns">
-                        <div class="column">
-                            <div class="field has-addons">
-                                <p class="control is-expanded has-icons-left">
-                                    <input class="input"formControlName="tag" type="text" placeholder="Ime seznama opravil">
-                                    <span class="icon is-small is-left">
-                                        <i class="fas fa-at"></i>
-                                    </span>
-                                </p>
-                              </div>
-                        </div>
-                        <div class="column">
-                            <div class="field">
-                                <p class="control is-expanded has-icons-left">
-                                    <input class="input"formControlName="ItemName" type="text" placeholder="Ime opravila">
-                                    <span class="icon is-small is-left">
-                                        <i class="fas fa-signature"></i>
-                                    </span>
-                                </p>
+                    <div class="box">
+                        <div class="columns">
+                            <div class="column">
+                                <div class="field">
+                                    <div class="control has-icons-left">
+                                        <div class="select">
+                                            <select formControlName="Tag" placeholder="Izberi zaznamko">
+                                                <option value="" disabled selected>Izberi oznako</option>
+                                                <option *ngFor="let tag of tags.data">{{tag.tagName}}</option>
+                                            </select>
+                                            <span class="icon is-left">
+                                                <i class="fas fa-tag"></i>
+                                              </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="field">
+                                    <p class="control is-expanded has-icons-left">
+                                        <input class="input"formControlName="ItemName" type="text" placeholder="Ime opravila">
+                                        <span class="icon is-small is-left">
+                                            <i class="fas fa-signature"></i>
+                                        </span>
+                                    </p>
+                                </div>
                             </div>
                         </div>
+                        <div class="field">
+                            <p class="control is-expended">
+                                <textarea class="textarea has-fixed-size" formControlName="ItemDesc" type="text" placeholder="Opis opravila"></textarea>
+                            </p>
+                        </div>  
                     </div>
-                    <div class="field">
-                        <p class="control is-expended">
-                            <textarea class="textarea has-fixed-size"formControlName="ItemDesc" type="text" placeholder="Opis"></textarea>
-                        </p>
+                    <div class="box">
+                        <div class="columns">
+                            <div class="column">
+                                <p>Posodobitev če je opravljeno</p>
+                                <div class="field">
+                                    <div class="options-container py-1">
+                                        <div class="options">
+                                            <input type="radio" value="0" id="radio-1" name="Active" checked="" formControlName="Active">
+                                            <label class="Active" for="radio-1"><i class="fas fa-check"></i></label>
+                                        </div>
+                                    </div>
+                            </div>
+                            </div>
+                            <div class="column">
+                                <p>Dokončati do</p>
+                                <div class="field">
+                                    <input class="input" type="datetime-local" formControlName="CompleteDate">
+                                </div>
+                        </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
         <footer class="modal-card-foot">
-            <button [disabled]="updateForm.invalid" (click)="onUpdate()" class="button is-warning">Uredi</button>
+            <button (click)="onUpdate()" class="button is-warning">Uredi</button>
         </footer>
     </div>
 </div>

@@ -19,6 +19,7 @@ import { ModelContentDeleteComponent } from './componets/dashboard/models/model-
 import { ModelContentEditComponent } from './componets/dashboard/models/model-content-edit/model-content-edit.component';
 import { ModelContentComponent } from './componets/dashboard/models/model-content/model-content.component';
 import { SearchComponent } from './componets/dashboard/search/search.component';
+import { ModelTagsComponent } from './componets/dashboard/models/model-tags/model-tags.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { SearchComponent } from './componets/dashboard/search/search.component';
     ModelContentDeleteComponent,
     ModelContentEditComponent,
     ModelContentComponent,
-    SearchComponent
+    SearchComponent,
+    ModelTagsComponent
   ],
   imports: [
     BrowserModule,

@@ -82,12 +82,6 @@ namespace AngularAuthAPI.Controllers
             {
                 return BadRequest(new { Message = "Elektronska pošta ze v uporabi" });
             }
-            //Preveri obliko email če je veljaven
-            var mail = CheckEmailBody(userObj.Email);
-            if (!string.IsNullOrEmpty(mail))
-            {
-                return BadRequest(new { Message = mail.ToString() });
-            }
 
             //Preveri moč gesla
             var pass = CheckPasswordStrength(userObj.Password);
@@ -105,16 +99,6 @@ namespace AngularAuthAPI.Controllers
         private async Task<bool> CheckEmailExistAsync(string email)
         {
             return await _authContext.Users.AnyAsync(x => x.Email == email);
-        }
-
-        private string CheckEmailBody(string email)
-        {
-            StringBuilder sb = new StringBuilder();
-            if (!Regex.IsMatch(email, "[@]") && !Regex.IsMatch(email, "[@]"))
-            {
-                sb.Append("Ni veljavna elektronska pošta.");
-            }
-            return sb.ToString();
         }
 
         private string CheckPasswordStrength(string password)
@@ -157,20 +141,21 @@ namespace AngularAuthAPI.Controllers
         }
 
         ///TO DO LIST
-        [HttpGet("IskanjeLista")]
+
+        [HttpGet("IskanjeListaVseh")]
         public async Task<ActionResult<Response<object>>> GetAllItems()
         {
             using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var exists = connection.ExecuteScalar<bool>("select * from Items");
+            IEnumerable<Items> items = await SelectAllItems(connection);
             ////Preveri
-            if (exists == true)
+            if (items == null )
             {
                 //Error 404
                 var erorrResponse = new Response<object>
                 {
                     Success = false,
                     Error = 404,
-                    Message = "404 Not Found - Podatki ne obstajajo",
+                    Message = "Podatki ne obstajajo",
                     Data = "404"
                 };
 
@@ -178,13 +163,29 @@ namespace AngularAuthAPI.Controllers
             }else
             {
                 //Uspesno
-                IEnumerable<Items> items = await SelectAllItems(connection);
+
+                DateTime currentDate = DateTime.Now;
+                List<Items> data = new List<Items>();
+
+                foreach (var item in items)
+                {
+                    if (currentDate > item.CompleteDate)
+                    {
+                        PosodobiStatus(connection, item.Id, 2);
+                    }
+                    else if (currentDate < item.CompleteDate)
+                    {
+                        PosodobiStatus(connection, item.Id, 1);
+                    }
+
+                    data.Add(item);
+                }
                 var successResponse = new Response<object>
                 {
                     Success = true,
                     Error = 200,
-                    Message = "200 Success - Pridobljeni podatki.",
-                    Data = items
+                    Message = "Pridobljeni podatki.",
+                    Data = data
                 };
 
                 return successResponse;
@@ -204,7 +205,7 @@ namespace AngularAuthAPI.Controllers
                 {
                     Success = false,
                     Error = 404,
-                    Message = "404 Not Found - Podatki ne obstajajo",
+                    Message = "Podatki ne obstajajo",
                     Data = "404"
                 };
 
@@ -218,7 +219,7 @@ namespace AngularAuthAPI.Controllers
                 {
                     Success = true,
                     Error = 200,
-                    Message = "200 Success - Pridobljeni podatki.",
+                    Message = "Pridobljeni podatki.",
                     Data = data
                 };
 
@@ -226,40 +227,55 @@ namespace AngularAuthAPI.Controllers
             }
         }
 
-        [HttpGet("IskanjeLista/{ItemTag}")]
-
-        public async Task<ActionResult<Response<object>>> GetItems(string ItemTag)
+        [HttpGet("IskanjeLista/{SearchedItem}")]
+        public async Task<ActionResult<Response<object>>> GetItems(string SearchedItem)
         {
             using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var exists = connection.ExecuteScalar<bool>("select count(1) from Items where Tag = @ItemTag", new {ItemTag});
-            ////Preveri
-            if (exists == false)
-            {
-                //Error 404
-                var erorrResponse = new Response<object>
-                {
-                    Success = false,
-                    Error = 404,
-                    Message = "404 Not Found - Podatki ne obstajajo",
-                    Data = "404"
-                };
+            var existsWithTag = connection.ExecuteScalar<bool>("select count(1) from Items where Tag = @SearchedItem", new { SearchedItem });
 
-                return erorrResponse;
-            }
-            else
+            if (existsWithTag)
             {
-                //Uspesno
-                var data = await connection.QueryAsync<Items>("select * from Items where Tag = @Tag",
-                new { Tag = ItemTag });
+                var data = await connection.QueryAsync<Items>("select * from Items where Tag = @SearchedItem", new { SearchedItem });
                 var successResponse = new Response<object>
                 {
                     Success = true,
                     Error = 200,
-                    Message = "200 Success - Pridobljeni podatki.",
+                    Message = "Pridobljeni podatki.",
                     Data = data
                 };
 
                 return successResponse;
+            }
+            else
+            {
+                var existsWithItemName = connection.ExecuteScalar<bool>("select count(1) from Items where ItemName = @SearchedItem", new { SearchedItem });
+
+                if (existsWithItemName)
+                {
+                    var data = await connection.QueryAsync<Items>("select * from Items where ItemName = @SearchedItem", new { SearchedItem });
+                    var successResponse = new Response<object>
+                    {
+                        Success = true,
+                        Error = 200,
+                        Message = "Pridobljeni podatki.",
+                        Data = data
+                    };
+
+                    return successResponse;
+                }
+                else
+                {
+                    //Error 404
+                    var errorResponse = new Response<object>
+                    {
+                        Success = false,
+                        Error = 404,
+                        Message = "Podatki ne obstajajo",
+                        Data = "404"
+                    };
+
+                    return errorResponse;
+                }
             }
         }
 
@@ -281,7 +297,8 @@ namespace AngularAuthAPI.Controllers
                 };
 
                 return erorrResponse;
-            }else
+            }
+            else
             {
                 await connection.ExecuteAsync("update Items set ItemName = @ItemName, ItemDesc = @ItemDesc where Tag = @Tag and ItemName = @ItemName", items);
                 IEnumerable<Items> data = await SelectAllItems(connection);
@@ -290,6 +307,88 @@ namespace AngularAuthAPI.Controllers
                     Success = true,
                     Error = 200,
                     Message = "200 Success - Pridobljeni podatki.",
+                    Data = items
+                };
+
+                return successResponse;
+            }
+        }
+
+        [HttpPut("UpdateStatus")]
+        public async Task<ActionResult<Response<object>>> UpdateStatus(Items items)
+        {
+            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+
+            var exists = connection.ExecuteScalar<bool>("SELECT COUNT(1) FROM Items WHERE ItemName = @ItemName AND Tag = @Tag", new { items.ItemName, items.Tag });
+
+            if (!exists)
+            {
+                var errorResponse = new Response<object>
+                {
+                    Success = false,
+                    Error = 404,
+                    Message = "Bad Request - Item not found",
+                    Data = "404"
+                };
+
+                return errorResponse;
+            }
+            else
+            {
+                var currentItem = connection.QuerySingleOrDefault<Items>("SELECT ItemDesc FROM Items WHERE ItemName = @ItemName AND Tag = @Tag", new { items.ItemName, items.Tag });
+                items.ItemDesc = currentItem.ItemDesc;
+
+                // Update the CompleteDate
+                await connection.ExecuteAsync("UPDATE Items SET Active = @Active, ItemStatus = 1 WHERE Tag = @Tag AND ItemName = @ItemName", new { items.Active, items.Tag, items.ItemName });
+
+                var data = await SelectAllItems(connection);
+
+                var successResponse = new Response<object>
+                {
+                    Success = true,
+                    Error = 200,
+                    Message = "Success - Data retrieved.",
+                    Data = data
+                };
+
+                return successResponse;
+            }
+        }
+
+        [HttpPut("UpdateDate")]
+        public async Task<ActionResult<Response<object>>> UpdateDate(Items items)
+        {
+            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+
+            var exists = connection.ExecuteScalar<bool>("SELECT COUNT(1) FROM Items WHERE ItemName = @ItemName AND Tag = @Tag", new { items.ItemName, items.Tag });
+
+            if (!exists)
+            {
+                var errorResponse = new Response<object>
+                {
+                    Success = false,
+                    Error = 404,
+                    Message = "Bad Request - Item not found",
+                    Data = "404"
+                };
+
+                return errorResponse;
+            }
+            else
+            {
+                var currentItem = connection.QuerySingleOrDefault<Items>("SELECT ItemDesc FROM Items WHERE ItemName = @ItemName AND Tag = @Tag", new { items.ItemName, items.Tag });
+                items.ItemDesc = currentItem.ItemDesc;
+
+                // Update the CompleteDate
+                await connection.ExecuteAsync("UPDATE Items SET CompleteDate = @CompleteDate WHERE Tag = @Tag AND ItemName = @ItemName", new { items.CompleteDate, items.Tag, items.ItemName });
+
+                var data = await SelectAllItems(connection);
+
+                var successResponse = new Response<object>
+                {
+                    Success = true,
+                    Error = 200,
+                    Message = "Success - Data retrieved.",
                     Data = data
                 };
 
@@ -311,7 +410,7 @@ namespace AngularAuthAPI.Controllers
                 {
                     Success = false,
                     Error = 404,
-                    Message = "Bad Request - Iskano ne obstaja",
+                    Message = "Iskano ne obstaja",
                     Data = "404"
                 };
 
@@ -324,7 +423,7 @@ namespace AngularAuthAPI.Controllers
                 {
                     Success = true,
                     Error = 200,
-                    Message = "200 Success - Pridobljeni podatki.",
+                    Message = "Pridobljeni podatki.",
                     Data = data
                 };
 
@@ -346,7 +445,7 @@ namespace AngularAuthAPI.Controllers
                 {
                     Success = false,
                     Error = 404,
-                    Message = "Bad Request - Iskano ne obstaja",
+                    Message = "Iskano ne obstaja",
                     Data = "404"
                 };
 
@@ -360,7 +459,7 @@ namespace AngularAuthAPI.Controllers
                 {
                     Success = true,
                     Error = 200,
-                    Message = "200 Success - Pridobljeni podatki.",
+                    Message = "Pridobljeni podatki.",
                     Data = data
                 };
 
@@ -380,20 +479,20 @@ namespace AngularAuthAPI.Controllers
                 {
                     Success = false,
                     Error = 400,
-                    Message = "Bad Request - Ime že obstaja",
+                    Message = "Ime že obstaja",
                     Data = "400"
                 };
 
                 return erorrResponse;
             }else
             {
-                var item = await connection.ExecuteAsync("if not exists (select * from items where ItemName = @ItemName and Tag = @Tag) insert into Items (Tag, ItemName, ItemDesc, Active, ItemStatus) values (@Tag, @ItemName, @ItemDesc, @Active, @ItemStatus)", items);
+                var item = await connection.ExecuteAsync("if not exists (select * from items where ItemName = @ItemName and Tag = @Tag) insert into Items (Tag, ItemName, ItemDesc, Active, ItemStatus, CreatedDate, CompleteDate) values (@Tag, @ItemName, @ItemDesc, @Active, @ItemStatus, @CreatedDate, @CompleteDate)", items);
                 IEnumerable<Items> data = await SelectAllItems(connection);
                 var successResponse = new Response<object>
                 {
                     Success = true,
                     Error = 200,
-                    Message = "200 Success - Pridobljeni podatki.",
+                    Message = "Pridobljeni podatki.",
                     Data = data
                 };
 
@@ -416,7 +515,7 @@ namespace AngularAuthAPI.Controllers
                 {
                     Success = true,
                     Error = 200,
-                    Message = "200 Success - Pridobljeni podatki.",
+                    Message = "Pridobljeni podatki.",
                     Data = data
                 };
 
@@ -429,7 +528,7 @@ namespace AngularAuthAPI.Controllers
                 {
                     Success = false,
                     Error = 404,
-                    Message = "Bad Request - Ime ne obstaja",
+                    Message = "Ime ne obstaja",
                     Data = "404"
                 };
 
@@ -437,6 +536,118 @@ namespace AngularAuthAPI.Controllers
             }
         }
 
+        ///Tags 
+
+        [HttpGet("VseTags")]
+
+        public async Task<ActionResult<Response<object>>> GetAllTags()
+        {
+            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            var exists = connection.ExecuteScalar<bool>("select * from Tags");
+            ////Preveri
+            if (exists == false)
+            {
+                //Error 404
+                var erorrResponse = new Response<object>
+                {
+                    Success = false,
+                    Error = 404,
+                    Message = "Podatki ne obstajajo",
+                    Data = "404"
+                };
+
+                return erorrResponse;
+            }
+            else
+            {
+                //Uspesno
+                var data = await connection.QueryAsync<Tags>("select * from Tags");
+                var successResponse = new Response<object>
+                {
+                    Success = true,
+                    Error = 200,
+                    Message = "Pridobljeni podatki.",
+                    Data = data
+                };
+
+                return successResponse;
+            }
+        }
+
+
+        [HttpPost("UstvarjanjeTag")]
+        public async Task<ActionResult<Response<object>>> CreateTag(Tags tags)
+        {
+            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            var exists = connection.ExecuteScalar<bool>("select count(1) from Tags where TagName = @TagName", new { tags.TagName });
+            if (exists == true)
+            {
+                //Error 400
+                var erorrResponse = new Response<object>
+                {
+                    Success = false,
+                    Error = 400,
+                    Message = "Ime že obstaja",
+                    Data = "400"
+                };
+
+                return erorrResponse;
+            }
+            else
+            {
+                var item = await connection.ExecuteAsync("if not exists (select * from Tags where TagName = @TagName) insert into Tags (TagName) values (@TagName)", tags);
+                var successResponse = new Response<object>
+                {
+                    Success = true,
+                    Error = 200,
+                    Message = "Oznaka narejena.",
+                    Data = item
+                };
+
+                return successResponse;
+            }
+        }
+
+        [HttpPut("IzbrisTag")]
+
+        public async Task<ActionResult<Response<object>>> DeleteTag(Tags tags)
+        {
+            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            var exists = connection.ExecuteScalar<bool>("select count(1) from Tags where TagName = @TagName", new { tags.TagName });
+            if (exists == true)
+            {
+                await connection.ExecuteAsync("Delete from Tags where TagName = @TagName and TagId = @TagId", tags);
+                var successResponse = new Response<object>
+                {
+                    Success = true,
+                    Error = 200,
+                    Message = "Pridobljeni podatki.",
+                    Data = null
+                };
+
+                return successResponse;
+            }
+            else
+            {
+                ///Error 404
+                var erorrResponse = new Response<object>
+                {
+                    Success = false,
+                    Error = 404,
+                    Message = "Ime ne obstaja",
+                    Data = "404"
+                };
+
+                return erorrResponse;
+            }
+        }
+
+        private void PosodobiStatus(SqlConnection connection, int itemId, int itemStatus)
+        {
+            // Adjust your SQL query to perform the update
+            string query = "UPDATE Items SET ItemStatus = @itemStatus WHERE Id = @itemId AND Active <> 0 AND ItemStatus <> 0";
+            connection.Execute(query, new { itemStatus, itemId });
+        }
         private static async Task<IEnumerable<Items>> SelectAllItems(SqlConnection connection)
         {
             return await connection.QueryAsync<Items>("select * from Items order by Tag");

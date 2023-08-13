@@ -2,6 +2,12 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
 
+interface Tag
+{
+  tagid: number;
+  tagName: string;
+};
+
 @Component({
   selector: 'app-model-content-delete',
   templateUrl: './model-content-delete.component.html',
@@ -10,19 +16,33 @@ import { AuthService } from 'src/app/services/auth.service';
 export class ModelContentDeleteComponent {
   deleteForm!: FormGroup;
   public errors:any = [];
+  public tags: { success: boolean; error: number; message: string; data: Tag[] } = {
+    success: false,
+    error: 0,
+    message: '',
+    data: []
+  };
   @Output() close = new EventEmitter<void>();
+
   constructor(private auth: AuthService,private fb: FormBuilder) 
   { };
+
   ngOnInit() {
     this.deleteForm = this.fb.group({
       tag: ['',Validators.required],
       ItemName: ['']
-    })
+    });
+    this.auth.GetTags().subscribe(
+      (res:any)=>{
+        this.tags = res;
+      }
+    )
   }
 
   modelCloseDelete() 
   {
     this.close.emit();
+    this.deleteForm.reset();
   }
 
   onDelete()
@@ -35,7 +55,6 @@ export class ModelContentDeleteComponent {
           res=>{
             this.errors = res;
             this.deleteForm.reset();
-            window.location.reload();
           }
         )
       })

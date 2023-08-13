@@ -2,7 +2,12 @@
     <div class="modal-background"></div>
     <div class="modal-card">
         <header class="modal-card-head">
-            <p class="modal-card-title">Izbriši To-Do</p>
+            <div class="modal-card-title">
+                <div class="icon is-large">
+                    <i class="far fa-calendar-minus"></i>
+                </div>
+                Izbriši To-Do
+            </div>
             <button (click)="modelCloseDelete()" class="delete" aria-label="close"></button>
         </header>
         <section class="modal-card-body">
@@ -13,25 +18,32 @@
                     <small>{{error.codeDesc}}</small>
                 </div>
                 <div class="form" [formGroup]="deleteForm">
+                <div class="box">
                     <div class="columns">
-                        <div class="column">
-                            <div class="field has-addons">
-                                <p class="control is-expanded has-icons-left">
-                                    <input class="input"formControlName="tag" type="text" placeholder="Ime seznama opravil">
-                                    <span class="icon is-small is-left">
-                                        <i class="fas fa-at"></i>
-                                    </span>
-                                </p>
-                              </div>
-                        </div>
-                        <div class="column">
-                            <div class="field">
-                                <p class="control is-expanded has-icons-left">
-                                    <input class="input"formControlName="ItemName" type="text" placeholder="Ime opravila">
-                                    <span class="icon is-small is-left">
-                                        <i class="fas fa-signature"></i>
-                                    </span>
-                                </p>
+                            <div class="column">
+                                <div class="field">
+                                    <div class="control has-icons-left">
+                                        <div class="select">
+                                            <select formControlName="tag" placeholder="Izberi zaznamko">
+                                                <option value="" disabled selected>Izberi oznako</option>
+                                                <option *ngFor="let tag of tags.data">{{tag.tagName}}</option>
+                                            </select>
+                                            <span class="icon is-left">
+                                                <i class="fas fa-tag"></i>
+                                              </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="field">
+                                    <p class="control is-expanded has-icons-left">
+                                        <input class="input"formControlName="ItemName" type="text" placeholder="Ime opravila">
+                                        <span class="icon is-small is-left">
+                                            <i class="fas fa-signature"></i>
+                                        </span>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
