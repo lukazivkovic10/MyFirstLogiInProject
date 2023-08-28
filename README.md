@@ -30,7 +30,7 @@
       - Dodajanje izpisa roka opravila po odkljukanem opravilu. Torej sta razvidna datum zaključka in rok opravila.
       - Navbar unification, ena vrstica z gumbi, dropdowni...
       - Izbira knjižnice visualizacije podatkov (chart.js, D3, izberi sam, preglej in debatirava naslednjič o izbiri)
-      - Grafi bodo sledeči:
+      - Grafi bodo sledeči: (primer knjižnice - https://apexcharts.com/)
             - Opravljena/neopravljena opravila stolpični diagram po mescih (zadnji trije), smiselne barve glede na status opravila
             - Procent uspešnosti tekočega meseca (pazi na ničelne vrednosti, ko je število vseh 0)
             - Najhitrejše zaključena opravila, katera, pod katero kategorijo spada, kdaj nsarejena in kdaj zaključena in ali so bila zaključena v roku.
