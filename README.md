@@ -24,3 +24,13 @@
      -  Naredi gumb, ki bo ustvaril seznam opravil, pod katerega bodo spadala opravila
      -  Naredi filtre za rok opravila, tag, naslov, seznam opravil
      -  Pri registraciji in prijavi hashaj geslo kar takoj preden pošlješ na API, da podatki ne bodo vidni v payloadu na browserju
+    
+  4. ???
+  5. Dopolnilne naloge (28. 8. 2023)
+      - Dodajanje izpisa roka opravila po odkljukanem opravilu. Torej sta razvidna datum zaključka in rok opravila.
+      - Izbira knjižnice visualizacije podatkov (chart.js, D3, izberi sam, preglej in debatirava naslednjič o izbiri)
+      - Grafi bodo sledeči:
+            - Opravljena/neopravljena opravila stolpični diagram po mescih (zadnji trije), smiselne barve glede na status opravila
+            - Procent uspešnosti tekočega meseca (pazi na ničelne vrednosti, ko je število vseh 0)
+            - Najhitrejše zaključena opravila, katera, pod katero kategorijo spada, kdaj nsarejena in kdaj zaključena in ali so bila zaključena v roku.
+     
