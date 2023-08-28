@@ -28,6 +28,7 @@
   4. ???
   5. Dopolnilne naloge (28. 8. 2023)
       - Dodajanje izpisa roka opravila po odkljukanem opravilu. Torej sta razvidna datum zaključka in rok opravila.
+      - Navbar unification, ena vrstica z gumbi, dropdowni...
       - Izbira knjižnice visualizacije podatkov (chart.js, D3, izberi sam, preglej in debatirava naslednjič o izbiri)
       - Grafi bodo sledeči:
             - Opravljena/neopravljena opravila stolpični diagram po mescih (zadnji trije), smiselne barve glede na status opravila
