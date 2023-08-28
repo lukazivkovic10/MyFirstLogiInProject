@@ -41,59 +41,75 @@ namespace AngularAuthAPI.Controllers
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody] User userObj)
         {
-                if (userObj.Email == null || userObj.Password == null)
+            if (userObj.Email == null || userObj.Password == null)
+            {
+                return BadRequest(new { Message = "Prazna zahtevana polja!" });
+            }
+            else
+            {
+                var user = await _authContext.Users
+                    .FirstOrDefaultAsync(x => x.Email == userObj.Email);
+
+                if (user == null)
                 {
-                    return BadRequest(new { Message = "Prazna zahtevana polja!" });//Vrne Bad Request(Error: 400)
+                    return NotFound(new { Message = "Napačni epoštni naslov!" });
                 }
                 else
                 {
-                    var user = await _authContext.Users
-                        .FirstOrDefaultAsync(x => x.Email == userObj.Email);//Preveri če vnešeni podatki obstajajo in so shranjeni v DB
-                    if (user == null)//če vrnjen prazno/null
-                    {
-                        return NotFound(new { Message = "Napačni epoštni naslov!" });//Vrne Not Found(Error: 404)
-                    }
-                    else
-                    {
-                    if (!PasswordHasher.VerifyPassword(userObj.Password, user.Password))
+                    // Decrypt the provided password
+                    string decryptedPassword = DecryptPassword(userObj.Password);
+
+                    if (decryptedPassword == null || !PasswordHasher.VerifyPassword(decryptedPassword, user.Password))
                     {
                         return BadRequest(new { Message = "Geslo ni pravilno" });
                     }
                     else
-
+                    {
                         user.Token = CreateJwtToken(user);
-                        return Ok(new { 
+                        return Ok(new
+                        {
                             Token = user.Token,
-                            Message = "Prijava uspela!" 
-                        });//Vrne OK(200)
+                            Message = "Prijava uspela!"
+                        });
                     }
                 }
+            }
         }
 
         [HttpPost("Registracija")]
         public async Task<IActionResult> RegisterUser([FromBody] User userObj)
         {
-            if(userObj == null)//Preveri če je userObj prazen
+            if (userObj == null)
             {
                 return BadRequest(new { Message = "Prazna zahtevana polja!" });
             }
-            //Preveri email če ze obstaja
-            if(await CheckEmailExistAsync(userObj.Email))
+
+            // Decrypt the provided password
+            string decryptedPassword = DecryptPassword(userObj.Password);
+
+            if (string.IsNullOrEmpty(decryptedPassword))
             {
-                return BadRequest(new { Message = "Elektronska pošta ze v uporabi" });
+                return BadRequest(new { Message = "Neveljavno geslo" });
             }
 
-            //Preveri moč gesla
-            var pass = CheckPasswordStrength(userObj.Password);
-            if(!string.IsNullOrEmpty(pass)) 
+            // Check password strength
+            var passStrengthMessage = CheckPasswordStrength(decryptedPassword);
+            if (!string.IsNullOrEmpty(passStrengthMessage))
             {
-                return BadRequest(new {Message = pass.ToString() });
+                return BadRequest(new { Message = passStrengthMessage });
             }
 
-            userObj.Password = PasswordHasher.HashPassword(userObj.Password);//Heshira geslo
-            await _authContext.Users.AddAsync(userObj);//Doda podatke
-            await _authContext.SaveChangesAsync();//Shrani podatke
-            return Ok(new {Message = "Uporabnik registriran!"});//Vrne OK(200)
+            // Proceed with the registration process
+            if (await CheckEmailExistAsync(userObj.Email))
+            {
+                return BadRequest(new { Message = "Elektronska pošta že v uporabi" });
+            }
+
+            userObj.Password = PasswordHasher.HashPassword(decryptedPassword);
+            await _authContext.Users.AddAsync(userObj);
+            await _authContext.SaveChangesAsync();
+
+            return Ok(new { Message = "Uporabnik registriran!" });
         }
 
         private async Task<bool> CheckEmailExistAsync(string email)
@@ -397,16 +413,15 @@ namespace AngularAuthAPI.Controllers
         }
 
         [HttpPut("Opravljeno")]
-
         public async Task<ActionResult<Response<object>>> DoneItem(Items items)
         {
             using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             var exists = connection.ExecuteScalar<bool>("select count(1) from Items where ItemName = @ItemName and Tag = @Tag", new { items.ItemName, items.Tag });
-            ////Preveri
+
             if (exists == false)
             {
-                ///Error 404
-                var erorrResponse = new Response<object>
+                // Error 404
+                var errorResponse = new Response<object>
                 {
                     Success = false,
                     Error = 404,
@@ -414,10 +429,14 @@ namespace AngularAuthAPI.Controllers
                     Data = "404"
                 };
 
-                return erorrResponse;
-            }else
+                return errorResponse;
+            }
+            else
             {
-                await connection.ExecuteAsync("update Items set Active = '0' where ItemName = @ItemName and Tag = @Tag", items);
+                // Update the Active status and DateOfCompletion
+                await connection.ExecuteAsync("update Items set Active = '0', DateOfCompletion = @CurrentDate where ItemName = @ItemName and Tag = @Tag",
+                    new { items.ItemName, items.Tag, CurrentDate = DateTime.Now });
+
                 IEnumerable<Items> data = await SelectAllItems(connection);
                 var successResponse = new Response<object>
                 {
@@ -644,13 +663,37 @@ namespace AngularAuthAPI.Controllers
 
         private void PosodobiStatus(SqlConnection connection, int itemId, int itemStatus)
         {
-            // Adjust your SQL query to perform the update
             string query = "UPDATE Items SET ItemStatus = @itemStatus WHERE Id = @itemId AND Active <> 0 AND ItemStatus <> 0";
             connection.Execute(query, new { itemStatus, itemId });
         }
         private static async Task<IEnumerable<Items>> SelectAllItems(SqlConnection connection)
         {
             return await connection.QueryAsync<Items>("select * from Items order by Tag");
+        }
+
+        private readonly string encryptionKey = "EncryptionKey";
+
+        public string DecryptPassword(string encryptedPassword)
+        {
+            try
+            {
+                byte[] encryptedBytes = Convert.FromBase64String(encryptedPassword);
+                string decryptedPasswordWithKey = Encoding.UTF8.GetString(encryptedBytes);
+
+                if (decryptedPasswordWithKey.EndsWith(encryptionKey))
+                {
+                    string decryptedPassword = decryptedPasswordWithKey.Substring(0, decryptedPasswordWithKey.Length - encryptionKey.Length);
+                    return decryptedPassword;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

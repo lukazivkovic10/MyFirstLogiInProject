@@ -14,6 +14,7 @@ interface Item
   active: number;
   createdDate: Date;
   completeDate: Date;
+  dateOfCompletion: Date;
 }
 
 @Component({
@@ -53,6 +54,7 @@ export class DashboardComponent implements OnInit{
 
   public hideNotDone: boolean = false; 
   public hideDeleted: boolean = false;
+  public hideDone: boolean = false; 
 
   constructor(private auth: AuthService, private sharedData: SharedDataService, private searchService: SearchTagService,private toast: NgToastService) 
   {};
@@ -88,6 +90,16 @@ export class DashboardComponent implements OnInit{
           data: ''}
       }
     );
+  }
+
+  onHideDoneCheckboxChange() {
+    const doneCheckbox = document.getElementById('done') as HTMLInputElement;
+  
+    if (doneCheckbox.checked) {
+      this.hideDone = true;
+    } else {
+      this.hideDone = false;
+    }
   }
 
   onHideDeletedCheckboxChange() {
@@ -144,6 +156,7 @@ export class DashboardComponent implements OnInit{
 
   doneCurrent(current:any)
   {
+    console.log(current);
       this.auth.DoneItem(current)
       .subscribe({
         next:(

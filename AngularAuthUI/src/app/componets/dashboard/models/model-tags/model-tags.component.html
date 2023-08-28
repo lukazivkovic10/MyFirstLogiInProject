@@ -21,11 +21,13 @@
             </div>
             <div class="field">
                 <div class="box" *ngFor="let tag of tags.data">
-                    <div class="columns">
-                        <div class="column is-10">
-                            {{tag.tagName}}
-                        </div>
+                    <div class="columns is-flex is-align-items-center is-flex-wrap-wrap">
                         <div class="column">
+                            <div class="title">
+                                {{tag.tagName}}
+                            </div>
+                        </div>
+                        <div class="column is-2">
                             <button (click)="onDelete(tag)" class="button is-danger">x</button>
                         </div>
                     </div>

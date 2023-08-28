@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import ValidateForm from 'src/app/helper/validateform';
 import { AuthService } from 'src/app/services/auth.service';
 import { NgToastService } from 'ng-angular-popup';
+import { PasswordService } from 'src/app/services/password.service';
 
 @Component({
   selector: 'app-signup',
@@ -17,7 +18,7 @@ export class SignupComponent {
   eyeIcon: string = "fa-eye";
   signUpForm!: FormGroup;
   errText:string = "";
-  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router,private toast: NgToastService) {};
+  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router,private toast: NgToastService, private passwordService: PasswordService) {};
 
   ngOnInit(): void
   {
@@ -25,7 +26,8 @@ export class SignupComponent {
       Firstname: ['',Validators.required],
       Lastname: ['',Validators.required],
       email: ['',Validators.compose([Validators.required,Validators.email])],
-      password: ['',Validators.required]
+      password: ['',Validators.compose([Validators.required,Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/)])],
+      token: ['']
     })
   }
 
@@ -38,6 +40,11 @@ export class SignupComponent {
 
   onSignup()
   {
+    const encryptedPassword = this.passwordService.encrypt(this.signUpForm.value.password);
+    
+    this.signUpForm.patchValue({
+      password: encryptedPassword
+    });
     if(this.signUpForm.valid)
     {
     //Pošlje v Db

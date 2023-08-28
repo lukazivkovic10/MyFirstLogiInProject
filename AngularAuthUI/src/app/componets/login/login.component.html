@@ -22,10 +22,10 @@
             <i class="fas fa-check"></i>
           </span>
           </p>
-          <!--Če je mail polje prazno in je error se spremeni div v clolumn is-one-fifth-->
-          <div *ngIf="loginForm.controls['email'].dirty && loginForm.hasError('required','email')" class="column">
-            <small *ngIf="loginForm.controls['email'].dirty && loginForm.hasError('required','email')" class="notification is-danger">*Zahtevano!</small>
-          </div>
+        </div>
+        <div class="pb-2">
+          <small *ngIf="loginForm.controls['email'].dirty && loginForm.hasError('required','email')" class="notification is-danger">*Zahtevano!</small>
+          <small *ngIf="loginForm.controls['email'].dirty && loginForm.hasError('email','email')" class="notification is-danger">*Ta epoštni naslov ne obstaja!</small>
         </div>
 <!--GESLO-->
       <div class="field has-addons">
@@ -38,10 +38,9 @@
         <p class="control">
             <a (click)="hideShowPassword()" class="button is-medium fas {{eyeIcon}}"></a>
         </p>
-        <!--Če je password polje prazno in je error se spremeni div v clolumn-->
-        <div *ngIf="loginForm.controls['password'].dirty && loginForm.hasError('required','password')" class="column">
-          <small *ngIf="loginForm.controls['password'].dirty && loginForm.hasError('required','password')" class="notification is-danger">*Zahtevano!</small>
       </div>
+      <div class="pb-2">
+        <small *ngIf="loginForm.controls['password'].dirty && loginForm.hasError('required','password')" class="notification is-danger">*Zahtevano!</small>
       </div>
       <div class="field">
 <!--PRIJAVA GUMB & REGISTRACIJA-->

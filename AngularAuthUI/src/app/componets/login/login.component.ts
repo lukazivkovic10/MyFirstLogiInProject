@@ -15,7 +15,7 @@ export class LoginComponent {
   isText: boolean = false;
   eyeIcon: string = "fa-eye";
   loginForm!: FormGroup;
-  constructor(private fb: FormBuilder, private auth: AuthService, private route: Router,private toast: NgToastService, private passwordService: PasswordService) {};
+  constructor(private fb: FormBuilder, private auth: AuthService, private route: Router, private toast: NgToastService, private passwordService: PasswordService) {}
 
   ngOnInit(): void
   {
@@ -35,21 +35,24 @@ export class LoginComponent {
     this.isText ? this.type = "text" : this.type = "password"; //to pa če je true spremeni type v text drugače pa v password
   };
 
-  onLogin()
-  {
-    console.log(this.loginForm.value)
-    //Pošlje v Db
-    this.auth.login(this.loginForm.value)
-    .subscribe({
-      next:(res=>{
+  onLogin() {
+    const encryptedPassword = this.passwordService.encrypt(this.loginForm.value.password);
+  
+    this.loginForm.patchValue({
+      password: encryptedPassword
+    });
+  
+    // Proceed with the login
+    this.auth.login(this.loginForm.value).subscribe({
+      next: (res) => {
         this.loginForm.reset();
         this.auth.storeToken(res.token);
-        this.toast.success({detail:"DOBRODOŠLI V PROGRAM",summary:res.message, duration: 5000});
+        this.toast.success({ detail: "DOBRODOŠLI V PROGRAM", summary: res.message, duration: 5000 });
         this.route.navigate(['dashboard']);
-      }),
-      error:(err)=>{
-        this.toast.error({detail:"NAPAKA", summary:err?.error.message, duration: 5000});
+      },
+      error: (err) => {
+        this.toast.error({ detail: "NAPAKA", summary: err?.error.message, duration: 5000 });
       }
-    })
+    });
   }
 }

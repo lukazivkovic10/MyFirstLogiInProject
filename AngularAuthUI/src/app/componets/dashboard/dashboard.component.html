@@ -15,7 +15,10 @@
                             </a>
                             <div class="navbar-dropdown is-rounded">
                                 <div class="navbar-item">
-                                    <input type="checkbox" id="done" (change)="onDoneCheckboxChange()">
+                                    Skri
+                                </div>
+                                <div class="navbar-item">
+                                    <input type="checkbox" id="done" (change)="onHideDoneCheckboxChange()">
                                     <p>Dokončano</p>
                                 </div>
                                 <div class="navbar-item">
@@ -102,11 +105,13 @@
                             <div class="field">
                                 <h3 class="title is-2">
                                     {{item.itemName}}
-                                    <button (click)="doneCurrent(item)" class="tag is-medium is-success is-rounded">
-                                        <div class="icons">
-                                            <i class="fas fa-check"></i>
-                                        </div>
-                                    </button>
+                                    <div class="tooltip" data-tooltip="Opravljeno">
+                                        <button (click)="doneCurrent(item)" class="tag is-medium is-success is-rounded">
+                                            <div class="icons">
+                                                <i class="fas fa-check"></i>
+                                            </div>
+                                        </button>  
+                                    </div>
                                 </h3>
                                 <hr class="solid">
                                 <h5 class="subtitle is-5">{{item.itemDesc}}</h5>
@@ -134,9 +139,11 @@
                         </div>
                     </span>
                     <!--Soft Izbrisana-->
-                    <div class="box" style="background-color: hsl(0, 0%, 96%);" *ngIf="!hideDeleted &&item.itemStatus==0">
+                    <div class="box" style="background-color: hsl(0, 0%, 96%);" *ngIf="!hideDeleted && item.itemStatus==0">
                         <div class="field">
+                            <div class="tooltip" data-tooltip="Izbrisano">
                             <h3 class="title has-text-grey-light is-2"><s>{{item.itemName}}</s></h3>
+                            </div>
                             <hr class="solid">
                             <h5 class="subtitle has-text-grey-lighter is-5"><s>{{item.itemDesc}}</s></h5>
                         </div>
@@ -159,16 +166,20 @@
                         </div>
                     </div>
                     <!--Narejena-->
-                    <div class="box"style="background-color: #48c78e;" *ngIf="item.itemStatus==1 && item.active==0">
+                    <div class="box"style="background-color: #48c78e;" *ngIf="!hideDone && item.itemStatus==1 && item.active==0">
                         <div class="field">
                             <h3 class="title has-text-white is-2">
+                                <div class="tooltip" data-tooltip="Dokončano">
                                 <i class="fas fa-check"></i>
                                 {{item.itemName}}
+                                </div>
+                                <div class="tooltip" data-tooltip="Ne Opravljeno">
                                 <button (click)="notDoneCurrent(item)" class="tag is-medium is-danger is-rounded">
                                     <div class="icons">
                                         <i class="fas  fa-xmark"></i>
                                     </div>
                                 </button>
+                                </div>
                             </h3>
                             <hr class="solid">
                             <h4 class="subtitle has-text-white is-4">{{item.itemDesc}}</h4>
@@ -177,7 +188,7 @@
                         <div class="field">
                             <div class="columns">
                                 <div class="column">
-                                    <small style="color: white;">Opravljeno je bilo do: {{item.completeDate | date:'HH:mm dd.MM.yyyy'}}</small>
+                                    <small style="color: white;">Opravljeno je bilo dne: {{item.dateOfCompletion | date:'HH:mm dd.MM.yyyy'}}</small>
                                 </div>
                                 <div class="column">
                                     <div class="tags has-addons">
@@ -198,8 +209,10 @@
                     <div class="box" style="background-color: hsl(348, 100%, 61%);" *ngIf="!hideNotDone && item.itemStatus == 2 && item.active != 0">
                         <div class="field">
                             <h3 class="title has-text-white is-2">
+                                <div class="tooltip" data-tooltip="Pretekel rok">
                                 <i class="fas fa-xmark"></i>
                                 {{item.itemName}}
+                                </div>
                             </h3>
                             <hr class="solid">
                             <h4 class="subtitle has-text-white is-4">{{item.itemDesc}}</h4>
@@ -218,6 +231,39 @@
                                             </div>
                                         </span>
                                     <span class="tag is-rounded is-whites is-small has-text-danger">
+                                        {{item.tag}}
+                                    </span>
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Narejena-->
+                    <div class="box"style="background-color: #48c78e;" *ngIf="!hideDone && item.itemStatus==2 && item.active==1">
+                        <div class="field">
+                            <h3 class="title has-text-white is-2">
+                                <div class="tooltip" data-tooltip="Dokončano">
+                                <i class="fas fa-check"></i>
+                                {{item.itemName}}
+                                </div>
+                            </h3>
+                            <hr class="solid">
+                            <h4 class="subtitle has-text-white is-4">{{item.itemDesc}}</h4>
+                        </div>
+                        <hr class="slim">
+                        <div class="field">
+                            <div class="columns">
+                                <div class="column">
+                                    <small style="color: white;">Opravljeno je bilo dne: {{item.dateOfCompletion| date:'HH:mm dd.MM.yyyy'}}</small>
+                                </div>
+                                <div class="column">
+                                    <div class="tags has-addons">
+                                        <span class="tag is-rounded is-dark is-small has-text-success">
+                                            <div class="icons">
+                                                <i class="fas fa-tag"></i>
+                                            </div>
+                                        </span>
+                                    <span class="tag is-rounded is-whites is-small has-text-success">
                                         {{item.tag}}
                                     </span>
                                     </div>  
