@@ -14,7 +14,11 @@
                             <input formControlName="tagName"  class="input" type="text" placeholder="Ime oznake">
                         </div>
                         <div class="column">
-                            <button (click)="onCreate()" class="button is-success">+</button>
+                            <div class="tooltip" data-tooltip="Ustvari">
+                                <button (click)="onCreate()" class="button is-success">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>  
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -24,11 +28,17 @@
                     <div class="columns is-flex is-align-items-center is-flex-wrap-wrap">
                         <div class="column">
                             <div class="title">
-                                {{tag.tagName}}
+                                <div class="tooltip" data-tooltip="Ime oznake">
+                                    {{tag.tagName}}   
+                                </div>
                             </div>
                         </div>
                         <div class="column is-2">
-                            <button (click)="onDelete(tag)" class="button is-danger">x</button>
+                            <div class="tooltip" data-tooltip="Izbriši">
+                                <button (click)="onDelete(tag)" class="button is-danger">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button> 
+                            </div>
                         </div>
                     </div>
                 </div>   

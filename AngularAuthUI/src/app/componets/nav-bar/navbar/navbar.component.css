@@ -2,3 +2,29 @@
     height: 50px;
     border-radius: 50px;
 }
+
+.navbar
+{
+    height: 56px;
+    padding-left: 75px;
+    padding-right: 65px;
+    border-radius: 5px;
+}
+
+.button
+{
+    border: none;
+    border-radius: 10px;
+    background-color: hsl(0, 0%, 98%);
+    transition: 0.5s;
+}
+
+.button:hover
+{
+    background-color: hsl(217, 71%, 91%);
+    color: hsl(217, 71%, 53%);
+    transform: scale(1.05);
+}
+
+@media (max-width: 1025px) {
+}

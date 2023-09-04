@@ -4,7 +4,6 @@ namespace AngularAuthAPI.Models
 {
     public class Items
     {
-        [Key]
         public int Id { get; set; }
         public string Tag { get; set; }
         public string ItemName { get; set; }
@@ -14,5 +13,10 @@ namespace AngularAuthAPI.Models
         public DateTime CreatedDate { get; set; }
         public DateTime CompleteDate { get; set; }
         public DateTime DateOfCompletion { get; set; }
+        public int TimeTakenSeconds { get; set; }
+        public string? TimeTaken { get; set; }
+
+        public string FormattedCreatedDate { get; set; }
+        public string FormattedDateOfCompletion { get; set; }
     }
 }

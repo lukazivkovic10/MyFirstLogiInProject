@@ -16,7 +16,7 @@
                     <i class="fas fa-user"></i>
                   </span>
                 </p>
-                <div *ngIf="signUpForm.controls['Firstname'].dirty && signUpForm.hasError('required','Firstname')" class="column is-half">
+                <div *ngIf="signUpForm.controls['Firstname'].dirty && signUpForm.hasError('required','Firstname')" class="column is-4">
                   <small *ngIf="signUpForm.controls['Firstname'].dirty && signUpForm.hasError('required','Firstname')" class="notification is-danger">*Zahtevano!</small>
                 </div>
               </div>
@@ -29,7 +29,7 @@
                     <i class="fas fa-signature"></i>
                   </span>
                 </p>
-                <div *ngIf="signUpForm.controls['Lastname'].dirty && signUpForm.hasError('required','Lastname')" class="column is half">
+                <div *ngIf="signUpForm.controls['Lastname'].dirty && signUpForm.hasError('required','Lastname')" class="column is-4">
                   <small *ngIf="signUpForm.controls['Lastname'].dirty && signUpForm.hasError('required','Lastname')" class="notification is-danger">*Zahtevano!</small>
                 </div>
               </div>
@@ -66,11 +66,12 @@
       <div class="pb-2">
         <small *ngIf="signUpForm.controls['password'].dirty && signUpForm.hasError('required','password')" class="notification is-danger">*Zahtevano!</small>
         <small *ngIf="signUpForm.controls['password'].dirty && signUpForm.hasError('pattern','password')" class="notification is-danger">*Geslo bi naj vsebovalo vsaj eno malo črko[a-z], eno veliko črko[A-Z], eno številko[0-9] in en poseben znak[!-?]!</small>
+        <small *ngIf="signUpForm.controls['password'].dirty && signUpForm.hasError('minLength','password')" class="notification is-danger">*Geslo mora biti vsaj 8 znakov dalgo!</small>
       </div>
 <!--Gumb Registracija in tekst za prijavo-->
       <div class="field">
     <div class = "columns">
-        <div class = "column is-one-fifth">
+        <div class = "column">
         <p class="control" routerLink="/signup">
           <button [disabled]="signUpForm.invalid" (click)="onSignup()" class="button is-warning is-medium is-fullwidth">
             Registracija
@@ -78,10 +79,8 @@
         </p>
     </div>
     <div class = "column my-auto">
-        <p class="control" >
             <b>Že imaš račun?</b>
             <a id="forget" routerLink="/login"> Prijava </a>
-          </p>
       </div>
     </div>
 </div>

@@ -1,10 +1,9 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgToastService } from 'ng-angular-popup';
-import { AuthService } from 'src/app/services/auth.service';
-import { ModelContentComponent } from '../models/model-content/model-content.component';
 import { SharedDataService } from 'src/app/services/shared-data-service.service';
 import { SearchTagService } from 'src/app/services/search-tag.service';
+import { ListService } from 'src/app/services/list.service';
 
 @Component({
   selector: 'app-search',
@@ -16,7 +15,7 @@ export class SearchComponent implements OnInit {
   public items:any = [];
 
   @Output() searchTagEvent = new EventEmitter<string>();
-  constructor(private auth: AuthService,private fb: FormBuilder,private toast: NgToastService,  private sharedDataService: SharedDataService, private searchService: SearchTagService) {};
+  constructor(private list: ListService,private fb: FormBuilder,private toast: NgToastService,  private sharedDataService: SharedDataService, private searchService: SearchTagService) {};
   searchForm!: FormGroup;
   
   ngOnInit(): void {
@@ -26,7 +25,7 @@ export class SearchComponent implements OnInit {
   }
 
   onSearch(){
-    this.auth.SearchItem(this.searchForm.value)
+    this.list.SearchItem(this.searchForm.value)
     .subscribe(
       (res: any)=>{
         console.log(res);

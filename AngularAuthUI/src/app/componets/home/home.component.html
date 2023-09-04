@@ -1,46 +1,64 @@
-
-<section class="section is-large">
-  <div class="container is-fluid">
+<body>
+  <section class="section">
     <p class="title">
-      Welcome
+      Grafi opravil
     </p>
-<table class="table is-striped is-bordered is-narrow is-fullwidth is-hoverable">
-   <thead>
-       <tr>
-          <th class="has-text-danger" scope="col" >
-            <span class="icons">
-              <i class="fas fa-hashtag"></i>
-            </span>
-          </th>
-          <th class="has-text-danger" scope="col">
-            <span class="icons">
-              <i class="fas fa-user"></i>
-            </span>
-            Ime
-          </th>
-          <th class="has-text-danger" scope="col">
-            <span class="icons">
-              <i class="fas fa-signature"></i>
-            </span>
-            Priimek
-          </th>
-          <th class="has-text-danger" scope="col">
-            <span class="icons">
-              <i class="fas fa-solid fa-inbox"></i>
-            </span>
-            Elektronski naslov
-          </th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr *ngFor="let user of users; let i= index">
-          <td >{{i+1}}</td>
-          <td>{{user.firstName}}</td>
-          <td>{{user.lastName}}</td>
-          <td>{{user.email}}</td>
-      </tr>
-
-  </tbody>
-</table>
-</div>
-</section>
+    <div class="columns">
+      <div class="column">
+        <div class="box">
+          <app-stacked-graph></app-stacked-graph> 
+        </div>
+      </div>
+      <div class="column">
+        <div class="box">
+          <app-percentage-graph></app-percentage-graph>
+        </div>
+      </div>
+      <div class="column">
+        <div class="box">
+          <app-timeline-chart></app-timeline-chart>
+        </div> 
+      </div>
+    </div>
+    <div class="container is-fluid">
+  <table class="table is-striped is-bordered is-narrow is-fullwidth is-hoverable">
+     <thead>
+         <tr>
+            <th class="has-text-danger" scope="col" >
+              <span class="icons">
+                <i class="fas fa-hashtag"></i>
+              </span>
+            </th>
+            <th class="has-text-danger" scope="col">
+              <span class="icons">
+                <i class="fas fa-user"></i>
+              </span>
+              Ime
+            </th>
+            <th class="has-text-danger" scope="col">
+              <span class="icons">
+                <i class="fas fa-signature"></i>
+              </span>
+              Priimek
+            </th>
+            <th class="has-text-danger" scope="col">
+              <span class="icons">
+                <i class="fas fa-solid fa-inbox"></i>
+              </span>
+              Elektronski naslov
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let user of users; let i= index">
+            <td >{{i+1}}</td>
+            <td>{{user.firstName}}</td>
+            <td>{{user.lastName}}</td>
+            <td>{{user.email}}</td>
+        </tr>
+  
+    </tbody>
+  </table>
+  </div>
+  </section>
+</body>

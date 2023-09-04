@@ -1,17 +1,15 @@
 <!--Iskalnik-->
-<div class="navbar">
     <form [formGroup]="searchForm">
         <div class="field has-addons">
             <div class="control">
-                <button (click)="onSearch()" class="button is-rounded is-link">
-                    <span class="icon is-medium">
+                <button (click)="onSearch()" class="button is-link">
+                    <span class="icon">
                         <i class="fas fa-magnifying-glass"></i>
                     </span>
                 </button>
             </div>
             <div class="control">
-                <input class="input is-rounded"formControlName="search" type="text" placeholder="Ime seznama opravil">
+                <input class="input"formControlName="search" type="text" placeholder="Išči...">
             </div>
         </div>
-    </form>
-</div>
+    </form>  

@@ -7,3 +7,20 @@
 {
     padding: 0.25rem 0.5rem 0.25rem 0.5rem;
 }
+
+.container
+{
+    width: 30vw;
+}
+
+.button
+{
+    width: 120px;
+}
+
+@media (max-width: 1200px) {
+    .container
+   {
+    width: 500px;
+   }
+}

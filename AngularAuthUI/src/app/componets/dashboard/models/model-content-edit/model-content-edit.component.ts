@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service';
+import { ListService } from 'src/app/services/list.service';
+import { TagsService } from 'src/app/services/tags.service';
 
 interface Tag
 {
@@ -25,18 +26,18 @@ export class ModelContentEditComponent {
   };
 
   @Output() close = new EventEmitter<void>();
-  constructor(private auth: AuthService,private fb: FormBuilder, private router: Router) 
+  constructor(private list: ListService,private fb: FormBuilder, private router: Router, private tagService: TagsService) 
   { };
 
   ngOnInit() {
     this.updateForm = this.fb.group({
       Tag: ['',Validators.required],
       ItemName: ['',Validators.required],
-      ItemDesc: ['',Validators.required],
-      CompleteDate: ['',Validators.required],
-      Active: ['',Validators.required]
+      ItemDesc: [''],
+      CompleteDate: [''],
+      Active: ['']
     });
-    this.auth.GetTags().subscribe(
+    this.tagService.GetTags().subscribe(
       (res:any)=>{
         this.tags = res;
       }
@@ -63,7 +64,7 @@ export class ModelContentEditComponent {
         ItemName: itemName,
         ItemDesc: itemDesc
       };
-      this.auth.UpdateItem(data).subscribe
+      this.list.UpdateItem(data).subscribe
       ({next:(
         res=>{
           this.errors = res;
@@ -79,7 +80,7 @@ export class ModelContentEditComponent {
       ItemDesc: itemDesc,
       CompleteDate: completeDate
     };
-      this.auth.UpdateItemDate(data).subscribe
+      this.list.UpdateItemDate(data).subscribe
       ({next:(
         res=>{
           this.errors = res;
@@ -95,7 +96,7 @@ export class ModelContentEditComponent {
         ItemDesc: itemDesc,
         Active: active
       };
-      this.auth.UpdateItemStatus(data).subscribe
+      this.list.UpdateItemStatus(data).subscribe
       ({next:(
         res=>{
           this.errors = res;

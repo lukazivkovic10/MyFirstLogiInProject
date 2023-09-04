@@ -1,21 +1,14 @@
 ﻿using AngularAuthAPI.Context;
+using AngularAuthAPI.Dtos;
 using AngularAuthAPI.Helper;
 using AngularAuthAPI.Models;
-using Dapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.VisualBasic;
-using System;
-using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace AngularAuthAPI.Controllers
 {
@@ -23,32 +16,36 @@ namespace AngularAuthAPI.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        ///PRIJAVA IN REGISTRACIJA
         private readonly AppDbContext _authContext;
-        private readonly IConfiguration _config;
-        public UserController(AppDbContext appDbContext, IConfiguration configuration)
+        public UserController(AppDbContext appDbContext)
         {
             _authContext = appDbContext;
-            _config = configuration;
         }
 
         [HttpGet("userList")]
-        public ActionResult<IEnumerable<User>> GetUsers()
+        public ActionResult<IEnumerable<UserDto>> GetUsers()
         {
-            return Ok(_authContext.Users);
+            var userDtos = _authContext.Users.Select(user => new UserDto
+            {
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName
+            }).ToList();
+
+            return Ok(userDtos);
         }
 
         [HttpPost("authenticate")]
-        public async Task<IActionResult> Authenticate([FromBody] User userObj)
+        public async Task<IActionResult> Authenticate([FromBody] UserCredentialsDto credentials)
         {
-            if (userObj.Email == null || userObj.Password == null)
+            if (credentials.Email == null || credentials.Password == null)
             {
                 return BadRequest(new { Message = "Prazna zahtevana polja!" });
             }
             else
             {
                 var user = await _authContext.Users
-                    .FirstOrDefaultAsync(x => x.Email == userObj.Email);
+                    .FirstOrDefaultAsync(x => x.Email == credentials.Email);
 
                 if (user == null)
                 {
@@ -57,7 +54,7 @@ namespace AngularAuthAPI.Controllers
                 else
                 {
                     // Decrypt the provided password
-                    string decryptedPassword = DecryptPassword(userObj.Password);
+                    string decryptedPassword = DecryptPassword(credentials.Password);
 
                     if (decryptedPassword == null || !PasswordHasher.VerifyPassword(decryptedPassword, user.Password))
                     {
@@ -77,15 +74,15 @@ namespace AngularAuthAPI.Controllers
         }
 
         [HttpPost("Registracija")]
-        public async Task<IActionResult> RegisterUser([FromBody] User userObj)
+        public async Task<IActionResult> RegisterUser([FromBody] UserRegistrationDto registrationDto)
         {
-            if (userObj == null)
+            if (registrationDto == null)
             {
                 return BadRequest(new { Message = "Prazna zahtevana polja!" });
             }
 
             // Decrypt the provided password
-            string decryptedPassword = DecryptPassword(userObj.Password);
+            string decryptedPassword = DecryptPassword(registrationDto.Password);
 
             if (string.IsNullOrEmpty(decryptedPassword))
             {
@@ -100,12 +97,20 @@ namespace AngularAuthAPI.Controllers
             }
 
             // Proceed with the registration process
-            if (await CheckEmailExistAsync(userObj.Email))
+            if (await CheckEmailExistAsync(registrationDto.Email))
             {
                 return BadRequest(new { Message = "Elektronska pošta že v uporabi" });
             }
 
-            userObj.Password = PasswordHasher.HashPassword(decryptedPassword);
+            // Create a User object from the DTO properties
+            var userObj = new User
+            {
+                FirstName = registrationDto.FirstName,
+                LastName = registrationDto.LastName,
+                Email = registrationDto.Email,
+                Password = PasswordHasher.HashPassword(decryptedPassword)
+            };
+
             await _authContext.Users.AddAsync(userObj);
             await _authContext.SaveChangesAsync();
 
@@ -154,521 +159,6 @@ namespace AngularAuthAPI.Controllers
             };
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
             return jwtTokenHandler.WriteToken(token);
-        }
-
-        ///TO DO LIST
-
-        [HttpGet("IskanjeListaVseh")]
-        public async Task<ActionResult<Response<object>>> GetAllItems()
-        {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            IEnumerable<Items> items = await SelectAllItems(connection);
-            ////Preveri
-            if (items == null )
-            {
-                //Error 404
-                var erorrResponse = new Response<object>
-                {
-                    Success = false,
-                    Error = 404,
-                    Message = "Podatki ne obstajajo",
-                    Data = "404"
-                };
-
-                return erorrResponse;
-            }else
-            {
-                //Uspesno
-
-                DateTime currentDate = DateTime.Now;
-                List<Items> data = new List<Items>();
-
-                foreach (var item in items)
-                {
-                    if (currentDate > item.CompleteDate)
-                    {
-                        PosodobiStatus(connection, item.Id, 2);
-                    }
-                    else if (currentDate < item.CompleteDate)
-                    {
-                        PosodobiStatus(connection, item.Id, 1);
-                    }
-
-                    data.Add(item);
-                }
-                var successResponse = new Response<object>
-                {
-                    Success = true,
-                    Error = 200,
-                    Message = "Pridobljeni podatki.",
-                    Data = data
-                };
-
-                return successResponse;
-            }
-        }
-
-        [HttpGet("PrikazOpravljenih")]
-        public async Task<ActionResult<Response<object>>> GetAllDoneItems()
-        {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var exists = connection.ExecuteScalar<bool>("select * from Items where Active = '0' and ItemStatus = '1'");
-            ////Preveri
-            if (exists == false)
-            {
-                //Error 404
-                var erorrResponse = new Response<object>
-                {
-                    Success = false,
-                    Error = 404,
-                    Message = "Podatki ne obstajajo",
-                    Data = "404"
-                };
-
-                return erorrResponse;
-            }
-            else
-            {
-                //Uspesno
-                var data = await connection.QueryAsync<Items>("select * from Items where Active = '0' and ItemStatus = '1'");
-                var successResponse = new Response<object>
-                {
-                    Success = true,
-                    Error = 200,
-                    Message = "Pridobljeni podatki.",
-                    Data = data
-                };
-
-                return successResponse;
-            }
-        }
-
-        [HttpGet("IskanjeLista/{SearchedItem}")]
-        public async Task<ActionResult<Response<object>>> GetItems(string SearchedItem)
-        {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var existsWithTag = connection.ExecuteScalar<bool>("select count(1) from Items where Tag = @SearchedItem", new { SearchedItem });
-
-            if (existsWithTag)
-            {
-                var data = await connection.QueryAsync<Items>("select * from Items where Tag = @SearchedItem", new { SearchedItem });
-                var successResponse = new Response<object>
-                {
-                    Success = true,
-                    Error = 200,
-                    Message = "Pridobljeni podatki.",
-                    Data = data
-                };
-
-                return successResponse;
-            }
-            else
-            {
-                var existsWithItemName = connection.ExecuteScalar<bool>("select count(1) from Items where ItemName = @SearchedItem", new { SearchedItem });
-
-                if (existsWithItemName)
-                {
-                    var data = await connection.QueryAsync<Items>("select * from Items where ItemName = @SearchedItem", new { SearchedItem });
-                    var successResponse = new Response<object>
-                    {
-                        Success = true,
-                        Error = 200,
-                        Message = "Pridobljeni podatki.",
-                        Data = data
-                    };
-
-                    return successResponse;
-                }
-                else
-                {
-                    //Error 404
-                    var errorResponse = new Response<object>
-                    {
-                        Success = false,
-                        Error = 404,
-                        Message = "Podatki ne obstajajo",
-                        Data = "404"
-                    };
-
-                    return errorResponse;
-                }
-            }
-        }
-
-        [HttpPut("Update")]
-
-        public async Task<ActionResult<Response<object>>> UpdateItem(Items items)
-        {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var exists = connection.ExecuteScalar<bool>("select count(1) from Items where ItemName = @ItemName and Tag = @Tag", new { items.ItemName, items.Tag });
-            ////Preveri
-            if (exists == false)
-            {
-                var erorrResponse = new Response<object>
-                {
-                    Success = false,
-                    Error = 404,
-                    Message = "Bad Request - Iskano ne obstaja",
-                    Data = "404"
-                };
-
-                return erorrResponse;
-            }
-            else
-            {
-                await connection.ExecuteAsync("update Items set ItemName = @ItemName, ItemDesc = @ItemDesc where Tag = @Tag and ItemName = @ItemName", items);
-                IEnumerable<Items> data = await SelectAllItems(connection);
-                var successResponse = new Response<object>
-                {
-                    Success = true,
-                    Error = 200,
-                    Message = "200 Success - Pridobljeni podatki.",
-                    Data = items
-                };
-
-                return successResponse;
-            }
-        }
-
-        [HttpPut("UpdateStatus")]
-        public async Task<ActionResult<Response<object>>> UpdateStatus(Items items)
-        {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-
-            var exists = connection.ExecuteScalar<bool>("SELECT COUNT(1) FROM Items WHERE ItemName = @ItemName AND Tag = @Tag", new { items.ItemName, items.Tag });
-
-            if (!exists)
-            {
-                var errorResponse = new Response<object>
-                {
-                    Success = false,
-                    Error = 404,
-                    Message = "Bad Request - Item not found",
-                    Data = "404"
-                };
-
-                return errorResponse;
-            }
-            else
-            {
-                var currentItem = connection.QuerySingleOrDefault<Items>("SELECT ItemDesc FROM Items WHERE ItemName = @ItemName AND Tag = @Tag", new { items.ItemName, items.Tag });
-                items.ItemDesc = currentItem.ItemDesc;
-
-                // Update the CompleteDate
-                await connection.ExecuteAsync("UPDATE Items SET Active = @Active, ItemStatus = 1 WHERE Tag = @Tag AND ItemName = @ItemName", new { items.Active, items.Tag, items.ItemName });
-
-                var data = await SelectAllItems(connection);
-
-                var successResponse = new Response<object>
-                {
-                    Success = true,
-                    Error = 200,
-                    Message = "Success - Data retrieved.",
-                    Data = data
-                };
-
-                return successResponse;
-            }
-        }
-
-        [HttpPut("UpdateDate")]
-        public async Task<ActionResult<Response<object>>> UpdateDate(Items items)
-        {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-
-            var exists = connection.ExecuteScalar<bool>("SELECT COUNT(1) FROM Items WHERE ItemName = @ItemName AND Tag = @Tag", new { items.ItemName, items.Tag });
-
-            if (!exists)
-            {
-                var errorResponse = new Response<object>
-                {
-                    Success = false,
-                    Error = 404,
-                    Message = "Bad Request - Item not found",
-                    Data = "404"
-                };
-
-                return errorResponse;
-            }
-            else
-            {
-                var currentItem = connection.QuerySingleOrDefault<Items>("SELECT ItemDesc FROM Items WHERE ItemName = @ItemName AND Tag = @Tag", new { items.ItemName, items.Tag });
-                items.ItemDesc = currentItem.ItemDesc;
-
-                // Update the CompleteDate
-                await connection.ExecuteAsync("UPDATE Items SET CompleteDate = @CompleteDate WHERE Tag = @Tag AND ItemName = @ItemName", new { items.CompleteDate, items.Tag, items.ItemName });
-
-                var data = await SelectAllItems(connection);
-
-                var successResponse = new Response<object>
-                {
-                    Success = true,
-                    Error = 200,
-                    Message = "Success - Data retrieved.",
-                    Data = data
-                };
-
-                return successResponse;
-            }
-        }
-
-        [HttpPut("Opravljeno")]
-        public async Task<ActionResult<Response<object>>> DoneItem(Items items)
-        {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var exists = connection.ExecuteScalar<bool>("select count(1) from Items where ItemName = @ItemName and Tag = @Tag", new { items.ItemName, items.Tag });
-
-            if (exists == false)
-            {
-                // Error 404
-                var errorResponse = new Response<object>
-                {
-                    Success = false,
-                    Error = 404,
-                    Message = "Iskano ne obstaja",
-                    Data = "404"
-                };
-
-                return errorResponse;
-            }
-            else
-            {
-                // Update the Active status and DateOfCompletion
-                await connection.ExecuteAsync("update Items set Active = '0', DateOfCompletion = @CurrentDate where ItemName = @ItemName and Tag = @Tag",
-                    new { items.ItemName, items.Tag, CurrentDate = DateTime.Now });
-
-                IEnumerable<Items> data = await SelectAllItems(connection);
-                var successResponse = new Response<object>
-                {
-                    Success = true,
-                    Error = 200,
-                    Message = "Pridobljeni podatki.",
-                    Data = data
-                };
-
-                return successResponse;
-            }
-        }
-
-        [HttpPut("NiOpravljeno")]
-
-        public async Task<ActionResult<Response<object>>> NotDoneItem(Items items)
-        {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var exists = connection.ExecuteScalar<bool>("select count(1) from Items where ItemName = @ItemName and Tag = @Tag", new { items.ItemName, items.Tag });
-            ////Preveri
-            if (exists == false)
-            {
-                ///Error 404
-                var erorrResponse = new Response<object>
-                {
-                    Success = false,
-                    Error = 404,
-                    Message = "Iskano ne obstaja",
-                    Data = "404"
-                };
-
-                return erorrResponse;
-            }
-            else
-            {
-                await connection.ExecuteAsync("update Items set Active = '1' where ItemName = @ItemName and Tag = @Tag", items);
-                IEnumerable<Items> data = await SelectAllItems(connection);
-                var successResponse = new Response<object>
-                {
-                    Success = true,
-                    Error = 200,
-                    Message = "Pridobljeni podatki.",
-                    Data = data
-                };
-
-                return successResponse;
-            }
-        }
-
-        [HttpPost("Ustvarjanje")]
-        public async Task<ActionResult<Response<object>>> CreateItem(Items items)
-        {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var exists = connection.ExecuteScalar<bool>("select count(1) from Items where ItemName = @ItemName and Tag = @Tag", new { items.ItemName, items.Tag });
-            if(exists == true) 
-            {
-                //Error 400
-                var erorrResponse = new Response<object>
-                {
-                    Success = false,
-                    Error = 400,
-                    Message = "Ime že obstaja",
-                    Data = "400"
-                };
-
-                return erorrResponse;
-            }else
-            {
-                var item = await connection.ExecuteAsync("if not exists (select * from items where ItemName = @ItemName and Tag = @Tag) insert into Items (Tag, ItemName, ItemDesc, Active, ItemStatus, CreatedDate, CompleteDate) values (@Tag, @ItemName, @ItemDesc, @Active, @ItemStatus, @CreatedDate, @CompleteDate)", items);
-                IEnumerable<Items> data = await SelectAllItems(connection);
-                var successResponse = new Response<object>
-                {
-                    Success = true,
-                    Error = 200,
-                    Message = "Pridobljeni podatki.",
-                    Data = data
-                };
-
-                return successResponse;
-            }
-        }
-
-        [HttpDelete("SoftDelete{ItemName}")]
-
-        public async Task<ActionResult<Response<object>>> SoftDeleteItem(string ItemName)
-        {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var exists = connection.ExecuteScalar<bool>("select count(1) from Items where ItemName = @ItemName", new { ItemName });
-            if (exists == true)
-            {
-                await connection.ExecuteAsync("update Items set ItemStatus = '0' where ItemName = @ItemName",
-                new { ItemName = ItemName });
-                IEnumerable<Items> data = await SelectAllItems(connection);
-                var successResponse = new Response<object>
-                {
-                    Success = true,
-                    Error = 200,
-                    Message = "Pridobljeni podatki.",
-                    Data = data
-                };
-
-                return successResponse;
-            }
-            else
-            {
-                ///Error 404
-                var erorrResponse = new Response<object>
-                {
-                    Success = false,
-                    Error = 404,
-                    Message = "Ime ne obstaja",
-                    Data = "404"
-                };
-
-                return erorrResponse;
-            }
-        }
-
-        ///Tags 
-
-        [HttpGet("VseTags")]
-
-        public async Task<ActionResult<Response<object>>> GetAllTags()
-        {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var exists = connection.ExecuteScalar<bool>("select * from Tags");
-            ////Preveri
-            if (exists == false)
-            {
-                //Error 404
-                var erorrResponse = new Response<object>
-                {
-                    Success = false,
-                    Error = 404,
-                    Message = "Podatki ne obstajajo",
-                    Data = "404"
-                };
-
-                return erorrResponse;
-            }
-            else
-            {
-                //Uspesno
-                var data = await connection.QueryAsync<Tags>("select * from Tags");
-                var successResponse = new Response<object>
-                {
-                    Success = true,
-                    Error = 200,
-                    Message = "Pridobljeni podatki.",
-                    Data = data
-                };
-
-                return successResponse;
-            }
-        }
-
-
-        [HttpPost("UstvarjanjeTag")]
-        public async Task<ActionResult<Response<object>>> CreateTag(Tags tags)
-        {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var exists = connection.ExecuteScalar<bool>("select count(1) from Tags where TagName = @TagName", new { tags.TagName });
-            if (exists == true)
-            {
-                //Error 400
-                var erorrResponse = new Response<object>
-                {
-                    Success = false,
-                    Error = 400,
-                    Message = "Ime že obstaja",
-                    Data = "400"
-                };
-
-                return erorrResponse;
-            }
-            else
-            {
-                var item = await connection.ExecuteAsync("if not exists (select * from Tags where TagName = @TagName) insert into Tags (TagName) values (@TagName)", tags);
-                var successResponse = new Response<object>
-                {
-                    Success = true,
-                    Error = 200,
-                    Message = "Oznaka narejena.",
-                    Data = item
-                };
-
-                return successResponse;
-            }
-        }
-
-        [HttpPut("IzbrisTag")]
-
-        public async Task<ActionResult<Response<object>>> DeleteTag(Tags tags)
-        {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var exists = connection.ExecuteScalar<bool>("select count(1) from Tags where TagName = @TagName", new { tags.TagName });
-            if (exists == true)
-            {
-                await connection.ExecuteAsync("Delete from Tags where TagName = @TagName and TagId = @TagId", tags);
-                var successResponse = new Response<object>
-                {
-                    Success = true,
-                    Error = 200,
-                    Message = "Pridobljeni podatki.",
-                    Data = null
-                };
-
-                return successResponse;
-            }
-            else
-            {
-                ///Error 404
-                var erorrResponse = new Response<object>
-                {
-                    Success = false,
-                    Error = 404,
-                    Message = "Ime ne obstaja",
-                    Data = "404"
-                };
-
-                return erorrResponse;
-            }
-        }
-
-        private void PosodobiStatus(SqlConnection connection, int itemId, int itemStatus)
-        {
-            string query = "UPDATE Items SET ItemStatus = @itemStatus WHERE Id = @itemId AND Active <> 0 AND ItemStatus <> 0";
-            connection.Execute(query, new { itemStatus, itemId });
-        }
-        private static async Task<IEnumerable<Items>> SelectAllItems(SqlConnection connection)
-        {
-            return await connection.QueryAsync<Items>("select * from Items order by Tag");
         }
 
         private readonly string encryptionKey = "EncryptionKey";

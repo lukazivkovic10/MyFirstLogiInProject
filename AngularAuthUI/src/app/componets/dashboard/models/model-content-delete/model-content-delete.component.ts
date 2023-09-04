@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from 'src/app/services/auth.service';
+import { ListService } from 'src/app/services/list.service';
+import { TagsService } from 'src/app/services/tags.service';
 
 interface Tag
 {
@@ -24,7 +25,7 @@ export class ModelContentDeleteComponent {
   };
   @Output() close = new EventEmitter<void>();
 
-  constructor(private auth: AuthService,private fb: FormBuilder) 
+  constructor(private list: ListService,private fb: FormBuilder, private tagService: TagsService) 
   { };
 
   ngOnInit() {
@@ -32,7 +33,7 @@ export class ModelContentDeleteComponent {
       tag: ['',Validators.required],
       ItemName: ['']
     });
-    this.auth.GetTags().subscribe(
+    this.tagService.GetTags().subscribe(
       (res:any)=>{
         this.tags = res;
       }
@@ -49,7 +50,7 @@ export class ModelContentDeleteComponent {
   {
     if(this.deleteForm.valid)
     {
-      this.auth.DeleteItem(this.deleteForm.value)
+      this.list.DeleteItem(this.deleteForm.value)
       .subscribe({
         next:(
           res=>{

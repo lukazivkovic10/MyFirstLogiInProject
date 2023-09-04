@@ -6,6 +6,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { RouterModule, Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { NgToastModule } from 'ng-angular-popup';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 //Components
 import { AppComponent } from './app.component';
@@ -20,6 +22,9 @@ import { ModelContentEditComponent } from './componets/dashboard/models/model-co
 import { ModelContentComponent } from './componets/dashboard/models/model-content/model-content.component';
 import { SearchComponent } from './componets/dashboard/search/search.component';
 import { ModelTagsComponent } from './componets/dashboard/models/model-tags/model-tags.component';
+import { StackedGraphComponent } from './componets/home/graphs/stacked-graph/stacked-graph.component';
+import { PercentageGraphComponent } from './componets/home/graphs/percentage-graph/percentage-graph.component';
+import { TimelineChartComponent } from './componets/home/graphs/timeline-chart/timeline-chart.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +39,10 @@ import { ModelTagsComponent } from './componets/dashboard/models/model-tags/mode
     ModelContentEditComponent,
     ModelContentComponent,
     SearchComponent,
-    ModelTagsComponent
+    ModelTagsComponent,
+    StackedGraphComponent,
+    PercentageGraphComponent,
+    TimelineChartComponent
   ],
   imports: [
     BrowserModule,
@@ -42,6 +50,8 @@ import { ModelTagsComponent } from './componets/dashboard/models/model-tags/mode
     ReactiveFormsModule,
     NgToastModule,
     HttpClientModule,
+    NgApexchartsModule,
+    BrowserAnimationsModule,
     RouterModule.forRoot([
       {
         path: 'login',

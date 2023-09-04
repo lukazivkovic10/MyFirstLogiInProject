@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service';
+import { TagsService } from 'src/app/services/tags.service';
 
 interface Tag
 {
@@ -26,7 +26,7 @@ export class ModelTagsComponent implements OnInit {
     data: []
   };
 
-  constructor(private auth: AuthService,private fb: FormBuilder, private router: Router){}
+  constructor(private auth: TagsService,private fb: FormBuilder, private router: Router){}
   ngOnInit(): void {
     this.auth.GetTags().subscribe(
       (res:any)=>{

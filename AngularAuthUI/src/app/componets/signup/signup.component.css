@@ -1,9 +1,31 @@
 .ng-invalid:not(form) 
 {
-    border-left: 5px solid hsl(348, 100%, 61%); /* red */
+    border-left: 5px solid hsl(348, 100%, 61%);
+}
+
+.ng-valid:not(form) 
+{
+    border-left: 5px solid hsl(141, 71%, 48%);
 }
 
 .notification
 {
     padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+}
+
+.container
+{
+    width: 40vw;
+}
+
+.button
+{
+    width: 120px;
+}
+
+@media (max-width: 1200px) {
+    .container
+   {
+    width: 500px;
+   }
 }

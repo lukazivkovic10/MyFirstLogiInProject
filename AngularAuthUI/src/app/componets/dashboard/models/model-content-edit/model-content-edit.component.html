@@ -77,7 +77,7 @@
             </div>
         </section>
         <footer class="modal-card-foot">
-            <button (click)="onUpdate()" class="button is-warning">Uredi</button>
+            <button (click)="onUpdate()" [disabled]="!updateForm.valid" class="button is-warning">Uredi</button>
         </footer>
     </div>
 </div>

@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgToastService } from 'ng-angular-popup';
-import { AuthService } from 'src/app/services/auth.service';
+import { ListService } from 'src/app/services/list.service';
 import { SearchTagService } from 'src/app/services/search-tag.service';
 import { SharedDataService } from 'src/app/services/shared-data-service.service';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 interface Item
 {
@@ -15,6 +16,8 @@ interface Item
   createdDate: Date;
   completeDate: Date;
   dateOfCompletion: Date;
+  TimeTakenSeconds: number;
+  TimeTaken: string;
 }
 
 @Component({
@@ -53,10 +56,11 @@ export class DashboardComponent implements OnInit{
   showModalTags: boolean = false;
 
   public hideNotDone: boolean = false; 
+  public hideNotDoneYet: boolean = false; 
   public hideDeleted: boolean = false;
   public hideDone: boolean = false; 
 
-  constructor(private auth: AuthService, private sharedData: SharedDataService, private searchService: SearchTagService,private toast: NgToastService) 
+  constructor(private auth: ListService, private sharedData: SharedDataService, private searchService: SearchTagService,private toast: NgToastService) 
   {};
 
   ngOnInit() {
@@ -75,6 +79,16 @@ export class DashboardComponent implements OnInit{
     this.searchService.getSearchData().subscribe(data => {
       this.searchData = data;
   });
+  }
+
+  isHovered = false;
+
+  onHover() {
+    this.isHovered = true;
+  }
+
+  onHoverLeave() {
+    this.isHovered = false;
   }
 
 
@@ -119,6 +133,16 @@ export class DashboardComponent implements OnInit{
       this.hideNotDone = true;
     } else {
       this.hideNotDone = false;
+    }
+  }
+
+  onHideNotDoneYetCheckboxChange() {
+    const doneCheckbox = document.getElementById('notDoneYet') as HTMLInputElement;
+  
+    if (doneCheckbox.checked) {
+      this.hideNotDoneYet = true;
+    } else {
+      this.hideNotDoneYet = false;
     }
   }
 

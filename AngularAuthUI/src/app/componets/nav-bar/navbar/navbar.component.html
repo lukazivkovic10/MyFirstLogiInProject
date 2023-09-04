@@ -1,39 +1,53 @@
-<nav class="navbar is-transparent">
+<nav class="navbar has-background-white-bis is-fixed-top">
     <div class="navbar-menu">
       <div class="navbar-start">
       <div class="buttons">
-      <button class="button is-stati is-danger" routerLink="/home">
-        <span class="icons pr-1">
-          <i class="fas fa-home"></i>
-        </span>
-        <p>Home</p>
+      <button class="button is-stati" routerLink="/home">
+        <div class="icon">
+          <i class="fa-solid fa-house-chimney-window"></i>
+        </div>
+        <span>Dom</span>
       </button>
     </div>
       </div>
       <div class="navbar-item">
-        <button class="button is-stati is-link" routerLink="/dashboard">
-            <p>Opravila</p>
+        <button class="button is-stati" routerLink="/dashboard">
+          <div class="icon">
+            <i class="fa-solid fa-rectangle-list"></i>
+          </div>
+            <span>Opravila</span>
         </button>
       </div>
       <div *ngIf="showProfile()===false" class="navbar-item">
         <div class="buttons">
-          <button class="button is-primary" routerLink="/login">
-              Prijava
+          <button class="button" routerLink="/login">
+            <div class="icon">
+              <i class="fa-solid fa-id-badge"></i>
+            </div>
+              <span>Prijava</span>
             </button>
-          <button class="button is-grey-lighter" routerLink="/signup">
-            <strong>Registracija</strong>
+          <button class="button" routerLink="/signup">
+            <div class="icon">
+              <i class="fa-solid fa-address-card"></i>
+            </div>
+            <span>Registracija</span>
           </button>
         </div>
       </div>
       <div *ngIf="showProfile()===true"  class="navbar-item has-dropdown is-hoverable">
         <div class="buttons">
             <button class="button circle">
-                <span class="icons">
-                    <i class="fas fa-user"></i>
+                <span class="icon">
+                  <i class="fa-solid fa-circle-user fas fa-lg"></i>
                 </span>
             </button>
             <div class="navbar-dropdown is-right p-4">
-                <button (click)="logout()" class="button is-dark">Odjava</button>
+                <button (click)="logout()" class="button has-text-dark">
+                  <div class="icon">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                  </div>
+                  <span class="has-text-dark">Odjava</span>
+                </button>
             </div>
         </div>
       </div>

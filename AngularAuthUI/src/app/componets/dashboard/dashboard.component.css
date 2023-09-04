@@ -1,8 +1,78 @@
+body{
+  padding-top: 56px;
+}
 .page-container {
   position: relative;
   min-height: 100vh;
+  margin-left: 5rem;
+  padding: 1rem;
 }
 
+.notdone
+{
+  border-left-style: solid;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-left-width: 5px;
+  border-color: hsl(217, 71%, 45%);
+  transition: all 0.1s ease-in-out;
+}
+
+.notdone:hover
+{
+  border-left-width: 10px;
+}
+
+.done
+{
+  border-left-style: solid;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-left-width: 5px;
+  border-color: hsl(141, 53%, 31%);
+  transition: all 0.1s ease-in-out;
+}
+
+.done:hover
+{
+  border-left-width: 10px;
+}
+
+
+.expired
+{
+  border-left-style: solid;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-left-width: 5px;
+  border-color: hsl(348, 86%, 43%);
+  transition: all 0.1s ease-in-out;
+}
+
+.expired:hover
+{
+  border-left-width: 10px;
+}
+
+.deleted
+{
+  border-left-style: solid;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-left-width: 5px;
+  transition: all 0.1s ease-in-out;
+}
+
+.deleted:hover
+{
+  border-left-width: 10px;
+}
+
+.tag
+{
+  box-shadow: 2px 2px 3px hsl(0, 0%, 86%);
+}
+/*hr*/
 hr.solid
 {
 border-top: 2px solid hsl(0, 0%, 86%);
@@ -21,16 +91,295 @@ border-top: 4px solid hsl(0, 0%, 71%);
 border-radius: 5px;
 }
 
-.sb
+/*Gumb kot checkbox*/
+.checkbox-type
 {
-width: 90px;
-padding: 5px;
-position: relative;
-transition: 1.5s;
-border-color: #485fc7;
+  border-bottom-style: solid;
+  border-width: 2px;
+  border-radius: 10px;
+  border-color: hsl(217, 71%, 45%);
+  transition: all 1s ease;
+  background-color: hsl(217, 71%, 91%);
 }
 
-.sb:hover
+.checkbox-type:hover
 {
-width: 250px;
+  background-color: hsl(141, 53%, 71%);
+  border-color: hsl(141, 53%, 71%);
+  border-radius: 30px;
 }
+
+.checkbox-type-done:hover
+{
+  background-color: hsl(217, 71%, 91%);
+  border-radius: 10px;
+  border-bottom-style: solid;
+  border-color: hsl(217, 71%, 45%);
+}
+
+.checkbox-type-done
+{
+  background-color: hsl(141, 53%, 31%);
+  border-radius: 30px;
+  border-width: 2px;
+  border-color: hsl(141, 53%, 31%);
+  transition: all 1s ease;
+}
+
+.checkbox-type-icon
+{
+  color: hsl(217, 71%, 91%);
+  transition: all 1s ease;
+}
+
+.checkbox-type:hover .checkbox-type-icon
+{
+  color: hsl(141, 53%, 91%);
+}
+
+.checkbox-type-icon-done
+{
+  color: white;
+  transition: all 1s ease;
+}
+
+.checkbox-type-done:hover .checkbox-type-icon-done
+{
+  color: hsl(217, 71%, 91%);
+}
+
+/*Opis*/
+.description
+{
+  font-size: 20px;
+  transition: 0.5s;
+}
+
+.description:hover
+{
+  color: hsl(0, 0%, 6%)
+}
+
+/*Izgled*/
+.box 
+{
+  border-radius: 15px;
+}
+
+/*box za prikaz časa*/
+.time-box
+{
+  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+  box-shadow: 0px 0px 0px 1px hsl(0, 0%, 86%);
+  opacity: 1;
+}
+
+/*Da je v centru*/
+.center 
+{
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+/*Da je v desno*/
+.end
+{
+  display: flex;
+  justify-content: flex-end;
+  align-content: center;
+}
+
+/*Naslovni box*/
+
+.title-box
+{
+  background-color: hsl(217, 71%, 53%);
+  margin-bottom: -12px;
+  border-radius: 15px 15px 0px 0px;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0px;
+  left: 0;
+  height: 100%;
+  width: 70px;
+  background: hsl(0, 0%, 96%);
+  padding: 15px 10px;
+  box-shadow: 0 0 2px hsl(0, 0%, 29%);
+  transition: all 0.4s ease;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.sidebar:hover {
+  width: 250px;
+}
+
+.menu_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 56px;
+  overflow-y: auto;
+  height: calc(100% - 56px);
+}
+
+.menu_container::-webkit-scrollbar {
+  display: none;
+}
+
+.sb-icon
+{
+  color: hsl(0, 0%, 65%);
+  display: flex;
+  min-width: 50px;
+  height: 50px;
+  font-size: 18px;
+  margin-right: 10px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.4s ease;
+}
+
+.sidebar:hover .sb-icon
+{
+  color: hsl(217, 71%, 53%);
+}
+
+.sidebar:hover .sb-text
+{
+  opacity: 1;
+}
+
+.sidebar:hover .item-title
+{
+  color: hsl(217, 71%, 53%);
+}
+
+.item-title
+{
+  list-style: none;
+  transition: all 0.4s ease;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+}
+
+.item 
+{
+  display: block;
+  padding: 1rem;
+  opacity: 0;
+  transition: all 0.4s ease;
+}
+
+.sidebar:hover .item
+{
+  opacity: 1;
+}
+
+.navbar-item a .dropdown
+{
+  position: absolute;
+  right: 0;
+  margin: 20px;
+  transition: 0.4 ease;
+}
+
+.sub-menu
+{
+  display: none;
+  opacity: 0;
+  font-size: 15px;
+  transition: all 0.1s ease;
+}
+
+.dropdown
+{
+  height: 2.5em;
+  padding-bottom: calc(0.5em - 1px);
+  padding-left: calc(0.75em - 1px);
+  padding-right: calc(0.75em - 1px);
+  padding-top: calc(0.5em - 1px);
+  border: none;
+  border-radius: 10px;
+  background-color: hsl(0, 0%, 96%);
+  transition: 0.5s;
+  cursor: default;
+}
+
+.dropdown:hover
+{
+  background-color: hsl(217, 71%, 91%);
+  color: hsl(217, 71%, 53%);
+  transform: scale(1.05);
+}
+
+.dropdown:hover + .sub-menu
+{
+  display: block;
+  opacity: 1;
+}
+
+.sub-menu:hover
+{
+  display: block;
+  opacity: 1;
+}
+
+.line {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 50px;
+  width: 50px;
+  border-radius: 25px;
+  padding: 5px;
+  background: hsl(0, 0%, 86%);
+  transition: all 0.4s ease;
+  z-index: -1;
+}
+
+.sidebar:hover .line
+{
+  border-radius: 5px;
+  background-color: hsl(217, 71%, 91%);
+  width: 225px;
+}
+
+.sub-item
+{
+  border-radius: 5px;
+  padding: 0.2rem;
+  cursor: default;
+  transition: all 0.4s ease;
+}
+
+.sub-item:hover
+{
+  background-color: hsl(217, 71%, 91%);
+  color: hsl(217, 71%, 53%);
+  transform: scale(1.05);
+}
+/*buttons*/
+.sidebar .button
+{
+    border: none;
+    border-radius: 10px;
+    background-color: hsl(0, 0%, 96%);
+    transition: 0.5s;
+}
+
+.sidebar .button:hover
+{
+    background-color: hsl(217, 71%, 91%);
+    color: hsl(217, 71%, 53%);
+    transform: scale(1.05);
+}
+

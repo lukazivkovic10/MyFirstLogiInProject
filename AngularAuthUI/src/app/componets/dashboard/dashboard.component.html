@@ -1,137 +1,218 @@
 <body>
-    <div class="page-container">
-        <div class="content py-2">
-            <div class="sb">
-                <app-search></app-search>
-            </div>
-                <div class="navbar">
-                    <div class="navbar-start">
-                        <div class="navbar-item has-dropdown is-hoverable">
-                            <a class="navbar-link has-icons-left">
-                                <span class="icon">
-                                    <i class="fa-solid fa-filter"></i>
-                                </span>
-                                Filtri
-                            </a>
-                            <div class="navbar-dropdown is-rounded">
-                                <div class="navbar-item">
-                                    Skri
-                                </div>
-                                <div class="navbar-item">
-                                    <input type="checkbox" id="done" (change)="onHideDoneCheckboxChange()">
-                                    <p>Dokončano</p>
-                                </div>
-                                <div class="navbar-item">
-                                    <input type="checkbox" id="hide" (change)="onHideNotDoneCheckboxChange()">
-                                    <p>Ne dokončano</p>
-                                </div>
-                                <div class="navbar-item">
-                                    <input type="checkbox" id="deleted" (change)="onHideDeletedCheckboxChange()">
-                                    <p>Izbrisano</p>
-                                </div>
-                            </div>
+    <nav class="sidebar">
+        <div class="menu_container">
+                <ul class="menu_item">
+                    <div class="item-title">
+                        <span class="line"></span>
+                        <div class="link flex">
+                          <div class="icon sb-icon">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                          </div>
+                          <span class="sb-text"><b>IŠČI</b></span>
                         </div>
                     </div>
-                    <div class="navbar-end">
+                    <li class="item">
+                        <app-search></app-search>
+                    </li>
+                    <div class="item-title">
+                        <span class="line"></span>
+                        <div class="link flex">
+                            <div class="icon sb-icon">
+                                <i class="fa-solid fa-filter"></i>
+                            </div>
+                            <span class="sb-text"><b>FILTRI</b></span>
+                        </div>
+                    </div>
+                    <li class="item">
+                        <div class="navbar-item dropdown">
+                                <span class="icon">
+                                    <i class="fa-solid fa-user-ninja"></i>
+                                </span>
+                                <span>Skrij</span>
+                                <span class="icon">
+                                    <i class="fa-solid fa-caret-down"></i>
+                                </span>
+                        </div>
+                        <div class="sub-menu">
+                            <div class="sub-item">
+                                <label for="done">
+                                <input type="checkbox" id="done" (change)="onHideDoneCheckboxChange()">
+                                <span class="pl-2">
+                                    <i class="fas fa-check has-text-success-dark"></i>
+                                    Dokončane
+                                </span>
+                                </label>
+                            </div>
+                            <div class="sub-item">
+                                <label for="notDoneYet">
+                                <input type="checkbox" id="notDoneYet" (change)="onHideNotDoneYetCheckboxChange()">
+                                <span class="pl-2">
+                                    <i class="fa-solid fa-hourglass-half has-text-link-dark"></i>
+                                    Ne dokončane
+                                </span>
+                               </label>
+                            </div>
+                            <div class="sub-item">
+                                <label for="hide">
+                                <input type="checkbox" id="hide" (change)="onHideNotDoneCheckboxChange()">
+                                <span class="pl-2">
+                                    <i class="fa-solid fa-hourglass has-text-danger-dark"></i>
+                                    Pretekle
+                                </span>
+                                </label>
+                            </div>
+                            <div class="sub-item">
+                                <label for="deleted">
+                                <input type="checkbox" id="deleted" (change)="onHideDeletedCheckboxChange()">
+                                <span class="pl-2">
+                                    <i class="fa-solid fa-trash"></i>
+                                    Izbrisane
+                                </span>
+                               </label>
+                            </div>
+                        </div>
+                    </li>
+                    <div class="item-title">
+                        <span class="line"></span>
+                        <div class="link flex">
+                            <div class="icon sb-icon">
+                                <i class="fa-solid fa-tags"></i>
+                            </div>
+                            <span class="sb-text"><b>OZNAKE</b></span>
+                        </div>
+                    </div>
+                    <li class="item">
                         <div class="navbar-item">
-                            <a (click)="modelOpenTags()">
-                                Oznake
-                            </a>
+                            <button class="button" (click)="modelOpenTags()">
+                                <div class="icon">
+                                    <i class="fa-solid fa-tag"></i> 
+                                </div>
+                                <span class="btn-text">Oznake</span>
+                            </button>
                             <div *ngIf="showModalTags">
                                 <app-model-tags *ngIf="showModalTags" (close)="modelCloseTags()"></app-model-tags>
                             </div>
                         </div>
-                        <div class="navbar-item has-dropdown is-hoverable">
-                            <a class="navbar-link has-icons-left">
-                                <span class="icon">
-                                    <i class="fa-solid fa-list-check"></i>
-                                </span>
-                                Opravila
-                            </a>
-                            <div class="navbar-dropdown is-right is-rounded">
-                                <div class="navbar-item">
-                                    <!--Ustvari-->
-                                    <button (click)="modelOpenCreate()" class="button is-rounded is-primary">
-                                        <div class="icon is-large">
-                                            <i class="far fa-calendar-plus"></i>
-                                        </div>
-                                    </button>
-                                     <div *ngIf="showModalCreate">
-                                                <app-model-content *ngIf="showModalCreate" (close)="modelCloseCreate()"></app-model-content>
-                                     </div>
-                                </div>
-                                <div class="navbar-item">
-                                    <!--Uredi-->
-                                    <button (click)="modelOpenEdit()" class="button is-rounded is-warning">
-                                        <div class="icon is-large">
-                                            <i class="fas fa-square-pen"></i>
-                                        </div>
-                                    </button>
-                                    <div *ngIf="showModalEdit">
-                                        <app-model-content-edit *ngIf="showModalEdit" (close)="modelCloseEdit()"></app-model-content-edit>
-                                    </div>
-                                </div>
-                                <div class="navbar-item">
-                                    <!--Izbrisi-->
-                                    <button (click)="modelOpenDelete()" class="button is-rounded is-danger">
-                                        <div class="icon is-large is-right">
-                                            <i class="far fa-calendar-minus"></i>
-                                        </div>
-                                    </button>
-                                    <div  *ngIf="showModalDelete">
-                                        <app-model-content-delete *ngIf="showModalDelete" (close)="modelCloseDelete()"></app-model-content-delete>
-                                    </div>
-                                </div>
+                    </li>
+                    <div class="item-title">
+                        <span class="line"></span>
+                        <div class="link flex">
+                            <div class="icon sb-icon">
+                                <i class="fa-solid fa-list-check"></i>
                             </div>
+                            <span class="sb-text"><b>OPRAVILA</b></span>
                         </div>
                     </div>
-                </div>
-                <div *ngIf="searchData.search!''" class="tag is-link is-medium is-rounded">
-                    {{searchData.search}}
-                    <button (click)="showAll()" class="delete py-1"></button>
-                </div>
+                    <li class="item">
+                        <div class="navbar-item">
+                            <!--Ustvari-->
+                            <button class="button" (click)="modelOpenCreate()">
+                                <div class="icon is-large">
+                                    <i class="far fa-calendar-plus"></i>
+                                </div>
+                                <span>Ustvari opravilo</span>
+                            </button>
+                             <div *ngIf="showModalCreate">
+                                        <app-model-content *ngIf="showModalCreate" (close)="modelCloseCreate()"></app-model-content>
+                             </div>
+                        </div>
+                        <div class="navbar-item">
+                            <!--Uredi-->
+                            <button (click)="modelOpenEdit()" class="button">
+                                <div class="icon is-large">
+                                    <i class="fas fa-square-pen"></i>
+                                </div>
+                                <span>Uredi opravilo</span>
+                            </button>
+                            <div *ngIf="showModalEdit">
+                                <app-model-content-edit *ngIf="showModalEdit" (close)="modelCloseEdit()"></app-model-content-edit>
+                            </div>
+                        </div>
+                        <div class="navbar-item">
+                            <!--Izbrisi-->
+                            <button class="button" (click)="modelOpenDelete()">
+                                <div class="icon is-large is-right">
+                                    <i class="far fa-calendar-minus"></i>
+                                </div>
+                                <span>Izbriši opravilo</span>
+                            </button>
+                            <div  *ngIf="showModalDelete">
+                                <app-model-content-delete *ngIf="showModalDelete" (close)="modelCloseDelete()"></app-model-content-delete>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+        </div>
+    </nav>
+    <div class="page-container">
+        <div class="content pt-2">
+            <h1 class="title is-1">
+                Opravila
+            </h1>
+            <div *ngIf="searchData.search!''" class="tag is-link is-medium is-rounded">
+                {{searchData.search}}
+                <button (click)="showAll()" class="delete py-1"></button>
+            </div>
         </div>
         <div class="content">
-            <div class="py-1" *ngFor="let item of items.data">
-                <h1 class="tittle" *ngIf="item.tag!=savedTag">
-                    <hr class="bold">
-                    {{item.tag}}
-                    {{saveTag(item.tag)}}
-                    <hr class="solid">
-                </h1>
+            <div class="pt-3" *ngFor="let item of items.data">
+                <div class="box title-box" *ngIf="item.tag!=savedTag">
+                    <div class="tooltip" data-tooltip="Ime oznake">
+                        <h2 class="title is-2 has-text-white-bis">
+                            {{item.tag}}
+                            {{saveTag(item.tag)}} 
+                        </h2>
+                    </div>
+                </div>
                     <!--Pusta-->
-                    <span *ngIf="item.itemStatus==1 && item.active==1">
-                        <div class="box">
-                            <div class="field">
-                                <h3 class="title is-2">
-                                    {{item.itemName}}
+                    <span *ngIf="!hideNotDoneYet && item.itemStatus==1 && item.active==1">
+                        <div class="box notdone">
+                            <div class="columns">
+                                <div class="column is-1">
                                     <div class="tooltip" data-tooltip="Opravljeno">
-                                        <button (click)="doneCurrent(item)" class="tag is-medium is-success is-rounded">
+                                        <button (click)="doneCurrent(item)" class="button checkbox-type">
                                             <div class="icons">
-                                                <i class="fas fa-check"></i>
+                                                <i class="fas fa-check checkbox-type-icon"> </i>
                                             </div>
                                         </button>  
                                     </div>
-                                </h3>
-                                <hr class="solid">
-                                <h5 class="subtitle is-5">{{item.itemDesc}}</h5>
-                            </div>
-                            <hr class="slim">
-                            <div class="field">
-                                <div class="columns">
-                                    <div class="column">
-                                        <p>Opraviti je treba do: <b>{{item.completeDate | date:'HH:mm dd.MM.yyyy'}}</b></p>
-                                    </div>
-                                    <div class="column">
-                                        <div class="tags has-addons">
-                                            <span class="tag is-rounded is-small">
-                                                <div class="icons">
-                                                    <i class="fas fa-tag"></i>
+                                </div>
+                                <div class="column">
+                                    <h3 class="title  is-2">
+                                        <div class="columns">
+                                            <div class="column">
+                                                <div class="tooltip" data-tooltip="Še ne opravljeno">
+                                                    {{item.itemName}} 
                                                 </div>
-                                            </span>
-                                        <span class="tag is-rounded is-link is-small">
-                                            {{item.tag}}
-                                        </span>
+                                            </div>
+                                        </div>
+                                    </h3>
+                                    <p class="description">{{item.itemDesc}}</p>
+                                    <hr class="slim">
+                                    <div class="field">
+                                        <div class="columns">
+                                            <div class="column is-3">
+                                                <div class="box time-box">
+                                                    <div class="tooltip center has-text-link-dark" data-tooltip="Zastavljen datum oddaje: ">
+                                                        <div class="icon">
+                                                            <i class="fa-solid fa-hourglass-half"></i>
+                                                        </div>
+                                                        <b>{{item.completeDate | date:'HH:mm dd.MM.yyyy'}}</b>  
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="column">
+                                                <div class="tags has-addons end">
+                                                    <span class="tag is-rounded is-medium">
+                                                        <div class="icons">
+                                                            <i class="fas fa-tag"></i>
+                                                        </div>
+                                                    </span>
+                                                <span class="tag is-rounded has-background-link-dark is-medium has-text-white-bis">
+                                                    <b>{{item.tag}}</b>
+                                                </span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -139,134 +220,216 @@
                         </div>
                     </span>
                     <!--Soft Izbrisana-->
-                    <div class="box" style="background-color: hsl(0, 0%, 96%);" *ngIf="!hideDeleted && item.itemStatus==0">
-                        <div class="field">
-                            <div class="tooltip" data-tooltip="Izbrisano">
-                            <h3 class="title has-text-grey-light is-2"><s>{{item.itemName}}</s></h3>
+                    <div class="box deleted"*ngIf="!hideDeleted && item.itemStatus==0">
+                        <div class="columns">
+                            <div class="column is-1">
+                                <div class="tooltip" data-tooltip="Izbrisano">
+                                    <div class="icon is-large">
+                                        <i class="fa-solid fa-trash fa-2x"></i>
+                                    </div> 
+                                </div>
+
                             </div>
-                            <hr class="solid">
-                            <h5 class="subtitle has-text-grey-lighter is-5"><s>{{item.itemDesc}}</s></h5>
-                        </div>
-                        <hr class="slim">
-                        <div class="field">
-                            <div class="columns">
-                                <div class="column">
-                                    <div class="tags has-addons">
-                                        <span class="tag is-rounded is-small">
-                                            <div class="icons">
-                                                <i class="fas fa-tag"></i>
+                            <div class="column">
+                                <div class="field">
+                                    <div class="tooltip" data-tooltip="Izbrisano">
+                                    <h3 class="title has-text-grey-light is-2"><s>{{item.itemName}}</s></h3>
+                                    </div>
+                                    <p class="description"><s>{{item.itemDesc}}</s></p>
+                                </div>
+                                <hr class="slim">
+                                <div class="field">
+                                    <div class="columns">
+                                        <div class="column is-3">
+                                            <div class="box time-box has-text-grey">
+                                                <div class="tooltip center" data-tooltip="Zastavljen datum oddaje: ">
+                                                    <s>
+                                                    <div class="icon">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </div>
+                                                    <b>{{item.completeDate | date:'HH:mm dd.MM.yyyy'}}</b>
+                                                    </s>
+                                                </div>
                                             </div>
-                                        </span>
-                                    <span class="tag is-rounded is-dark is-small">
-                                        <s>{{item.tag}}</s>
-                                    </span>
+                                        </div>
+                                        <div class="column">
+                                            <div class="tags has-addons end">
+                                                <span class="tag is-rounded is-medium">
+                                                    <div class="icons">
+                                                        <i class="fas fa-tag"></i>
+                                                    </div>
+                                                </span>
+                                            <span class="tag is-rounded is-dark is-medium">
+                                                <b><s>{{item.tag}}</s></b>
+                                            </span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!--Narejena-->
-                    <div class="box"style="background-color: #48c78e;" *ngIf="!hideDone && item.itemStatus==1 && item.active==0">
-                        <div class="field">
-                            <h3 class="title has-text-white is-2">
-                                <div class="tooltip" data-tooltip="Dokončano">
-                                <i class="fas fa-check"></i>
-                                {{item.itemName}}
+                    <div class="box done" *ngIf="!hideDone && item.itemStatus==1 && item.active==0">
+                        <div class="columns">
+                            <div class="column is-1">
+                                <div class="tooltip" data-tooltip="Še ne opravljeno">
+                                    <button (click)="notDoneCurrent(item)" class="button checkbox-type-done">
+                                        <div class="icons">
+                                            <i class="fas  fa-check checkbox-type-icon-done"></i>
+                                        </div>
+                                    </button>  
                                 </div>
-                                <div class="tooltip" data-tooltip="Ne Opravljeno">
-                                <button (click)="notDoneCurrent(item)" class="tag is-medium is-danger is-rounded">
-                                    <div class="icons">
-                                        <i class="fas  fa-xmark"></i>
-                                    </div>
-                                </button>
-                                </div>
-                            </h3>
-                            <hr class="solid">
-                            <h4 class="subtitle has-text-white is-4">{{item.itemDesc}}</h4>
-                        </div>
-                        <hr class="slim">
-                        <div class="field">
-                            <div class="columns">
-                                <div class="column">
-                                    <small style="color: white;">Opravljeno je bilo dne: {{item.dateOfCompletion | date:'HH:mm dd.MM.yyyy'}}</small>
-                                </div>
-                                <div class="column">
-                                    <div class="tags has-addons">
-                                        <span class="tag is-rounded is-dark is-small has-text-success">
-                                            <div class="icons">
-                                                <i class="fas fa-tag"></i>
+                            </div>
+                            <div class="column">
+                                <div class="field">
+                                    <h3 class="title is-2">
+                                        <div class="columns">
+                                            <div class="column">
+                                                <div class="tooltip" data-tooltip="Dokončano">
+                                                    {{item.itemName}}
+                                                    </div>
                                             </div>
-                                        </span>
-                                    <span class="tag is-rounded is-whites is-small has-text-success">
-                                        {{item.tag}}
-                                    </span>
-                                    </div>  
+                                            <div class="column is-1">
+                                                <div class="tooltip" data-tooltip="Ne Opravljeno">
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </h3>
+                                    <p class="description">{{item.itemDesc}}</p>
+                                </div>
+                                <hr class="slim">
+                                <div class="field">
+                                    <div class="columns">
+                                        <div class="column is-5">
+                                            <div class="box time-box">
+                                                <div class="tooltip center has-text-success-dark" data-tooltip="Datum in ura kadar je bilo opravilo dokončano | Zastavljen datum oddaje: ">
+                                                    <div class="icon">
+                                                        <i class="fa-solid fa-check"></i>  
+                                                    </div>
+                                                    <b>{{item.dateOfCompletion | date:'HH:mm dd.MM.yyyy'}} |</b> 
+                                                    <div class="icon">
+                                                        <i class="fa-solid fa-hourglass-end"></i>
+                                                    </div>
+                                                    <b>{{item.completeDate | date:'HH:mm dd.MM.yyyy'}}</b> 
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="column">
+                                            <div class="tags has-addons end">
+                                                <span class="tag is-rounded has-background-success-dark is-medium has-text-white-bis">
+                                                    <div class="icons">
+                                                        <i class="fas fa-tag"></i>
+                                                    </div>
+                                                </span>
+                                            <span class="tag is-rounded is-whites is-medium has-text-success-dark">
+                                                <b>{{item.tag}}</b>
+                                            </span>
+                                            </div>  
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!--Ne Dokončano-->
-                    <div class="box" style="background-color: hsl(348, 100%, 61%);" *ngIf="!hideNotDone && item.itemStatus == 2 && item.active != 0">
-                        <div class="field">
-                            <h3 class="title has-text-white is-2">
+                    <div class="box expired" *ngIf="!hideNotDone && item.itemStatus == 2 && item.active != 0">
+                        <div class="columns">
+                            <div class="column is-1">
                                 <div class="tooltip" data-tooltip="Pretekel rok">
-                                <i class="fas fa-xmark"></i>
-                                {{item.itemName}}
+                                    <span class="icon is-large has-text-danger-dark">
+                                        <i class="fas fa-x fa-2x"></i>
+                                    </span>  
                                 </div>
-                            </h3>
-                            <hr class="solid">
-                            <h4 class="subtitle has-text-white is-4">{{item.itemDesc}}</h4>
-                        </div>
-                        <hr class="slim">
-                        <div class="field">
-                            <div class="columns">
-                                <div class="column">
-                                    <small style="color: white;">Opraviti bi bilo treba do: {{item.completeDate | date:'HH:mm dd.MM.yyyy'}}</small>
+                            </div>
+                            <div class="column">
+                                <div class="field">
+                                    <h3 class="title is-2">
+                                        <div class="tooltip" data-tooltip="Pretekel rok">
+                                        {{item.itemName}}
+                                        </div>
+                                    </h3>
+                                    <p class="description ">{{item.itemDesc}}</p>
                                 </div>
-                                <div class="column">
-                                    <div class="tags has-addons">
-                                        <span class="tag is-rounded is-dark is-small has-text-danger">
-                                            <div class="icons">
-                                                <i class="fas fa-tag"></i>
+                                <hr class="slim">
+                                <div class="field">
+                                    <div class="columns">
+                                        <div class="column is-3">
+                                            <div class="box time-box has-text-danger-dark">
+                                                <div class="tooltip center" data-tooltip="Zastavljen datum oddaje: ">
+                                                    <div class="icon">
+                                                        <i class="fa-solid fa-hourglass"></i>
+                                                    </div>
+                                                    <b>{{item.completeDate | date:'HH:mm dd.MM.yyyy'}}</b>  
+                                                </div>
                                             </div>
-                                        </span>
-                                    <span class="tag is-rounded is-whites is-small has-text-danger">
-                                        {{item.tag}}
-                                    </span>
-                                    </div>  
+                                        </div>
+                                        <div class="column">
+                                            <div class="tags has-addons end">
+                                                <span class="tag is-rounded has-background-danger-dark is-medium has-text-white-bis">
+                                                    <div class="icons">
+                                                        <i class="fas fa-tag"></i>
+                                                    </div>
+                                                </span>
+                                            <span class="tag is-rounded is-whites is-medium has-text-danger-dark">
+                                                <b>{{item.tag}}</b>
+                                            </span>
+                                            </div>  
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!--Narejena-->
-                    <div class="box"style="background-color: #48c78e;" *ngIf="!hideDone && item.itemStatus==2 && item.active==1">
-                        <div class="field">
-                            <h3 class="title has-text-white is-2">
-                                <div class="tooltip" data-tooltip="Dokončano">
-                                <i class="fas fa-check"></i>
-                                {{item.itemName}}
+                    <div class="box done" *ngIf="!hideDone && item.itemStatus==2 && item.active==0">
+                        <div class="columns">
+                            <div class="column is-1">
+                                <div class="tooltip" data-tooltip="Opravljeno v roku">
+                                    <div class="icon is-large has-text-success-dark">
+                                        <i class="fa-solid fa-check fa-2x"></i>
+                                    </div> 
                                 </div>
-                            </h3>
-                            <hr class="solid">
-                            <h4 class="subtitle has-text-white is-4">{{item.itemDesc}}</h4>
-                        </div>
-                        <hr class="slim">
-                        <div class="field">
-                            <div class="columns">
-                                <div class="column">
-                                    <small style="color: white;">Opravljeno je bilo dne: {{item.dateOfCompletion| date:'HH:mm dd.MM.yyyy'}}</small>
+                            </div>
+                            <div class="column">
+                                <div class="field">
+                                    <h3 class="title is-2">
+                                        <div class="tooltip" data-tooltip="Dokončano">
+                                        {{item.itemName}}
+                                        </div>
+                                    </h3>
+                                    <p class="description">{{item.itemDesc}}</p>
                                 </div>
-                                <div class="column">
-                                    <div class="tags has-addons">
-                                        <span class="tag is-rounded is-dark is-small has-text-success">
-                                            <div class="icons">
-                                                <i class="fas fa-tag"></i>
+                                <hr class="slim">
+                                <div class="field">
+                                    <div class="columns">
+                                        <div class="column is-5">
+                                            <div class="box time-box">
+                                                <div class="tooltip center has-text-success-dark" data-tooltip="Dne katerega je bilo opravilo dokončano | Zastavljen datum oddaje: ">
+                                                    <div class="icon">
+                                                        <i class="fa-solid fa-check"></i>  
+                                                    </div>
+                                                    <b>{{item.dateOfCompletion | date:'HH:mm dd.MM.yyyy'}} |</b> 
+                                                    <div class="icon">
+                                                        <i class="fa-solid fa-hourglass-end"></i>
+                                                    </div>
+                                                    <b>{{item.completeDate | date:'HH:mm dd.MM.yyyy'}}</b> 
+                                                </div>
                                             </div>
-                                        </span>
-                                    <span class="tag is-rounded is-whites is-small has-text-success">
-                                        {{item.tag}}
-                                    </span>
-                                    </div>  
+                                        </div>
+                                        <div class="column">
+                                            <div class="tags has-addons end">
+                                                <span class="tag is-rounded has-background-success-dark is-medium has-text-white-bis">
+                                                    <div class="icon">
+                                                        <i class="fas fa-tag"></i>
+                                                    </div>
+                                                </span>
+                                            <span class="tag is-rounded is-whites is-medium has-text-success-dark">
+                                                <b>{{item.tag}}</b>
+                                            </span>
+                                            </div>  
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

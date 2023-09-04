@@ -2,19 +2,17 @@
 <!doctype html>
 <html lang="en">
 <body>
+  <div class="site-content">
   <header>
-    <app-hero></app-hero>
+    <!--<app-hero></app-hero>-->
   </header>
-  <section class="section" id="hero">
-    <app-navbar></app-navbar>
-  </section>
+  <app-navbar></app-navbar>
   <div class="page-container">
-  <section class="section" id="body">
-    <div class="container">
+    <div class="p-2">
       <router-outlet routerLink="/login"></router-outlet>
       <ng-toast></ng-toast>
     </div>
-  </section>
+  </div>
   <footer class="footer">
     <div class="content has-text-centered">
       <p>

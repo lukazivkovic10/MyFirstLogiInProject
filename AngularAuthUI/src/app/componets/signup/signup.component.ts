@@ -26,8 +26,7 @@ export class SignupComponent {
       Firstname: ['',Validators.required],
       Lastname: ['',Validators.required],
       email: ['',Validators.compose([Validators.required,Validators.email])],
-      password: ['',Validators.compose([Validators.required,Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/)])],
-      token: ['']
+      password: ['',Validators.compose([Validators.required,Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/),Validators.minLength(8)])],
     })
   }
 

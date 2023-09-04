@@ -1,8 +1,9 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
+import { ListService } from 'src/app/services/list.service';
+import { TagsService } from 'src/app/services/tags.service';
 
 interface Tag
 {
@@ -25,7 +26,7 @@ export class ModelContentComponent {
     data: []
   };
   @Output() close = new EventEmitter<void>();
-  constructor(private auth: AuthService,private fb: FormBuilder, private router: Router, private toast: NgToastService){ };
+  constructor(private list: ListService,private fb: FormBuilder, private router: Router, private toast: NgToastService, private tagService: TagsService){ };
 
   public ds: Date = new Date();
   ngOnInit() {
@@ -38,7 +39,7 @@ export class ModelContentComponent {
       CreatedDate: [this.ds],
       CompleteDate: ['',Validators.required]
     });
-    this.auth.GetTags().subscribe(
+    this.tagService.GetTags().subscribe(
       (res:any)=>{
         this.tags = res;
       }
@@ -56,7 +57,7 @@ export class ModelContentComponent {
     console.log(this.createForm.value);
     if(this.createForm.valid)
     {
-      this.auth.CreateItem(this.createForm.value)
+      this.list.CreateItem(this.createForm.value)
       .subscribe({
         next:(
           res=>{
