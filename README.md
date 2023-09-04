@@ -25,12 +25,12 @@
      -  Pri registraciji in prijavi hashaj geslo kar takoj preden pošlješ na API, da podatki ne bodo vidni v payloadu na browserju
     
   4. Dopolnilne naloge (21. 8. 2023)
-     -Incript password zardai payload
-     -Tooltips
-     -Live opozorila pri registraciji in prijavi
-     -Datum kdaj je bilo opravilo dokončano
-     -Filter "Dokončano" v frontend
-     -Jasnost v filtrih
+       - Incript password zardai payload
+       - Tooltips
+       - Live opozorila pri registraciji in prijavi
+       - Datum kdaj je bilo opravilo dokončano
+       - Filter "Dokončano" v frontend
+       - Jasnost v filtrih
      
   6. Dopolnilne naloge (28. 8. 2023)
       - Dodajanje izpisa roka opravila po odkljukanem opravilu. Torej sta razvidna datum zaključka in rok opravila.
@@ -44,4 +44,4 @@
         - Reminderji - cronjob, nek scheduler, ki preverja roke nalog, reminderje lahko user nastavi sam. Če ga ne nastavi ga ni. Lahko jih tudi pogleda na ločeni podstrani, vsi reminderji razvrščeni po datumu (logični izpis)
         - Dodajanje datotek k nalogi. Prav tako dodana funkcionalnost za prenos teh datotek.
         - Ponavljajoče naloge - dnevno (delovni dnevi, vikend, custom), tedensko, mesečno, letno.
-        - Dopolni točko 4. !!!!!!!
+        - Tabelo uporabnikov seli na svojo stran
