@@ -24,8 +24,15 @@
      -  Naredi filtre za rok opravila, tag, naslov, seznam opravil
      -  Pri registraciji in prijavi hashaj geslo kar takoj preden pošlješ na API, da podatki ne bodo vidni v payloadu na browserju
     
-  4. ???
-  5. Dopolnilne naloge (28. 8. 2023)
+  4. Dopolnilne naloge (21. 8. 2023)
+     -Incript password zardai payload
+     -Tooltips
+     -Live opozorila pri registraciji in prijavi
+     -Datum kdaj je bilo opravilo dokončano
+     -Filter "Dokončano" v frontend
+     -Jasnost v filtrih
+     
+  6. Dopolnilne naloge (28. 8. 2023)
       - Dodajanje izpisa roka opravila po odkljukanem opravilu. Torej sta razvidna datum zaključka in rok opravila.
       - Navbar unification, ena vrstica z gumbi, dropdowni...
       - Izbira knjižnice visualizacije podatkov (chart.js, D3, izberi sam, preglej in debatirava naslednjič o izbiri)
@@ -33,7 +40,7 @@
             - Opravljena/neopravljena opravila stolpični diagram po mescih (zadnji trije), smiselne barve glede na status opravila
             - Procent uspešnosti tekočega meseca (pazi na ničelne vrednosti, ko je število vseh 0)
             - Najhitrejše zaključena opravila, katera, pod katero kategorijo spada, kdaj nsarejena in kdaj zaključena in ali so bila zaključena v roku.
-  6. Dopolnilne naloge (4. 9. 2023) //2 tedna časa ali ko končaš, napiši Žigi
+  7. Dopolnilne naloge (4. 9. 2023) //2 tedna časa ali ko končaš, napiši Žigi
         - Reminderji - cronjob, nek scheduler, ki preverja roke nalog, reminderje lahko user nastavi sam. Če ga ne nastavi ga ni. Lahko jih tudi pogleda na ločeni podstrani, vsi reminderji razvrščeni po datumu (logični izpis)
         - Dodajanje datotek k nalogi. Prav tako dodana funkcionalnost za prenos teh datotek.
         - Ponavljajoče naloge - dnevno (delovni dnevi, vikend, custom), tedensko, mesečno, letno.
