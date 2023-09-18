@@ -11,10 +11,12 @@ namespace AngularAuthAPI.Controllers
     public class GraphController : ControllerBase
     {
         private readonly IConfiguration _config;
+        private readonly ILogger<FileUploadController> _logger;
 
-        public GraphController(IConfiguration configuration)
+        public GraphController(IConfiguration configuration, ILogger<FileUploadController> logger)
         {
             _config = configuration;
+            _logger = logger;
         }
 
         [HttpGet("ŠtVsehOpravil")]
@@ -22,7 +24,19 @@ namespace AngularAuthAPI.Controllers
         {
             using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
 
-            var Data = (await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) AS Count FROM Items"));
+            var query = @"SELECT CASE WHEN ItemStatus = 2 AND Active <> 0 THEN 'Preteklo' WHEN (ItemStatus = 1 OR ItemStatus = 2) AND Active = 0 THEN 'Dokoncano' WHEN ItemStatus = 1 AND Active = 1 THEN 'Nedokoncano' ELSE 'Izbriano' END AS Status, 
+                          COUNT (*) AS Count From Items GROUP BY CASE WHEN ItemStatus = 2 AND Active <> 0 THEN 'Preteklo' WHEN (ItemStatus = 1 OR ItemStatus = 2) AND Active = 0 THEN 'Dokoncano' WHEN ItemStatus = 1 AND Active = 1 THEN 'Nedokoncano' ELSE 'Izbriano' END 
+                          UNION ALL 
+                          SELECT 'Vse' AS Status, COUNT(*) AS Count FROM Items;";
+
+            var Data = (await connection.QueryAsync(query))
+                .Where(row => row.Status != null && row.Count != null)
+                .ToDictionary(row => row.Status, row => (int)row.Count); 
+            ;
+
+            var dataString = string.Join(", ", Data.Select(kv => $"{kv.Key}: {kv.Value}"));
+
+            _logger.LogInformation($"Št vseh opravil: {dataString}");
 
             return new Response<object>
             {
@@ -40,42 +54,120 @@ namespace AngularAuthAPI.Controllers
 
             var currentDate = DateTime.Now;
             var threeMonthsAgo = currentDate.AddMonths(-3);
+            var twoMonthsAgo = currentDate.AddMonths(-2);
+            var oneMonthAgo = currentDate.AddMonths(-1);
 
+            var data = new List<Dictionary<string, object>>();
 
-            var query = @"SELECT 
-            CASE 
-                WHEN ItemStatus = 2 AND Active <> 0 THEN 'Preteklo'
-                WHEN (ItemStatus = 1 OR ItemStatus = 2) AND Active = 0 THEN 'Dokončano'
-                WHEN ItemStatus = 1 AND Active = 1 THEN 'Še ne dokončano'
-            END AS Status,
-            COUNT(*) AS Count FROM Items WHERE CreatedDate >= @StartDate AND CreatedDate <= @EndDate GROUP BY
-            CASE 
-                WHEN ItemStatus = 2 AND Active <> 0 THEN 'Preteklo'
-                WHEN (ItemStatus = 1 OR ItemStatus = 2) AND Active = 0 THEN 'Dokončano'
-                WHEN ItemStatus = 1 AND Active = 1 THEN 'Še ne dokončano'
-            END";
+            // Query for the first month
+            var queryMonth1 = @"SELECT 
+        CASE 
+            WHEN ItemStatus = 2 AND Active <> 0 THEN 'Preteklo'
+            WHEN (ItemStatus = 1 OR ItemStatus = 2) AND Active = 0 THEN 'Dokončano'
+            WHEN ItemStatus = 1 AND Active = 1 THEN 'Še ne dokončano'
+        END AS Status,
+        COUNT(*) AS Count FROM Items WHERE CreatedDate >= @StartDate1 AND CreatedDate <= @EndDate1 GROUP BY
+        CASE 
+            WHEN ItemStatus = 2 AND Active <> 0 THEN 'Preteklo'
+            WHEN (ItemStatus = 1 OR ItemStatus = 2) AND Active = 0 THEN 'Dokončano'
+            WHEN ItemStatus = 1 AND Active = 1 THEN 'Še ne dokončano'
+        END";
 
-            var data = (await connection.QueryAsync(query, new { StartDate = threeMonthsAgo, EndDate = currentDate }))
-           .Where(row => row.Status != null && row.Count != null)
-           .ToDictionary(row => row.Status, row => (int)row.Count);
+            var dataMonth1 = (await connection.QueryAsync(queryMonth1, new { StartDate1 = threeMonthsAgo, EndDate1 = twoMonthsAgo }))
+                .Where(row => row.Status != null && row.Count != null)
+                .ToDictionary(row => row.Status, row => (int)row.Count);
 
-            var stackedColumnData = new List<Dictionary<string, object>>();
-
+            // Ensure zero counts for Month1
             foreach (var status in new[] { "Dokončano", "Še ne dokončano", "Preteklo" })
             {
-                stackedColumnData.Add(new Dictionary<string, object>
-                    {
-                       { "name", status },
-                       { "data", data.ContainsKey(status) ? data[status] : 0 },
-                       { "startingDate", threeMonthsAgo.ToString("yyyy-MM-dd") },
-                       { "currentDate", currentDate.ToString("yyyy-MM-dd") }
-                    });
+                if (!dataMonth1.ContainsKey(status))
+                {
+                    dataMonth1[status] = 0;
+                }
             }
 
+            data.Add(new Dictionary<string, object>
+    {
+        { "name", threeMonthsAgo.ToString("MM.yy") },
+        { "data", dataMonth1 },
+        { "startingDate", threeMonthsAgo.ToString("dd.MM.yyyy") },
+        { "currentDate", twoMonthsAgo.ToString("dd.MM.yyyy") }
+    });
+
+            // Query for the second month
+            var queryMonth2 = @"SELECT 
+        CASE 
+            WHEN ItemStatus = 2 AND Active <> 0 THEN 'Preteklo'
+            WHEN (ItemStatus = 1 OR ItemStatus = 2) AND Active = 0 THEN 'Dokončano'
+            WHEN ItemStatus = 1 AND Active = 1 THEN 'Še ne dokončano'
+        END AS Status,
+        COUNT(*) AS Count FROM Items WHERE CreatedDate >= @StartDate2 AND CreatedDate <= @EndDate2 GROUP BY
+        CASE 
+            WHEN ItemStatus = 2 AND Active <> 0 THEN 'Preteklo'
+            WHEN (ItemStatus = 1 OR ItemStatus = 2) AND Active = 0 THEN 'Dokončano'
+            WHEN ItemStatus = 1 AND Active = 1 THEN 'Še ne dokončano'
+        END";
+
+            var dataMonth2 = (await connection.QueryAsync(queryMonth2, new { StartDate2 = twoMonthsAgo, EndDate2 = oneMonthAgo }))
+                .Where(row => row.Status != null && row.Count != null)
+                .ToDictionary(row => row.Status, row => (int)row.Count);
+
+            // Ensure zero counts for Month2
+            foreach (var status in new[] { "Dokončano", "Še ne dokončano", "Preteklo" })
+            {
+                if (!dataMonth2.ContainsKey(status))
+                {
+                    dataMonth2[status] = 0;
+                }
+            }
+
+            data.Add(new Dictionary<string, object>
+    {
+        { "name", twoMonthsAgo.ToString("MM.yy") },
+        { "data", dataMonth2 },
+        { "startingDate", twoMonthsAgo.ToString("dd.MM.yyyy") },
+        { "currentDate", oneMonthAgo.ToString("dd.MM.yyyy") }
+    });
+
+            // Query for the third month
+            var queryMonth3 = @"SELECT 
+        CASE 
+            WHEN ItemStatus = 2 AND Active <> 0 THEN 'Preteklo'
+            WHEN (ItemStatus = 1 OR ItemStatus = 2) AND Active = 0 THEN 'Dokončano'
+            WHEN ItemStatus = 1 AND Active = 1 THEN 'Še ne dokončano'
+        END AS Status,
+        COUNT(*) AS Count FROM Items WHERE CreatedDate >= @StartDate3 AND CreatedDate <= @EndDate3 GROUP BY
+        CASE 
+            WHEN ItemStatus = 2 AND Active <> 0 THEN 'Preteklo'
+            WHEN (ItemStatus = 1 OR ItemStatus = 2) AND Active = 0 THEN 'Dokončano'
+            WHEN ItemStatus = 1 AND Active = 1 THEN 'Še ne dokončano'
+        END";
+
+            var dataMonth3 = (await connection.QueryAsync(queryMonth3, new { StartDate3 = oneMonthAgo, EndDate3 = currentDate }))
+                .Where(row => row.Status != null && row.Count != null)
+                .ToDictionary(row => row.Status, row => (int)row.Count);
+
+            // Ensure zero counts for Month3
+            foreach (var status in new[] { "Dokončano", "Še ne dokončano", "Preteklo" })
+            {
+                if (!dataMonth3.ContainsKey(status))
+                {
+                    dataMonth3[status] = 0;
+                }
+            }
+
+            data.Add(new Dictionary<string, object>
+    {
+        { "name", oneMonthAgo.ToString("MM.yy") },
+        { "data", dataMonth3 },
+        { "startingDate", oneMonthAgo.ToString("dd.MM.yyyy") },
+        { "currentDate", currentDate.ToString("dd.MM.yyyy") }
+    });
+            _logger.LogInformation($"---Graph-Opravila---" + " currentDate: " + currentDate + " threeMonthsAgo: " + threeMonthsAgo + " twoMonthsAgo: " + twoMonthsAgo + " oneMonthAgo: " + oneMonthAgo);
             return new Response<object>
             {
                 Success = true,
-                Data = stackedColumnData
+                Data = data
             };
         }
 
@@ -87,12 +179,15 @@ namespace AngularAuthAPI.Controllers
             var currentDate = DateTime.Now;
             var lastMonthStartDate = currentDate.AddMonths(-1);
 
-            var completedCount = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) AS Count FROM Items WHERE ItemStatus = 2 AND Active = 0 AND CreatedDate >= @StartDate AND CreatedDate <= @EndDate", new { StartDate = lastMonthStartDate, EndDate = currentDate });
+            var completedCount = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) AS Count FROM Items WHERE (ItemStatus = 2 OR ItemStatus = 1) AND Active = 0 AND CreatedDate >= @StartDate AND CreatedDate <= @EndDate", new { StartDate = lastMonthStartDate, EndDate = currentDate });
             var totalCount = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) AS Count FROM Items WHERE CreatedDate >= @StartDate AND CreatedDate <= @EndDate", new { StartDate = lastMonthStartDate, EndDate = currentDate });
 
             double percentage = totalCount > 0 ? (completedCount / (double)totalCount) * 100 : 0;
 
+
             int roundedPercentage = (int)Math.Round(percentage); // Convert to integer
+
+            _logger.LogInformation("---Procenti_GRAF--- " + $"roundedPercentage: {roundedPercentage} " + $"currentDate: {currentDate} " + $"lastMonthStartDate: {lastMonthStartDate} " + $"completedCount: {completedCount} " + $"totalCount: {totalCount} " + $"percentage: {percentage} ");
 
             return new Response<double>
             {
@@ -124,7 +219,7 @@ namespace AngularAuthAPI.Controllers
                 minutes %= 60;
                 seconds %= 60;
 
-                item.TimeTaken = $"{days} days, {hours} hours, {minutes} minutes, {seconds} seconds";
+                item.TimeTaken = $"{days} dneh, {hours} urah, {minutes} minutah in {seconds} sekundah";
             }
 
             return new Response<object>

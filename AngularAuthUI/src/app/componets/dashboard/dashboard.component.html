@@ -185,9 +185,36 @@
                                                     {{item.itemName}} 
                                                 </div>
                                             </div>
+                                            <div class="column is-1">
+                                                <div class="tooltip" data-tooltip="Opomnik">
+                                                    <button class="ReminderChkbox" (click)="createNotification(item)"></button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </h3>
                                     <p class="description">{{item.itemDesc}}</p>
+                                    <div class="tooltip" data-tooltip="Priloge" style="width: 100%;">
+                                        <h5 class="subtitle is-5 liner has-text-grey-lighter">Priloge</h5>
+                                    </div>
+                                    <div class="list" *ngFor="let file of files.data">
+                                        <span *ngIf="file.tag == item.tag && file.itemName == item.itemName">
+                                            <div class="tooltip" data-tooltip="Prenesi prilogo">
+                                                <div class="file_c">
+                                                    <button class="button" (click)="downloadFile(file.id,file.fileName)">
+                                                        <span class="icon-text">
+                                                            <span class="icon is-small">
+                                                                <i [ngClass]="getFileIconClass(file.fileName)" class="fas fa-1x"></i> 
+                                                            </span>
+                                                            <span> {{file.fileName}} | {{file.fileSize | byteSize}}</span>
+                                                            <span class="icon">
+                                                                <i class="fa-regular fa-circle-down"></i>
+                                                            </span>
+                                                        </span>
+                                                    </button>
+                                                </div>   
+                                            </div>
+                                        </span>
+                                    </div>
                                     <hr class="slim">
                                     <div class="field">
                                         <div class="columns">
@@ -236,6 +263,28 @@
                                     <h3 class="title has-text-grey-light is-2"><s>{{item.itemName}}</s></h3>
                                     </div>
                                     <p class="description"><s>{{item.itemDesc}}</s></p>
+                                    <div class="tooltip" data-tooltip="Priloge" style="width: 100%;">
+                                        <h5 class="subtitle is-5 liner has-text-grey-lighter">Priloge</h5>
+                                    </div>
+                                    <div class="list" *ngFor="let file of files.data">
+                                        <span *ngIf="file.tag == item.tag && file.itemName == item.itemName">
+                                            <div class="tooltip" data-tooltip="Prenesi prilogo">
+                                                <div class="file_c">
+                                                    <button class="button" (click)="downloadFile(file.id,file.fileName)">
+                                                        <span class="icon-text">
+                                                            <span class="icon is-small">
+                                                                <i [ngClass]="getFileIconClass(file.fileName)" class="fas fa-1x"></i> 
+                                                            </span>
+                                                            <span> {{file.fileName}} | {{file.fileSize | byteSize}}</span>
+                                                            <span class="icon">
+                                                                <i class="fa-regular fa-circle-down"></i>
+                                                            </span>
+                                                        </span>
+                                                    </button>
+                                                </div>   
+                                            </div>
+                                        </span>
+                                    </div>
                                 </div>
                                 <hr class="slim">
                                 <div class="field">
@@ -297,6 +346,28 @@
                                         </div>
                                     </h3>
                                     <p class="description">{{item.itemDesc}}</p>
+                                    <div class="tooltip" data-tooltip="Priloge" style="width: 100%;">
+                                        <h5 class="subtitle is-5 liner has-text-grey-lighter">Priloge</h5>
+                                    </div>
+                                    <div class="list" *ngFor="let file of files.data">
+                                        <span *ngIf="file.tag == item.tag && file.itemName == item.itemName">
+                                            <div class="tooltip" data-tooltip="Prenesi prilogo">
+                                                <div class="file_c">
+                                                    <button class="button" (click)="downloadFile(file.id,file.fileName)">
+                                                        <span class="icon-text">
+                                                            <span class="icon is-small">
+                                                                <i [ngClass]="getFileIconClass(file.fileName)" class="fas fa-1x"></i> 
+                                                            </span>
+                                                            <span> {{file.fileName}} | {{file.fileSize | byteSize}}</span>
+                                                            <span class="icon">
+                                                                <i class="fa-regular fa-circle-down"></i>
+                                                            </span>
+                                                        </span>
+                                                    </button>
+                                                </div>   
+                                            </div>
+                                        </span>
+                                    </div>
                                 </div>
                                 <hr class="slim">
                                 <div class="field">
@@ -350,6 +421,28 @@
                                         </div>
                                     </h3>
                                     <p class="description ">{{item.itemDesc}}</p>
+                                    <div class="tooltip" data-tooltip="Priloge" style="width: 100%;">
+                                        <h5 class="subtitle is-5 liner has-text-grey-lighter">Priloge</h5>
+                                    </div>
+                                    <div class="list" *ngFor="let file of files.data">
+                                        <span *ngIf="file.tag == item.tag && file.itemName == item.itemName">
+                                            <div class="tooltip" data-tooltip="Prenesi prilogo">
+                                                <div class="file_c">
+                                                    <button class="button" (click)="downloadFile(file.id,file.fileName)">
+                                                        <span class="icon-text">
+                                                            <span class="icon is-small">
+                                                                <i [ngClass]="getFileIconClass(file.fileName)" class="fas fa-1x"></i> 
+                                                            </span>
+                                                            <span> {{file.fileName}} | {{file.fileSize | byteSize}}</span>
+                                                            <span class="icon">
+                                                                <i class="fa-regular fa-circle-down"></i>
+                                                            </span>
+                                                        </span>
+                                                    </button>
+                                                </div>   
+                                            </div>
+                                        </span>
+                                    </div>
                                 </div>
                                 <hr class="slim">
                                 <div class="field">
@@ -399,6 +492,28 @@
                                         </div>
                                     </h3>
                                     <p class="description">{{item.itemDesc}}</p>
+                                    <div class="tooltip" data-tooltip="Priloge" style="width: 100%;">
+                                        <h5 class="subtitle is-5 liner has-text-grey-lighter">Priloge</h5>
+                                    </div>
+                                    <div class="list" *ngFor="let file of files.data">
+                                        <span *ngIf="file.tag == item.tag && file.itemName == item.itemName">
+                                            <div class="tooltip" data-tooltip="Prenesi prilogo">
+                                                <div class="file_c">
+                                                    <button class="button" (click)="downloadFile(file.id,file.fileName)">
+                                                        <span class="icon-text">
+                                                            <span class="icon is-small">
+                                                                <i [ngClass]="getFileIconClass(file.fileName)" class="fas fa-1x"></i> 
+                                                            </span>
+                                                            <span> {{file.fileName}} | {{file.fileSize | byteSize}}</span>
+                                                            <span class="icon">
+                                                                <i class="fa-regular fa-circle-down"></i>
+                                                            </span>
+                                                        </span>
+                                                    </button>
+                                                </div>   
+                                            </div>
+                                        </span>
+                                    </div>
                                 </div>
                                 <hr class="slim">
                                 <div class="field">

@@ -19,7 +19,7 @@
                 </div>
                 <div class="form" [formGroup]="createForm">
                     <div class="box">
-                        <h3 class="tittle is-3">Glava opravila</h3>
+                        <h5 class="title is-5">Glava opravila</h5>
                         <div class="columns">
                             <div class="column">
                                 <div class="field">
@@ -52,9 +52,30 @@
                                 <textarea class="textarea has-fixed-size" formControlName="ItemDesc" type="text" placeholder="Opis opravila"></textarea>
                             </p>
                         </div>  
+                        <div class="field">
+                            <input type="file" (change)="onFileSelected($event)" multiple>
+                            <ul class="list">
+                                <li *ngFor="let file of selectedFiles">
+                                    <small>
+                                        <span class="icon is-left">
+                                            <i [class]="getFileIconClass(file.type)"></i>
+                                        </span>
+                                        <span>
+                                            {{ file.name }} |   
+                                        </span>
+                                        <span class="icon is-left">
+                                            <i class="fa-solid fa-floppy-disk"></i>
+                                        </span>
+                                        <span>
+                                            {{formatFileSize(file.size)}}
+                                        </span>
+                                    </small>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="box">
-                        <h3 class="tittle is-3">Podrobnosti opravila</h3>
+                        <h5 class="title is-5">Podrobnosti opravila</h5>
                         <div class="columns">
                             <div class="column">
                                 <p>Že opravljeno?</p>
@@ -77,11 +98,171 @@
                         </div>
                         </div>
                     </div>
+                    <div class="box">
+                        <div class="columns">
+                           <div class="column">
+                            <h5 class="title is-5">Ponavljajoča opravila</h5>
+                           </div> 
+                           <div class="column is-2">
+                            <label class="switch">
+                                <input #switchElement type="checkbox" class="switch" (change)="toggleContent()">
+                                <span class="slider round"></span>
+                            </label>
+                           </div> 
+                        </div>
+                       <div class="switch-content" *ngIf="isSwitchChecked">
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link">
+                              Izbira
+                            </a>
+                    
+                            <div class="navbar-dropdown">
+                                <a class="navbar-item">
+                                  <input type="radio" id="dnevno" name="repeatingOption" (change)="onRadioChange('daily')" [checked]="!showDaily">
+                                  <span class="pl-2">
+                                    Dnevno ponavljajoča
+                                  </span>
+                                </a>
+                                <a class="navbar-item">
+                                    <input type="radio" id="weekly" name="repeatingOption" (change)="onRadioChange('weekly')" [checked]="!showWeekly">
+                                    <span class="pl-2">
+                                      Tedensko ponavljajoča
+                                    </span>
+                                  </a>
+                                <a class="navbar-item">
+                                  <input type="radio" id="monthly" name="repeatingOption" (change)="onRadioChange('monthly')" [checked]="!showMonthly">
+                                  <span class="pl-2">
+                                    Mesečno ponavljajoča
+                                  </span>
+                                </a>
+                                <a class="navbar-item">
+                                  <input type="radio" id="yearly" name="repeatingOption" (change)="onRadioChange('yearly')" [checked]="!showYearly">
+                                  <span class="pl-2">
+                                    Letno ponavljajoča
+                                  </span>
+                                </a>
+                                <a class="navbar-item">
+                                  <input type="radio" id="custom" name="repeatingOption" (change)="onRadioChange('custom')" [checked]="!showCustom">
+                                  <span class="pl-2">
+                                    Po izbiri ponavljajoča
+                                  </span>
+                                </a>
+                              </div>
+                          </div>
+                        <!--Dnevno-->
+                        <div class="box" *ngIf="!showDaily">
+                            <div class="columns">
+                                <div class="column">
+                                    <h6 class="title is-6">Dnevno ponavljajoča</h6>
+                                </div>
+                                <div class="column">
+                                    <input type="radio" value='Dnevno' formControlName="ItemRepeating">
+                                </div>
+                            </div>
+                        </div>
+                        <!--Tedensko-->
+                        <div class="box" *ngIf="!showWeekly">
+                            <div class="columns">
+                                <div class="column">
+                                    <h6 class="title is-6">Tedensko ponavljajoča</h6>
+                                </div>
+                                <div class="column">
+                                    <input type="radio" value='Tedensko' formControlName="ItemRepeating">
+                                </div>
+                            </div>
+                            <div class="grid">
+                                <div class="column">
+                                    <div class="box day">
+                                        <div class="center">
+                                            <p>Ponedeljek</p>
+                                            <input type="checkbox" class="weekly-check" (change)="toggleDay(1)" [checked]="isDaySelected(1)">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <div class="box day">
+                                        <div class="center">
+                                            <p>Torek</p>
+                                            <input type="checkbox" class="weekly-check" (change)="toggleDay(2)" [checked]="isDaySelected(2)">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <div class="box day">
+                                        <div class="center">
+                                            <p>Sreda</p> 
+                                            <input type="checkbox" class="weekly-check" (change)="toggleDay(3)" [checked]="isDaySelected(3)">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <div class="box day">
+                                        <div class="center">
+                                            <p>Četrtek</p>
+                                            <input type="checkbox" class="weekly-check" (change)="toggleDay(4)" [checked]="isDaySelected(4)">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <div class="box day">
+                                        <div class="center">
+                                            <p>Petek</p>
+                                            <input type="checkbox" class="weekly-check" (change)="toggleDay(5)" [checked]="isDaySelected(5)">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <div class="box day">
+                                        <div class="center">
+                                            <p>Sobota</p>
+                                            <input type="checkbox" class="weekly-check" (change)="toggleDay(6)" [checked]="isDaySelected(6)">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <div class="box day">
+                                        <div class="center">
+                                            <p>Nedelja</p>
+                                            <input type="checkbox" class="weekly-check" (change)="toggleDay(7)" [checked]="isDaySelected(7)">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Mesečno-->
+                        <div class="box" *ngIf="!showMonthly">
+                            <div class="columns">
+                                <div class="column">
+                                    <h6 class="title is-6">Mesecno ponavljajoča</h6>
+                                </div>
+                                <div class="column">
+                                    <input type="radio" value='Mesecno' formControlName="ItemRepeating">
+                                </div> 
+                            </div>
+                        </div>
+                        <!--Letno-->
+                        <div class="box" *ngIf="!showYearly">
+                            <div class="columns">
+                                <div class="column">
+                                    <h6 class="title is-6">Letno ponavljajoča</h6>
+                                </div>
+                                <div class="column">
+                                    <input type="radio" value='Letno' formControlName="ItemRepeating">
+                                </div> 
+                            </div>
+                        </div>
+                        <!--Custom-->
+                        <div class="box" *ngIf="!showCustom">
+                            <h6 class="title is-6">Po izbiri ponavljajoča</h6>
+                            <input type="date" class="input" formControlName="ReapeatCustom">
+                        </div>
+                       </div>
+                    </div>
                 </div>
             </div>
         </section>
-        <footer class="modal-card-foot">
-            <button (click)="onCreate()" [disabled]="!this.createForm.valid" class="button is-success">Ustvari</button>
+        <footer class="modal-card-foot" >
+            <button (click)="onCreate()" class="button is-success">Ustvari</button>
         </footer>
     </div>
 </div>

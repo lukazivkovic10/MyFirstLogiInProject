@@ -1,0 +1,12 @@
+<div class="calendar">
+    <div class="days">
+      <div
+        class="day"
+        *ngFor="let day of daysInMonth"
+        [class.selected]="selectedDate === day"
+        (click)="selectDate(day)"
+      >
+        {{ day }}
+      </div>
+    </div>
+  </div>

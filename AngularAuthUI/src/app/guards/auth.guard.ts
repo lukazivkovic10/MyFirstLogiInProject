@@ -10,9 +10,9 @@ export const authGuard: CanActivateFn = () => {
 
   if(auth.isLoggedIn())
   {
+    toast.error({detail:"NAPAKA", summary:"Ste že prijavljeni!", duration: 5000});
+    router.navigate(['home']);
     return true;
   }else
-  toast.error({detail:"NAPAKA", summary:"Prosim prijavite se prvo", duration: 5000});
-  router.navigate(['login']);
   return false;
 };

@@ -3,62 +3,58 @@
     <p class="title">
       Grafi opravil
     </p>
-    <div class="columns">
-      <div class="column">
-        <div class="box">
-          <app-stacked-graph></app-stacked-graph> 
+    <div class="columns" id="flex1">
+      <div id="grid">
+        <div class="tooltip" data-tooltip="Število vseh opravil">
+          <div class="box" id="grid-box">
+            <h6 class="subtitle is-6">Vsa Opravila</h6>
+            <h1 class="title is-1"><b>{{tasks.data.Vse}}</b></h1>
+            <div class="icon is-large" id="grid-icon">
+              <i class="fa-solid fa-list-check fas fa-10x"></i>
+            </div>
+          </div>
+        </div>
+        <div class="tooltip" data-tooltip="Število vseh dokončanih opravil">
+          <div class="box" id="grid-box">
+            <h6 class="subtitle is-6">Dokončana opravila</h6>
+            <h1 class="title is-1"><b>{{tasks.data.Dokoncano}}</b></h1>
+            <div class="icon is-large" id="grid-icon">
+              <i class="fa-solid fa-check fas fa-10x"></i>
+            </div>
+          </div>
+        </div>
+        <div class="tooltip" data-tooltip="Število vseh ne dokončanih opravil">
+          <div class="box" id="grid-box">
+            <h6 class="subtitle is-6">Ne dokončana opravila</h6>
+            <h1 class="title is-1"><b>{{tasks.data.Nedokoncano}}</b></h1>
+            <div class="icon is-large" id="grid-icon">
+              <i class="fa-solid fa-hourglass-half fas fa-10x"></i>
+            </div>
+          </div>
+        </div>
+        <div class="tooltip" data-tooltip="Število vseh preteklih opravil">
+          <div class="box" id="grid-box">
+            <h6 class="subtitle is-6">Pretekla opravila</h6>
+            <h1 class="title is-1"><b>{{tasks.data.Preteklo}}</b></h1>
+            <div class="icon is-large" id="grid-icon">
+              <i class="fa-solid fa-x fas fa-10x"></i>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="column">
-        <div class="box">
-          <app-percentage-graph></app-percentage-graph>
-        </div>
-      </div>
-      <div class="column">
-        <div class="box">
-          <app-timeline-chart></app-timeline-chart>
-        </div> 
+      <div class="box stacked-chart" id="stacked-chart">
+        <h4 class="title is-4">Opravila v zadnjih treh mescih</h4>
+        <app-stacked-graph></app-stacked-graph> 
       </div>
     </div>
-    <div class="container is-fluid">
-  <table class="table is-striped is-bordered is-narrow is-fullwidth is-hoverable">
-     <thead>
-         <tr>
-            <th class="has-text-danger" scope="col" >
-              <span class="icons">
-                <i class="fas fa-hashtag"></i>
-              </span>
-            </th>
-            <th class="has-text-danger" scope="col">
-              <span class="icons">
-                <i class="fas fa-user"></i>
-              </span>
-              Ime
-            </th>
-            <th class="has-text-danger" scope="col">
-              <span class="icons">
-                <i class="fas fa-signature"></i>
-              </span>
-              Priimek
-            </th>
-            <th class="has-text-danger" scope="col">
-              <span class="icons">
-                <i class="fas fa-solid fa-inbox"></i>
-              </span>
-              Elektronski naslov
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let user of users; let i= index">
-            <td >{{i+1}}</td>
-            <td>{{user.firstName}}</td>
-            <td>{{user.lastName}}</td>
-            <td>{{user.email}}</td>
-        </tr>
-  
-    </tbody>
-  </table>
-  </div>
+    <div class="columns" id="flex2">
+      <div class="box timeline-chart" id="timeline-chart">
+        <h4 class="title is-4">Najhitreje opravljena opravila</h4>
+        <app-timeline-chart></app-timeline-chart>
+      </div>
+      <div class="box" id="percentage-graph">
+        <app-percentage-graph></app-percentage-graph>
+      </div>
+    </div>
   </section>
 </body>

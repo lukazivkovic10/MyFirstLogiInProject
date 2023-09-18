@@ -10,5 +10,6 @@
         public int Active { get; set; } = 1;
         public DateTime CreatedDate { get; set; }
         public DateTime CompleteDate { get; set; }
+        public string ItemRepeating { get; set; }
     }
 }

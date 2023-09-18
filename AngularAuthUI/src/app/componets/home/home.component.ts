@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AuthService } from 'src/app/services/auth.service';
+import { GraphService } from 'src/app/services/graph.service';
 
 @Component({
   selector: 'app-home',
@@ -7,21 +7,21 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
-  constructor(private auth: AuthService){
+  public tasks: { success: boolean; error: number; message: string; data: any } = {
+    success: false,
+    error: 0,
+    message: '',
+    data: []
   };
-  public users:any = [];
-  public fullName : string = "";
+
+  constructor(private Graph: GraphService){}
+
   ngOnInit()
   {
-    this.auth.getAll()
-    .subscribe(res=>{
-      this.users = res;
-    })
+    this.Graph.NumberOfAllTasks().subscribe
+    ((res: any) => {
+      console.log(res);
+      this.tasks = res;
+    });
   }
-
-  public getId(x:number = 0){
-    if(this.users.user.id = x)
-    {
-    }
-  };
 }

@@ -15,8 +15,11 @@ namespace AngularAuthAPI.Models
         public DateTime DateOfCompletion { get; set; }
         public int TimeTakenSeconds { get; set; }
         public string? TimeTaken { get; set; }
-
         public string FormattedCreatedDate { get; set; }
         public string FormattedDateOfCompletion { get; set; }
+        public string FolderPath { get; set; }
+        public string ItemRepeating { get; set; }
+        public string ItemDaysOfWeek { get; set; }
+        public DateTime NextActivationDate { get; set; }
     }
 }

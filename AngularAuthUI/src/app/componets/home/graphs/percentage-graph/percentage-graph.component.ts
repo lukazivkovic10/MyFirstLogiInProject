@@ -4,7 +4,8 @@ import {
   ApexPlotOptions,
   ApexChart,
   ChartComponent,
-  ApexFill
+  ApexFill,
+  ApexStroke
 } from "ng-apexcharts";
 import { GraphService } from 'src/app/services/graph.service';
 
@@ -14,6 +15,7 @@ export type ChartOptions = {
   labels: string[];
   plotOptions: ApexPlotOptions;
   fill: ApexFill;
+  stroke: ApexStroke;
 };
 
 @Component({
@@ -41,14 +43,36 @@ export class PercentageGraphComponent {
       plotOptions: {
         radialBar: {
           hollow: {
-            size: '70%'
+            size: '75%'
+          },
+          track: {
+            dropShadow: {
+              enabled: true,
+              top: 2,
+              left: 0,
+              blur: 4,
+              opacity: 0.15
+            }
+          },
+          dataLabels: {
+            name: {
+              fontSize: "15px",
+              fontWeight: 'bold'
+            },
+            value: {
+              fontSize: "30px",
+              show: true
+            }
           }
         }
       },
-      labels: ['Uspešnost v 31 dneh'],
+      labels: ['Uspešnost v zadnjih 31 dneh'],
       fill: {
         opacity: 1,
         colors: ['hsl(141, 53%, 31%)']
+      },
+      stroke: {
+        lineCap: "round"
       }
     };
   }
@@ -56,7 +80,8 @@ export class PercentageGraphComponent {
   ngOnInit() {
     this.graphService.PercentageData().subscribe((res: any) => {
       this.items = res;
-      this.chartOptions.series = [this.items.data]; // Set the series data from API response
+      this.chartOptions.series = [this.items.data];
+       // Set the series data from API response
     });
   }
 }

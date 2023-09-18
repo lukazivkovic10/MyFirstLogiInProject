@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Dapper;
 using AngularAuthAPI.Dtos;
+using Microsoft.Extensions.Logging;
 
 namespace AngularAuthAPI.Controllers
 {
@@ -11,9 +12,11 @@ namespace AngularAuthAPI.Controllers
     public class ListController : ControllerBase
     {
         private readonly IConfiguration _config;
-        public ListController( IConfiguration configuration)
+        private readonly ILogger<ListController> _logger;
+        public ListController( IConfiguration configuration, ILogger<ListController> logger)
         {
             _config = configuration;
+            _logger = logger;
         }
 
         [HttpGet("IskanjeListaVseh")]
@@ -155,7 +158,6 @@ namespace AngularAuthAPI.Controllers
         }
 
         [HttpPut("Update")]
-
         public async Task<ActionResult<Response<object>>> UpdateItem([FromBody] ListItemDto ItemDto)
         {
             using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
@@ -277,6 +279,7 @@ namespace AngularAuthAPI.Controllers
             using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             var exists = await connection.ExecuteScalarAsync<bool>("select count(1) from Items where ItemName = @ItemName and Tag = @Tag", new { ItemDataDto.ItemName, ItemDataDto.Tag });
 
+
             if (!exists)
             {
                 // Error 404
@@ -292,6 +295,7 @@ namespace AngularAuthAPI.Controllers
             }
             else
             {
+
                 // Calculate and store TimeTakenSeconds
                 var currentItem = await connection.QuerySingleOrDefaultAsync<Items>("select * from Items where ItemName = @ItemName and Tag = @Tag", new { ItemDataDto.ItemName, ItemDataDto.Tag });
 
@@ -300,7 +304,8 @@ namespace AngularAuthAPI.Controllers
                 // Update the Active status, DateOfCompletion, and TimeTakenSeconds
                 await connection.ExecuteAsync("update Items SET TimeTakenSeconds = @TimeTakenSeconds, Active = '0', DateOfCompletion = @CurrentDate where ItemName = @ItemName and Tag = @Tag",new { ItemDataDto.ItemName, ItemDataDto.Tag, CurrentDate = DateTime.Now, TimeTakenSeconds });
 
-                    var Response = new Response<object>
+                _logger.LogInformation($"TimeTakenSeconds: " + TimeTakenSeconds);
+                var Response = new Response<object>
                     {
                         Success = true,
                         Error = 200,
@@ -352,11 +357,12 @@ namespace AngularAuthAPI.Controllers
         public async Task<ActionResult<Response<object>>> CreateItem([FromBody] ListItemDto ItemDto)
         {
             using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var exists = connection.ExecuteScalar<bool>("select count(1) from Items where ItemName = @ItemName and Tag = @Tag", new { ItemDto.ItemName, ItemDto.Tag });
-            if (exists == true)
+            var exists = connection.ExecuteScalar<bool>("SELECT COUNT(1) FROM Items WHERE ItemName = @ItemName AND Tag = @Tag", new { ItemDto.ItemName, ItemDto.Tag });
+
+            if (exists)
             {
-                //Error 400
-                var erorrResponse = new Response<object>
+                // Error 400
+                var errorResponse = new Response<object>
                 {
                     Success = false,
                     Error = 400,
@@ -364,12 +370,31 @@ namespace AngularAuthAPI.Controllers
                     Data = "400"
                 };
 
-                return erorrResponse;
+                return errorResponse;
             }
             else
             {
-                var item = await connection.ExecuteAsync("if not exists (select * from items where ItemName = @ItemName and Tag = @Tag) insert into Items (Tag, ItemName, ItemDesc, Active, ItemStatus, CreatedDate, CompleteDate) values (@Tag, @ItemName, @ItemDesc, @Active, @ItemStatus, @CreatedDate, @CompleteDate)", ItemDto);
+                // Generate the folder_path based on ItemName and Tag
+                string folderPath = $"/uploads/todo_{ItemDto.Tag.Replace(" ", "_")}_{ItemDto.ItemName.Replace(" ", "_")}/";
+
+                // Insert the new to-do item into the database with the generated folder_path
+                await connection.ExecuteAsync("INSERT INTO Items (Tag, ItemName, ItemDesc, Active, ItemStatus, CreatedDate, CompleteDate, folderPath, ItemRepeating) " +
+                                              "VALUES (@Tag, @ItemName, @ItemDesc, @Active, @ItemStatus, @CreatedDate, @CompleteDate, @folderPath, @ItemRepeating)",
+                                              new
+                                              {
+                                                  ItemDto.Tag,
+                                                  ItemDto.ItemName,
+                                                  ItemDto.ItemDesc,
+                                                  ItemDto.Active,
+                                                  ItemDto.ItemStatus,
+                                                  ItemDto.CreatedDate,
+                                                  ItemDto.CompleteDate,
+                                                  folderPath,
+                                                  ItemDto.ItemRepeating
+                                              });
+
                 IEnumerable<Items> data = await SelectAllItems(connection);
+
                 var successResponse = new Response<object>
                 {
                     Success = true,
@@ -383,7 +408,6 @@ namespace AngularAuthAPI.Controllers
         }
 
         [HttpDelete("SoftDelete{ItemName}")]
-
         public async Task<ActionResult<Response<object>>> SoftDeleteItem(string ItemName)
         {
             using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));

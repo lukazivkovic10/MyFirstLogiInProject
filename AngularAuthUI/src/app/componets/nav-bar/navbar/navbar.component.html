@@ -42,12 +42,18 @@
                 </span>
             </button>
             <div class="navbar-dropdown is-right p-4">
-                <button (click)="logout()" class="button has-text-dark">
-                  <div class="icon">
-                    <i class="fa-solid fa-right-to-bracket"></i>
-                  </div>
-                  <span class="has-text-dark">Odjava</span>
-                </button>
+              <button class="button has-text-dark" routerLink="/user-list">
+                <div class="icon">
+                  <i class="fa-solid fa-users-between-lines"></i>
+                </div>
+                <span class="has-text-dark">Uporabniki</span>
+              </button>
+              <button (click)="logout()" class="button has-text-dark">
+                <div class="icon">
+                  <i class="fa-solid fa-right-to-bracket"></i>
+                </div>
+                <span class="has-text-dark">Odjava</span>
+              </button>
             </div>
         </div>
       </div>

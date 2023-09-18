@@ -1,0 +1,43 @@
+<body>
+    <h3 class="title is-3">
+        Registrirani uporabniki
+    </h3>
+    <table class="table is-striped is-bordered is-narrow is-fullwidth is-hoverable">
+        <thead>
+            <tr>
+               <th class="has-text-danger" scope="col" >
+                 <span class="icons">
+                   <i class="fas fa-hashtag"></i>
+                 </span>
+               </th>
+               <th class="has-text-danger" scope="col">
+                 <span class="icons">
+                   <i class="fas fa-user"></i>
+                 </span>
+                 Ime
+               </th>
+               <th class="has-text-danger" scope="col">
+                 <span class="icons">
+                   <i class="fas fa-signature"></i>
+                 </span>
+                 Priimek
+               </th>
+               <th class="has-text-danger" scope="col">
+                 <span class="icons">
+                   <i class="fas fa-solid fa-inbox"></i>
+                 </span>
+                 Elektronski naslov
+               </th>
+           </tr>
+       </thead>
+       <tbody>
+           <tr *ngFor="let user of users; let i= index">
+               <td >{{i+1}}</td>
+               <td>{{user.firstName}}</td>
+               <td>{{user.lastName}}</td>
+               <td>{{user.email}}</td>
+           </tr>
+     
+       </tbody>
+     </table>
+</body>

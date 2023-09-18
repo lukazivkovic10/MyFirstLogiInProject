@@ -9,6 +9,11 @@ export class GraphService {
   private baseUrl:string = "https://localhost:7023/api/Graph/"
   constructor(private http : HttpClient, private router: Router) { }
 
+  NumberOfAllTasks()
+  {
+    return this.http.get<any>(`${this.baseUrl}ŠtVsehOpravil`);
+  }
+
   StackedData()
   {
     return this.http.get<any>(`${this.baseUrl}GraphOpravila`);

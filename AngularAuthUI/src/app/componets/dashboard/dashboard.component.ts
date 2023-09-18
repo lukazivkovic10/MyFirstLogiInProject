@@ -3,7 +3,11 @@ import { NgToastService } from 'ng-angular-popup';
 import { ListService } from 'src/app/services/list.service';
 import { SearchTagService } from 'src/app/services/search-tag.service';
 import { SharedDataService } from 'src/app/services/shared-data-service.service';
-import { trigger, state, style, animate, transition } from '@angular/animations';
+import { Router } from '@angular/router';
+import { FileUploadService } from 'src/app/services/file-upload.service';
+import { NotificationService } from 'src/app/services/notification.service';
+import { SignalRService } from 'src/app/services/signal-r.service';
+import { Observable } from 'rxjs';
 
 interface Item
 {
@@ -20,6 +24,16 @@ interface Item
   TimeTaken: string;
 }
 
+interface File
+{
+  id: number;
+  tag: string;
+  itemName: string;
+  fileSize: number;
+  filePath: string;
+  fileName: string;
+}
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -29,6 +43,13 @@ interface Item
 export class DashboardComponent implements OnInit{
 
   public items: { success: boolean; error: number; message: string; data: Item[] } = {
+    success: false,
+    error: 0,
+    message: '',
+    data: []
+  };
+
+  public files: { success: boolean; error: number; message: string; data: File[] } = {
     success: false,
     error: 0,
     message: '',
@@ -60,7 +81,10 @@ export class DashboardComponent implements OnInit{
   public hideDeleted: boolean = false;
   public hideDone: boolean = false; 
 
-  constructor(private auth: ListService, private sharedData: SharedDataService, private searchService: SearchTagService,private toast: NgToastService) 
+  constructor(private auth: ListService, private sharedData: SharedDataService, 
+    private searchService: SearchTagService,private toast: NgToastService, 
+    private router: Router, private fileS: FileUploadService, 
+    private notificationService: NotificationService, private signalRService: SignalRService) 
   {};
 
   ngOnInit() {
@@ -69,16 +93,134 @@ export class DashboardComponent implements OnInit{
         this.items = res;
       }
     );
-
+    this.fileS.GetAllFiles().subscribe(
+      (res: any) => {
+        this.files = res;
+      }
+    );
     this.sharedData.searchResult$.subscribe((res: any) => {
       if (res) {
         this.items = res;
       }
     });
-
     this.searchService.getSearchData().subscribe(data => {
       this.searchData = data;
   });
+  // Initialize SignalR and subscribe to notifications
+  this.signalRService.addNotificationListener((message: string) => {
+    // Call the showNotification function when a new notification is received
+    this.notificationService.showNotification(
+      'Opravila',
+      {
+        body: message,
+        icon: '../assets/check-to-slot-solid.svg' // URL to an icon image
+      }
+    );
+
+    this.notificationService.notificationClick.subscribe(() => {
+      // Open the specified URL when the notification is clicked
+      window.open('http://localhost:4200/dashboard', '_blank');
+    });
+  });
+  }
+
+  sendNotification(): void {
+    // Example: Send a notification from this component
+    setTimeout(() => {
+      this.notificationService.showNotification(
+        'Opravila',
+        {
+          body: 'Rok za TestFileD bo potekel čez 24ur.',
+          icon: '../assets/check-to-slot-solid.svg' // URL to an icon image
+        }
+      );
+    }, 5000); // 5 seconds (5,000 milliseconds)
+  
+    // Subscribe to the custom notificationClick event
+    this.notificationService.notificationClick.subscribe(() => {
+      // Open the specified URL when the notification is clicked
+      window.open('http://localhost:4200/dashboard', '_blank');
+    });
+  }
+
+  createNotification(notificationData: object): void {
+    this.notificationService.requestNotificationPermission();
+    this.notificationService.CreateNoti(notificationData).subscribe(
+      (response) => {
+        // Handle the response from the server if needed
+        console.log('Notification created successfully:', response);
+      },
+      (error) => {
+        // Handle any errors that occur during the HTTP request
+        console.error('Error creating notification:', error);
+      }
+    );
+  }
+
+  downloadFile(id: number, fileName: string) {
+    this.fileS.DownloadFile(id).subscribe(
+      (blobData: Blob) => {
+        const blob = new Blob([blobData], { type: 'application/octet-stream' });
+        const url = window.URL.createObjectURL(blob);
+
+        // Create a temporary link element and set the desired file name
+        const a = document.createElement('a');
+        a.href = url;
+
+        // Specify the desired file name here
+        a.download = fileName; // Replace with the desired file name
+
+        document.body.appendChild(a);
+        a.click();
+
+        // Clean up
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      },
+      (error) => {
+        console.error('Error downloading file:', error);
+      }
+    );
+  }
+
+  getFileIconClass(fileName: string| undefined): string {
+    // Extract the file extension from the file name
+    if (!fileName) {
+      // Return a default icon class for unknown file types
+      return 'fas fa-file'; // You can replace this with your desired default icon class
+    }
+
+    const fileExtension = fileName.split('.').pop()?.toLowerCase() || '';
+
+    // Define your iconMap here (same as in your previous code)
+    const iconMap: { [key: string]: string } = {
+      'jpg': 'fas fa-file-image',
+      'jpeg': 'fas fa-file-image',
+      'png': 'fas fa-file-image',
+      'pdf': 'fas fa-file-pdf',
+      'zip': 'fas fa-file-archive',
+      '7zip': 'fas fa-file-archive',
+      'pptx': 'fas fa-file-powerpoint',
+      'pptm': 'fas fa-file-powerpoint',
+      'ppt': 'fas fa-file-powerpoint',
+      'xlsx': 'fas fa-file-excel',
+      'xlsm': 'fas fa-file-excel',
+      'xlsb': 'fas fa-file-excel',
+      'xltx': 'fas fa-file-excel',
+      'doc': 'fas fa-file-word',
+      'txt': 'fas fa-file-lines',
+      'mpeg': 'fas fa-file-video',
+      'mp3': 'fas fa-file-audio',
+    };
+
+    // Check if the extracted file extension exists in the iconMap
+  if (iconMap.hasOwnProperty(fileExtension)) {
+    // Return the corresponding icon class
+    return iconMap[fileExtension];
+  } else {
+    // Return a default icon class for unknown file types
+    return 'fas fa-file'; // You can replace this with your desired default icon class
+  }
   }
 
   isHovered = false;

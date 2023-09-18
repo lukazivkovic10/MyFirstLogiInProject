@@ -80,7 +80,7 @@ export class TimelineChartComponent {
       this.chartOptions = {
         series: [{ data:chartData }],
         chart: {
-          height: 350,
+          height: 450,
           type: "rangeBar"
         },
         plotOptions: {
@@ -97,7 +97,7 @@ export class TimelineChartComponent {
           formatter: function (value: any, { seriesIndex, dataPointIndex }: { seriesIndex: number, dataPointIndex: number }): string {
             const dataPoint = chartData[dataPointIndex];
             const formattedDate = 'Rok: ' + dataPoint.completeDate;
-            const formattedTimeTaken = 'Opravljeno v: ' + dataPoint.TimeTaken;
+            const formattedTimeTaken = '| Opravljeno v ' + dataPoint.TimeTaken;
             return formattedDate + '\n' + formattedTimeTaken;
           },
           style: {

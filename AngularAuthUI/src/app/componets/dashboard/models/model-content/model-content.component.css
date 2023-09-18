@@ -31,5 +31,101 @@
   .options-container input[type="radio"]:checked + label {
     background-color: hsl(0, 0%, 86%);
   }
-  
+
+  .list
+  {
+    list-style-type: square;
+    padding-left: 25px;
+    padding-top: 15px;
+  }
+
+  /*Switch checkbox*/
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 25px;
+}
+
+.switch input.switch { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 19px;
+  width: 19px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input.switch:checked + .slider {
+  background-color: #2196F3;
+}
+
+input.switch:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input.switch:checked + .slider:before {
+  -webkit-transform: translateX(15px);
+  -ms-transform: translateX(15px);
+  transform: translateX(15px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.grid
+{
+  display: grid;
+  grid-template-columns: auto auto auto;
+}
+
+.day
+{
+  height: 100px;
+  width: 100px;
+}
+
+.center
+{
+  display: flex;
+  align-self: center;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+}
+
+.weekly-check
+{
+  width: 25px;
+  height: 25px;
+  align-self: center;
+  justify-self: center;
+}
   
