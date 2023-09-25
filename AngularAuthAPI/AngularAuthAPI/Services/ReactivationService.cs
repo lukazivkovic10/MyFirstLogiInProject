@@ -34,9 +34,14 @@ namespace AngularAuthAPI.Services
                 {
                     CalculateNextActivationDate(item);
 
-                    if (item.NextActivationDate.Date <= DateTime.Today)
+                    var itemsNextDate = dbConnection.Query<RepeatingItem>("SELECT NextActivationDate FROM RepeatingItem WHERE ItemName = @ItemName and Tag = @Tag", new { ItemName = item.ItemName, Tag = item.Tag });
+
+                    foreach (var repeatingItem in itemsNextDate)
                     {
-                        PerformReactivation(item);
+                        if (repeatingItem.NextActivationDate <= DateTime.Today)
+                        {
+                            PerformReactivation(item);
+                        }
                     }
                 }
             }
@@ -83,7 +88,7 @@ namespace AngularAuthAPI.Services
             {
                 dbConnection.Open();
                 dbConnection.Execute(
-                    "UPDATE Items SET NextActivationDate = @NextActivationDate WHERE Tag = @Tag AND ItemName = @ItemName",
+                    "UPDATE RepeatingItem SET NextActivationDate = @NextActivationDate WHERE Tag = @Tag AND ItemName = @ItemName",
                     new
                     {
                        ItemName = todoItem.ItemName,
@@ -164,12 +169,11 @@ namespace AngularAuthAPI.Services
 
                 // Update the database with the new item or reactivation information
                 dbConnection.Execute(
-                    "UPDATE Items SET CreatedDate = @CreatedDate, CompleteDate = @CompleteDate, NextActivationDate = @NextActivationDate WHERE Id = @Id",
+                    "UPDATE Items SET CreatedDate = @CreatedDate, CompleteDate = @CompleteDate WHERE Id = @Id",
                     new
                     {
                         todoItem.CreatedDate,
                         todoItem.CompleteDate,
-                        todoItem.NextActivationDate,
                         Id = todoItem.Id
                     });
 

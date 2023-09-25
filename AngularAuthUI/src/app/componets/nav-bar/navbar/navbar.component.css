@@ -5,6 +5,7 @@
 
 .navbar
 {
+    z-index: 10000;
     height: 56px;
     padding-left: 75px;
     padding-right: 65px;

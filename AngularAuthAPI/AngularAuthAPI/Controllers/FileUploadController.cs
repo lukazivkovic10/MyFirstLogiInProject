@@ -24,7 +24,7 @@ namespace AngularAuthAPI.Controllers
         }
 
         private readonly string[] AllowedFileExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".mp4", ".txt", ".pdf", ".zip", ".7zip", ".pptx", ".pptm", ".ppt", ".xlsx", ".xlsm", ".xlsb", ".xltx", ".doc", ".plain", ".mpeg", ".mp3" };
-        private const long MaxFileSize = 100 * 1024 * 1024;
+        private const long MaxFileSize = 25 * 1024 * 1024;
 
         [HttpPost("Upload")]
         public IActionResult Upload([FromForm] string todoTagName, [FromForm] string Tag, [FromForm] string ItemName, [FromForm] List<IFormFile> files)
@@ -53,7 +53,7 @@ namespace AngularAuthAPI.Controllers
                         // Check if the file size is within the limit
                         if (file.Length > MaxFileSize)
                         {
-                            return BadRequest(new { message = "Velikost datoteke presega 100MB." });
+                            return BadRequest(new { message = "Velikost datoteke presega 25MB." });
                         }
 
                         // Create a unique folder for each to-do item

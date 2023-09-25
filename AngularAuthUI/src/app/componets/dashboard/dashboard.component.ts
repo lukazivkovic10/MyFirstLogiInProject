@@ -7,7 +7,8 @@ import { Router } from '@angular/router';
 import { FileUploadService } from 'src/app/services/file-upload.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { SignalRService } from 'src/app/services/signal-r.service';
-import { Observable } from 'rxjs';
+import { AssignUserService } from 'src/app/services/assign-user.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 interface Item
 {
@@ -22,6 +23,14 @@ interface Item
   dateOfCompletion: Date;
   TimeTakenSeconds: number;
   TimeTaken: string;
+  ItemRepeating: string;
+}
+
+interface User
+{
+  firstName: string;
+  lastName: string;
+  email: string;
 }
 
 interface File
@@ -34,6 +43,13 @@ interface File
   fileName: string;
 }
 
+interface UserAsign
+{
+  tag:string;
+  itemName:string;
+  userMail:string;
+}
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -43,6 +59,20 @@ interface File
 export class DashboardComponent implements OnInit{
 
   public items: { success: boolean; error: number; message: string; data: Item[] } = {
+    success: false,
+    error: 0,
+    message: '',
+    data: []
+  };
+
+  public users: { success: boolean; error: number; message: string; data: User[] } = {
+    success: false,
+    error: 0,
+    message: '',
+    data: []
+  };
+
+  public assignedUsers: { success: boolean; error: number; message: string; data: UserAsign[] } = {
     success: false,
     error: 0,
     message: '',
@@ -68,6 +98,7 @@ export class DashboardComponent implements OnInit{
     message: '',
     data: ''
   }
+  addUserForm!: FormGroup;
 
   public savedTag: string = "";
 
@@ -84,7 +115,8 @@ export class DashboardComponent implements OnInit{
   constructor(private auth: ListService, private sharedData: SharedDataService, 
     private searchService: SearchTagService,private toast: NgToastService, 
     private router: Router, private fileS: FileUploadService, 
-    private notificationService: NotificationService, private signalRService: SignalRService) 
+    private notificationService: NotificationService, private signalRService: SignalRService,
+    private UserAsign: AssignUserService, private fb: FormBuilder)
   {};
 
   ngOnInit() {
@@ -93,6 +125,15 @@ export class DashboardComponent implements OnInit{
         this.items = res;
       }
     );
+    this.UserAsign.showUsers().subscribe
+    ((res: any)=>
+    {
+      this.users = res;
+    });
+    this.UserAsign.showAssignedUsers().subscribe((res: any) => {
+      console.log(res);
+      this.assignedUsers = res;
+    });
     this.fileS.GetAllFiles().subscribe(
       (res: any) => {
         this.files = res;
@@ -121,6 +162,9 @@ export class DashboardComponent implements OnInit{
       // Open the specified URL when the notification is clicked
       window.open('http://localhost:4200/dashboard', '_blank');
     });
+  });
+  this.addUserForm = this.fb.group({
+    UserMail: ['',Validators.required]
   });
   }
 
@@ -155,6 +199,16 @@ export class DashboardComponent implements OnInit{
         console.error('Error creating notification:', error);
       }
     );
+  }
+
+  asignUserToItem(itemTag: string, itemName: string, userEmail: string) {
+    const userObj = {
+      Tag: itemTag,
+      Email: userEmail,
+      ItemName: itemName
+    };
+  
+    this.UserAsign.AsignUser(userObj).subscribe();
   }
 
   downloadFile(id: number, fileName: string) {

@@ -146,9 +146,18 @@
     </nav>
     <div class="page-container">
         <div class="content pt-2">
-            <h1 class="title is-1">
-                Opravila
-            </h1>
+            <div class="columns">
+                <div class="column">
+                    <h1 class="title">
+                        <b>Opravila</b>
+                    </h1>
+                </div>
+                <div class="column is-1">
+                    <button class="circle-btn" (click)="modelOpenCreate()">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                </div>
+            </div>
             <div *ngIf="searchData.search!''" class="tag is-link is-medium is-rounded">
                 {{searchData.search}}
                 <button (click)="showAll()" class="delete py-1"></button>
@@ -163,35 +172,91 @@
                             {{saveTag(item.tag)}} 
                         </h2>
                     </div>
-                </div>
+                </div> 
+
                     <!--Pusta-->
                     <span *ngIf="!hideNotDoneYet && item.itemStatus==1 && item.active==1">
                         <div class="box notdone">
-                            <div class="columns">
-                                <div class="column is-1">
-                                    <div class="tooltip" data-tooltip="Opravljeno">
-                                        <button (click)="doneCurrent(item)" class="button checkbox-type">
-                                            <div class="icons">
-                                                <i class="fas fa-check checkbox-type-icon"> </i>
-                                            </div>
-                                        </button>  
-                                    </div>
-                                </div>
-                                <div class="column">
-                                    <h3 class="title  is-2">
+                                <div>
                                         <div class="columns">
                                             <div class="column">
-                                                <div class="tooltip" data-tooltip="Še ne opravljeno">
-                                                    {{item.itemName}} 
+                                                <div class="tooltip" data-tooltip="Opravljeno">
+                                                    <button (click)="doneCurrent(item)" class="button checkbox-type">
+                                                        <div class="icons">
+                                                            <i class="fas fa-check checkbox-type-icon"> </i>
+                                                        </div>
+                                                    </button>  
                                                 </div>
                                             </div>
-                                            <div class="column is-1">
-                                                <div class="tooltip" data-tooltip="Opomnik">
-                                                    <button class="ReminderChkbox" (click)="createNotification(item)"></button>
+                                            <div class="column is-3">
+                                                <div class="columns">
+                                                    <div class="column">
+                                                        <div class="tooltip" data-tooltip="Opomnik">
+                                                            <button class="ReminderChkbox" (click)="createNotification(item)">
+                                                                <span class="icon">
+                                                                    <i class="fa-solid fa-bell ReminderIcon"></i>
+                                                                </span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="tooltip" data-tooltip="Dodeli opravilo uporabniku">
+                                                            <span class="user-button-item">
+                                                                <button class="circle-btn">
+                                                                    <i class="fa-solid fa-plus"></i>
+                                                                </button>
+                                                                <ul class="menu-user-list">
+                                                                    <div class="control has-icons-left">
+                                                                        <div class="form" [formGroup]="addUserForm">
+                                                                            <div class="select">
+                                                                                <select formControlName="UserMail" placeholder="Dodaj uporabnika">
+                                                                                    <option value="" disabled selected>Dodaj uporabnika</option>
+                                                                                    <option *ngFor="let user of users.data" [value]="user.email">{{user.email}}</option>
+                                                                                </select>
+                                                                                <span class="icon is-left">
+                                                                                    <i class="fas fa-tag"></i>
+                                                                                  </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <button class="button" (invalid)="!addUserForm" (click)="asignUserToItem(item.tag, item.itemName, addUserForm.get('UserMail')?.value)">Dodaj</button>
+                                                                    </div>
+                                                                </ul>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="tooltip" data-tooltip="Dodatne nastavitve">
+                                                            <span class="button-item">
+                                                                <button class="show-menu-button">
+                                                                    <span class="icon button-item">
+                                                                        <i class="fa-solid fa-angles-down"></i>
+                                                                    </span>
+                                                                </button>
+                                                                <ul class="menu-sub-list">
+                                                                    <li class="menu-item" style="--i:2;">
+                                                                        <button class="menu-button center" (click)="modelOpenDelete()">
+                                                                            <span class="icon">
+                                                                                <i class="fa-solid fa-delete-left fa-2x"></i>
+                                                                            </span>
+                                                                        </button>
+                                                                    </li>
+                                                                    <li class="menu-item " style="--i:1;">
+                                                                        <button class="menu-button center" (click)="modelOpenEdit()">
+                                                                            <span class="icon">
+                                                                                <i class="fa-solid fa-pen-to-square fa-2x"></i>
+                                                                            </span>
+                                                                        </button>
+                                                                    </li>
+                                                                </ul>
+                                                            </span>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </h3>
+                                    <div class="tooltip" data-tooltip="Še ne opravljeno">
+                                        <h2 class="todo-title">{{item.itemName}}</h2>
+                                    </div>
                                     <p class="description">{{item.itemDesc}}</p>
                                     <div class="tooltip" data-tooltip="Priloge" style="width: 100%;">
                                         <h5 class="subtitle is-5 liner has-text-grey-lighter">Priloge</h5>
@@ -229,38 +294,67 @@
                                                 </div>
                                             </div>
                                             <div class="column">
-                                                <div class="tags has-addons end">
-                                                    <span class="tag is-rounded is-medium">
-                                                        <div class="icons">
-                                                            <i class="fas fa-tag"></i>
+                                                <div class="columns">
+                                                    <div class="column">
+                                                        <div class="tooltip" data-tooltip="Dodeljeni uporabniki">
+                                                            <span class="user-button-item">
+                                                                <button class="circle-btn">
+                                                                    <i class="fa-solid fa-users"></i>
+                                                                </button>
+                                                                <ul class="menu-user-list">
+                                                                    <span *ngFor="let auser of assignedUsers.data">
+                                                                        <li *ngIf="auser.tag === item.tag && auser.itemName === item.itemName">
+                                                                            <div class="columns">
+                                                                                <div class="column is-1">
+                                                                                    <span class="icon">
+                                                                                        <i class="fa-solid fa-clipboard-user"></i>
+                                                                                    </span>
+                                                                                </div>
+                                                                                <div class="column">
+                                                                                    <span>{{auser.userMail}}</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </li>
+                                                                    </span>
+                                                                </ul>
+                                                            </span>
                                                         </div>
-                                                    </span>
-                                                <span class="tag is-rounded has-background-link-dark is-medium has-text-white-bis">
-                                                    <b>{{item.tag}}</b>
-                                                </span>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="tags has-addons end">
+                                                            <span class="tag is-rounded is-medium">
+                                                                <div class="icons">
+                                                                    <i class="fas fa-tag"></i>
+                                                                </div>
+                                                            </span>
+                                                        <span class="tag is-rounded has-background-link-dark is-medium has-text-white-bis">
+                                                            <b>{{item.tag}}</b>
+                                                        </span>
+                                                        </div>  
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                         </div>
                     </span>
+
                     <!--Soft Izbrisana-->
                     <div class="box deleted"*ngIf="!hideDeleted && item.itemStatus==0">
-                        <div class="columns">
-                            <div class="column is-1">
-                                <div class="tooltip" data-tooltip="Izbrisano">
-                                    <div class="icon is-large">
-                                        <i class="fa-solid fa-trash fa-2x"></i>
-                                    </div> 
-                                </div>
-
-                            </div>
-                            <div class="column">
+                        <div>
                                 <div class="field">
+                                    <div class="columns">
+                                        <div class="column">
+                                            <div class="tooltip" data-tooltip="Izbrisano">
+                                                <div class="icon is-large">
+                                                    <i class="fa-solid fa-trash fa-2x"></i>
+                                                </div> 
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="tooltip" data-tooltip="Izbrisano">
-                                    <h3 class="title has-text-grey-light is-2"><s>{{item.itemName}}</s></h3>
+                                        <h2 class="todo-title"><s>{{item.itemName}}</s></h2>
                                     </div>
                                     <p class="description"><s>{{item.itemDesc}}</s></p>
                                     <div class="tooltip" data-tooltip="Priloge" style="width: 100%;">
@@ -317,34 +411,51 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+
                     <!--Narejena-->
                     <div class="box done" *ngIf="!hideDone && item.itemStatus==1 && item.active==0">
-                        <div class="columns">
-                            <div class="column is-1">
-                                <div class="tooltip" data-tooltip="Še ne opravljeno">
-                                    <button (click)="notDoneCurrent(item)" class="button checkbox-type-done">
-                                        <div class="icons">
-                                            <i class="fas  fa-check checkbox-type-icon-done"></i>
-                                        </div>
-                                    </button>  
-                                </div>
-                            </div>
-                            <div class="column">
                                 <div class="field">
-                                    <h3 class="title is-2">
-                                        <div class="columns">
-                                            <div class="column">
-                                                <div class="tooltip" data-tooltip="Dokončano">
-                                                    {{item.itemName}}
+                                    <div class="columns">
+                                        <div class="column">
+                                            <div class="tooltip" data-tooltip="Še ne opravljeno">
+                                                <button (click)="notDoneCurrent(item)" class="button checkbox-type-done">
+                                                    <div class="icons">
+                                                        <i class="fas  fa-check checkbox-type-icon-done"></i>
                                                     </div>
-                                            </div>
-                                            <div class="column is-1">
-                                                <div class="tooltip" data-tooltip="Ne Opravljeno">
-                                                    </div>
+                                                </button>  
                                             </div>
                                         </div>
-                                    </h3>
+                                        <div class="column is-1">
+                                            <div class="tooltip" data-tooltip="Dodatne nastavitve">
+                                                <span class="button-item">
+                                                    <button class="show-menu-button">
+                                                        <span class="icon button-item">
+                                                            <i class="fa-solid fa-angles-down"></i>
+                                                        </span>
+                                                    </button>
+                                                    <ul class="menu-sub-list">
+                                                        <li class="menu-item" style="--i:2;">
+                                                            <button class="menu-button center" (click)="modelOpenDelete()">
+                                                                <span class="icon">
+                                                                    <i class="fa-solid fa-delete-left fa-2x"></i>
+                                                                </span>
+                                                            </button>
+                                                        </li>
+                                                        <li class="menu-item " style="--i:1;">
+                                                            <button class="menu-button center" (click)="modelOpenEdit()">
+                                                                <span class="icon">
+                                                                    <i class="fa-solid fa-pen-to-square fa-2x"></i>
+                                                                </span>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tooltip" data-tooltip="Dokončano">
+                                        <h2 class="todo-title">{{item.itemName}}</h2>
+                                    </div>
                                     <p class="description">{{item.itemDesc}}</p>
                                     <div class="tooltip" data-tooltip="Priloge" style="width: 100%;">
                                         <h5 class="subtitle is-5 liner has-text-grey-lighter">Priloge</h5>
@@ -400,97 +511,145 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
                     </div>
+
                     <!--Ne Dokončano-->
                     <div class="box expired" *ngIf="!hideNotDone && item.itemStatus == 2 && item.active != 0">
-                        <div class="columns">
-                            <div class="column is-1">
-                                <div class="tooltip" data-tooltip="Pretekel rok">
-                                    <span class="icon is-large has-text-danger-dark">
-                                        <i class="fas fa-x fa-2x"></i>
-                                    </span>  
-                                </div>
-                            </div>
-                            <div class="column">
-                                <div class="field">
-                                    <h3 class="title is-2">
-                                        <div class="tooltip" data-tooltip="Pretekel rok">
-                                        {{item.itemName}}
-                                        </div>
-                                    </h3>
-                                    <p class="description ">{{item.itemDesc}}</p>
-                                    <div class="tooltip" data-tooltip="Priloge" style="width: 100%;">
-                                        <h5 class="subtitle is-5 liner has-text-grey-lighter">Priloge</h5>
+                        <div class="field">
+                            <div class="columns">
+                                <div class="column">
+                                    <div class="tooltip" data-tooltip="Pretekel rok">
+                                        <span class="icon is-large has-text-danger-dark">
+                                            <i class="fas fa-x fa-2x"></i>
+                                        </span>  
                                     </div>
-                                    <div class="list" *ngFor="let file of files.data">
-                                        <span *ngIf="file.tag == item.tag && file.itemName == item.itemName">
-                                            <div class="tooltip" data-tooltip="Prenesi prilogo">
-                                                <div class="file_c">
-                                                    <button class="button" (click)="downloadFile(file.id,file.fileName)">
-                                                        <span class="icon-text">
-                                                            <span class="icon is-small">
-                                                                <i [ngClass]="getFileIconClass(file.fileName)" class="fas fa-1x"></i> 
-                                                            </span>
-                                                            <span> {{file.fileName}} | {{file.fileSize | byteSize}}</span>
-                                                            <span class="icon">
-                                                                <i class="fa-regular fa-circle-down"></i>
-                                                            </span>
+                                </div>
+                                <div class="column is-1">
+                                    <div class="tooltip" data-tooltip="Dodatne nastavitve">
+                                        <span class="button-item">
+                                            <button class="show-menu-button">
+                                                <span class="icon button-item">
+                                                    <i class="fa-solid fa-angles-down"></i>
+                                                </span>
+                                            </button>
+                                            <ul class="menu-sub-list">
+                                                <li class="menu-item" style="--i:2;">
+                                                    <button class="menu-button center" (click)="modelOpenDelete()">
+                                                        <span class="icon">
+                                                            <i class="fa-solid fa-delete-left fa-2x"></i>
                                                         </span>
                                                     </button>
-                                                </div>   
-                                            </div>
+                                                </li>
+                                                <li class="menu-item " style="--i:1;">
+                                                    <button class="menu-button center" (click)="modelOpenEdit()">
+                                                        <span class="icon">
+                                                            <i class="fa-solid fa-pen-to-square fa-2x"></i>
+                                                        </span>
+                                                    </button>
+                                                </li>
+                                            </ul>
                                         </span>
                                     </div>
                                 </div>
-                                <hr class="slim">
-                                <div class="field">
-                                    <div class="columns">
-                                        <div class="column is-3">
-                                            <div class="box time-box has-text-danger-dark">
-                                                <div class="tooltip center" data-tooltip="Zastavljen datum oddaje: ">
-                                                    <div class="icon">
-                                                        <i class="fa-solid fa-hourglass"></i>
-                                                    </div>
-                                                    <b>{{item.completeDate | date:'HH:mm dd.MM.yyyy'}}</b>  
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="column">
-                                            <div class="tags has-addons end">
-                                                <span class="tag is-rounded has-background-danger-dark is-medium has-text-white-bis">
-                                                    <div class="icons">
-                                                        <i class="fas fa-tag"></i>
-                                                    </div>
+                            </div>
+                            <div class="tooltip" data-tooltip="Pretekel rok">
+                                <h2 class="todo-title">{{item.itemName}}</h2>
+                            </div>
+                            <p class="description ">{{item.itemDesc}}</p>
+                            <div class="tooltip" data-tooltip="Priloge" style="width: 100%;">
+                                <h5 class="subtitle is-5 liner has-text-grey-lighter">Priloge</h5>
+                            </div>
+                            <div class="list" *ngFor="let file of files.data">
+                                <span *ngIf="file.tag == item.tag && file.itemName == item.itemName">
+                                    <div class="tooltip" data-tooltip="Prenesi prilogo">
+                                        <div class="file_c">
+                                            <button class="button" (click)="downloadFile(file.id,file.fileName)">
+                                                <span class="icon-text">
+                                                    <span class="icon is-small">
+                                                        <i [ngClass]="getFileIconClass(file.fileName)" class="fas fa-1x"></i> 
+                                                    </span>
+                                                    <span> {{file.fileName}} | {{file.fileSize | byteSize}}</span>
+                                                    <span class="icon">
+                                                        <i class="fa-regular fa-circle-down"></i>
+                                                    </span>
                                                 </span>
-                                            <span class="tag is-rounded is-whites is-medium has-text-danger-dark">
-                                                <b>{{item.tag}}</b>
-                                            </span>
-                                            </div>  
+                                            </button>
+                                        </div>   
+                                    </div>
+                                </span>
+                            </div>
+                        </div>
+                        <hr class="slim">
+                        <div class="field">
+                            <div class="columns">
+                                <div class="column is-3">
+                                    <div class="box time-box has-text-danger-dark">
+                                        <div class="tooltip center" data-tooltip="Zastavljen datum oddaje: ">
+                                            <div class="icon">
+                                                <i class="fa-solid fa-hourglass"></i>
+                                            </div>
+                                            <b>{{item.completeDate | date:'HH:mm dd.MM.yyyy'}}</b>  
                                         </div>
                                     </div>
+                                </div>
+                                <div class="column">
+                                    <div class="tags has-addons end">
+                                        <span class="tag is-rounded has-background-danger-dark is-medium has-text-white-bis">
+                                            <div class="icons">
+                                                <i class="fas fa-tag"></i>
+                                            </div>
+                                        </span>
+                                    <span class="tag is-rounded is-whites is-medium has-text-danger-dark">
+                                        <b>{{item.tag}}</b>
+                                    </span>
+                                    </div>  
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <!--Narejena-->
                     <div class="box done" *ngIf="!hideDone && item.itemStatus==2 && item.active==0">
-                        <div class="columns">
-                            <div class="column is-1">
-                                <div class="tooltip" data-tooltip="Opravljeno v roku">
-                                    <div class="icon is-large has-text-success-dark">
-                                        <i class="fa-solid fa-check fa-2x"></i>
-                                    </div> 
-                                </div>
-                            </div>
-                            <div class="column">
                                 <div class="field">
-                                    <h3 class="title is-2">
-                                        <div class="tooltip" data-tooltip="Dokončano">
-                                        {{item.itemName}}
+                                    <div class="columns">
+                                        <div class="column">
+                                            <div class="tooltip" data-tooltip="Opravljeno v roku">
+                                                <div class="icon is-large has-text-success-dark">
+                                                    <i class="fa-solid fa-check fa-2x"></i>
+                                                </div> 
+                                            </div>
                                         </div>
-                                    </h3>
+                                        <div class="column is-1">
+                                            <div class="tooltip" data-tooltip="Dodatne nastavitve">
+                                                <span class="button-item">
+                                                    <button class="show-menu-button">
+                                                        <span class="icon button-item">
+                                                            <i class="fa-solid fa-angles-down"></i>
+                                                        </span>
+                                                    </button>
+                                                    <ul class="menu-sub-list">
+                                                        <li class="menu-item" style="--i:2;">
+                                                            <button class="menu-button center" (click)="modelOpenDelete()">
+                                                                <span class="icon">
+                                                                    <i class="fa-solid fa-delete-left fa-2x"></i>
+                                                                </span>
+                                                            </button>
+                                                        </li>
+                                                        <li class="menu-item " style="--i:1;">
+                                                            <button class="menu-button center" (click)="modelOpenEdit()">
+                                                                <span class="icon">
+                                                                    <i class="fa-solid fa-pen-to-square fa-2x"></i>
+                                                                </span>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tooltip" data-tooltip="Dokončano">
+                                        <h2 class="todo-title">{{item.itemName}}</h2>
+                                    </div>
                                     <p class="description">{{item.itemDesc}}</p>
                                     <div class="tooltip" data-tooltip="Priloge" style="width: 100%;">
                                         <h5 class="subtitle is-5 liner has-text-grey-lighter">Priloge</h5>
@@ -546,8 +705,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
                     </div>
             </div>
         </div>

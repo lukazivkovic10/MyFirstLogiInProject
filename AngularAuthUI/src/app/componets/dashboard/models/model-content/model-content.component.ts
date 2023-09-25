@@ -203,6 +203,7 @@ public showMonthly: boolean = true;
 public showYearly: boolean = true;
 public showWeekly: boolean = true;
 public showCustom: boolean = true;
+public showWeeklyFieldset: boolean = true;
 
 onRadioChange(option: string) {
   switch (option) {
@@ -211,21 +212,21 @@ onRadioChange(option: string) {
       this.showMonthly = true;
       this.showYearly = true;
       this.showWeekly = true;
-      this.showCustom = true;
+      this.showWeeklyFieldset = true;
       break;
     case 'monthly':
       this.showDaily = true;
       this.showMonthly = false;
       this.showYearly = true;
       this.showWeekly = true;
-      this.showCustom = true;
+      this.showWeeklyFieldset = true;
       break;
     case 'yearly':
       this.showDaily = true;
       this.showMonthly = true;
       this.showYearly = false;
       this.showWeekly = true;
-      this.showCustom = true;
+      this.showWeeklyFieldset = true;
       break;
     case 'weekly':
       this.showDaily = true;
@@ -233,6 +234,7 @@ onRadioChange(option: string) {
       this.showYearly = true;
       this.showWeekly = false;
       this.showCustom = true;
+      this.showWeeklyFieldset = true;
       break;
     case 'custom':
       this.showDaily = true;
@@ -240,12 +242,24 @@ onRadioChange(option: string) {
       this.showYearly = true;
       this.showWeekly = true;
       this.showCustom = false;
+      this.showWeeklyFieldset = true;
       break;
+    case 'showWeekly':
+      this.showWeeklyFieldset = false;
+    break;
+
     default:
       // Handle unexpected option
       break;
   }
 }
+
+showFieldset: boolean = false;
+
+toggleFieldset() {
+  this.showFieldset = !this.showFieldset;
+}
+
   toggleDay(day: number) {
     const control = this.createForm.get('ReapeatWeekly');
 

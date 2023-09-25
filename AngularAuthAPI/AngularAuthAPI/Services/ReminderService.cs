@@ -3,6 +3,9 @@ using AngularAuthAPI.Models;
 using Dapper;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Data.SqlClient;
+using ntfy;
+using ntfy.Actions;
+using ntfy.Requests;
 
 namespace AngularAuthAPI.Services
 {
@@ -45,6 +48,8 @@ namespace AngularAuthAPI.Services
                             // Send the reminder using SignalR
                             await SendNotification($"Reminder for '{reminder.ItemName}': {reminder.ReminderDescription}");
 
+                            await SendNotificationNtfy($"Potekel bo rok za opravilo {reminder.Tag}, {reminder.ItemName} čez 24 ur. Klikni me, da opravilo označiš kot dokončano.");
+
                             // Mark the reminder as sent in the database
                             connection.Execute(
                                 "UPDATE Reminder SET ReminderSent = 1 WHERE Id = @Id",
@@ -65,6 +70,25 @@ namespace AngularAuthAPI.Services
         public async Task SendNotification(string message)
         {
             await _hubContext.Clients.All.SendAsync("ReceiveNotification", message);
+        }
+
+        public async Task SendNotificationNtfy(string desc)
+        {
+            var client = new Client("https://ntfy.sh/");
+            var message = new SendingMessage
+            {
+                Title = "Opravilo bo poteklo.",
+                Message = desc,
+                Click = new Uri("http://localhost:4200/dashboard"),
+                Actions = new ntfy.Actions.Action[]
+            {
+                new View("Nujno", new Uri("http://localhost:4200/dashboard"))
+                {
+                }
+            }
+            };
+
+            await client.Publish("nPhWPYveugtYi7rKToDoAppNotification", message);
         }
     }
 }

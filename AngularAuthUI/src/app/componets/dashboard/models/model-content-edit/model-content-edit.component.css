@@ -1,3 +1,10 @@
+.modal-card
+{
+  z-index: 250;
+  border: solid 2px hsl(0, 0%, 45%);
+  border-radius: 10px;
+}
+
 .options {
     display: flex;
     position: relative;

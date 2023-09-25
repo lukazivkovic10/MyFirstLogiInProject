@@ -354,7 +354,7 @@ namespace AngularAuthAPI.Controllers
         }
 
         [HttpPost("Ustvarjanje")]
-        public async Task<ActionResult<Response<object>>> CreateItem([FromBody] ListItemDto ItemDto)
+        public async Task<ActionResult<Response<object>>> CreateItem([FromBody] ListItemCreate ItemDto)
         {
             using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             var exists = connection.ExecuteScalar<bool>("SELECT COUNT(1) FROM Items WHERE ItemName = @ItemName AND Tag = @Tag", new { ItemDto.ItemName, ItemDto.Tag });
@@ -390,6 +390,14 @@ namespace AngularAuthAPI.Controllers
                                                   ItemDto.CreatedDate,
                                                   ItemDto.CompleteDate,
                                                   folderPath,
+                                                  ItemDto.ItemRepeating
+                                              });
+                await connection.ExecuteAsync("INSERT INTO RepeatingItem (TypeOfReapeating, Tag, ItemName) " +
+                                              "VALUES (@ItemRepeating, @Tag, @ItemNamE)",
+                                              new
+                                              {
+                                                  ItemDto.Tag,
+                                                  ItemDto.ItemName,
                                                   ItemDto.ItemRepeating
                                               });
 

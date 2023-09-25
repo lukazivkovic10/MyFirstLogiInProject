@@ -75,6 +75,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.2.3, )"
+            },
+            "ntfy": {
+              "target": "Package",
+              "version": "[0.5.0, )"
             }
           },
           "imports": [

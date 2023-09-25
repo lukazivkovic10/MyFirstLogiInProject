@@ -1,5 +1,4 @@
 <div class="modal is-active">
-    <div class="modal-background"></div>
     <div class="modal-card">
         <header class="modal-card-head">
             <div class="modal-card-title">
@@ -111,44 +110,31 @@
                            </div> 
                         </div>
                        <div class="switch-content" *ngIf="isSwitchChecked">
-                        <div class="navbar-item has-dropdown is-hoverable">
-                            <a class="navbar-link">
-                              Izbira
-                            </a>
-                    
-                            <div class="navbar-dropdown">
-                                <a class="navbar-item">
-                                  <input type="radio" id="dnevno" name="repeatingOption" (change)="onRadioChange('daily')" [checked]="!showDaily">
-                                  <span class="pl-2">
-                                    Dnevno ponavljajoča
-                                  </span>
-                                </a>
-                                <a class="navbar-item">
-                                    <input type="radio" id="weekly" name="repeatingOption" (change)="onRadioChange('weekly')" [checked]="!showWeekly">
-                                    <span class="pl-2">
-                                      Tedensko ponavljajoča
-                                    </span>
-                                  </a>
-                                <a class="navbar-item">
-                                  <input type="radio" id="monthly" name="repeatingOption" (change)="onRadioChange('monthly')" [checked]="!showMonthly">
-                                  <span class="pl-2">
-                                    Mesečno ponavljajoča
-                                  </span>
-                                </a>
-                                <a class="navbar-item">
-                                  <input type="radio" id="yearly" name="repeatingOption" (change)="onRadioChange('yearly')" [checked]="!showYearly">
-                                  <span class="pl-2">
-                                    Letno ponavljajoča
-                                  </span>
-                                </a>
-                                <a class="navbar-item">
-                                  <input type="radio" id="custom" name="repeatingOption" (change)="onRadioChange('custom')" [checked]="!showCustom">
-                                  <span class="pl-2">
-                                    Po izbiri ponavljajoča
-                                  </span>
-                                </a>
-                              </div>
-                          </div>
+                        <div class="nav-select">
+                                <div>
+                                    <label>
+                                        <input type="radio" id="dnevno" name="repeatingOption" (change)="onRadioChange('daily')" [checked]="!showDaily">
+                                        <span>Dnevno</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" id="weekly" name="repeatingOption" (change)="onRadioChange('weekly')" [checked]="!showWeekly">
+                                        <span>Tedensko</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" id="monthly" name="repeatingOption" (change)="onRadioChange('monthly')" [checked]="!showMonthly">
+                                        <span>Mesečno</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" id="yearly" name="repeatingOption" (change)="onRadioChange('yearly')" [checked]="!showYearly">
+                                        <span>Letno</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" id="custom" name="repeatingOption" (change)="onRadioChange('custom')" [checked]="!showCustom">
+                                        <span>Po izbiri</span>
+                                    </label>
+                                    
+                                </div>
+                        </div>
                         <!--Dnevno-->
                         <div class="box" *ngIf="!showDaily">
                             <div class="columns">
@@ -156,7 +142,10 @@
                                     <h6 class="title is-6">Dnevno ponavljajoča</h6>
                                 </div>
                                 <div class="column">
-                                    <input type="radio" value='Dnevno' formControlName="ItemRepeating">
+                                    <label class="switch">
+                                        <input #switchElement type="radio" value='Dnevno' class="switch" formControlName="ItemRepeating">
+                                        <span class="slider round"></span>
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -167,67 +156,92 @@
                                     <h6 class="title is-6">Tedensko ponavljajoča</h6>
                                 </div>
                                 <div class="column">
-                                    <input type="radio" value='Tedensko' formControlName="ItemRepeating">
+                                    <label class="switch">
+                                        <input #switchElement class="switch" type="radio" value='Tedensko' formControlName="ItemRepeating" formControlName="ItemRepeating" (change)="onRadioChange('showWeekly')" [checked]="!showYearly">
+                                        <span class="slider round"></span>
+                                    </label>
                                 </div>
                             </div>
-                            <div class="grid">
-                                <div class="column">
-                                    <div class="box day">
-                                        <div class="center">
-                                            <p>Ponedeljek</p>
-                                            <input type="checkbox" class="weekly-check" (change)="toggleDay(1)" [checked]="isDaySelected(1)">
-                                        </div>
-                                    </div>
+                            <fieldset class="checkbox-group" *ngIf="!showWeeklyFieldset">
+                                <legend class="checkbox-group-legend">Izberi dni tedna</legend>
+                                <div class="checkbox">
+                                    <label class="checkbox-wrapper">
+                                        <input type="checkbox" class="checkbox-input" (change)="toggleDay(1)" [checked]="isDaySelected(1)">
+                                        <span class="checkbox-tile">
+                                        <span class="checkbox-icon">
+                                            <i class="fa-solid fa-briefcase"></i>
+                                        </span>
+                                        <span class="checkbox-label">Ponedeljek</span>
+                                        </span>
+                                    </label>
                                 </div>
-                                <div class="column">
-                                    <div class="box day">
-                                        <div class="center">
-                                            <p>Torek</p>
-                                            <input type="checkbox" class="weekly-check" (change)="toggleDay(2)" [checked]="isDaySelected(2)">
-                                        </div>
-                                    </div>
+                                <div class="checkbox">
+                                    <label class="checkbox-wrapper">
+                                        <input type="checkbox" class="checkbox-input" (change)="toggleDay(2)" [checked]="isDaySelected(2)">
+                                        <span class="checkbox-tile">
+                                        <span class="checkbox-icon">
+                                            <i class="fa-solid fa-briefcase"></i>
+                                        </span>
+                                        <span class="checkbox-label">Torek</span>
+                                        </span>
+                                    </label>
                                 </div>
-                                <div class="column">
-                                    <div class="box day">
-                                        <div class="center">
-                                            <p>Sreda</p> 
-                                            <input type="checkbox" class="weekly-check" (change)="toggleDay(3)" [checked]="isDaySelected(3)">
-                                        </div>
-                                    </div>
+                                <div class="checkbox">
+                                    <label class="checkbox-wrapper">
+                                        <input type="checkbox" class="checkbox-input" (change)="toggleDay(3)" [checked]="isDaySelected(3)">
+                                        <span class="checkbox-tile">
+                                        <span class="checkbox-icon">
+                                            <i class="fa-solid fa-briefcase"></i>
+                                        </span>
+                                        <span class="checkbox-label">Sreda</span>
+                                        </span>
+                                    </label>
                                 </div>
-                                <div class="column">
-                                    <div class="box day">
-                                        <div class="center">
-                                            <p>Četrtek</p>
-                                            <input type="checkbox" class="weekly-check" (change)="toggleDay(4)" [checked]="isDaySelected(4)">
-                                        </div>
-                                    </div>
+                                <div class="checkbox">
+                                    <label class="checkbox-wrapper">
+                                        <input type="checkbox" class="checkbox-input" (change)="toggleDay(4)" [checked]="isDaySelected(4)">
+                                        <span class="checkbox-tile">
+                                        <span class="checkbox-icon">
+                                            <i class="fa-solid fa-briefcase"></i>
+                                        </span>
+                                        <span class="checkbox-label">Četrtek</span>
+                                        </span>
+                                    </label>
                                 </div>
-                                <div class="column">
-                                    <div class="box day">
-                                        <div class="center">
-                                            <p>Petek</p>
-                                            <input type="checkbox" class="weekly-check" (change)="toggleDay(5)" [checked]="isDaySelected(5)">
-                                        </div>
-                                    </div>
+                                <div class="checkbox">
+                                    <label class="checkbox-wrapper">
+                                        <input type="checkbox" class="checkbox-input" (change)="toggleDay(5)" [checked]="isDaySelected(5)">
+                                        <span class="checkbox-tile">
+                                        <span class="checkbox-icon">
+                                            <i class="fa-solid fa-briefcase"></i>
+                                        </span>
+                                        <span class="checkbox-label">Petek</span>
+                                        </span>
+                                    </label>
                                 </div>
-                                <div class="column">
-                                    <div class="box day">
-                                        <div class="center">
-                                            <p>Sobota</p>
-                                            <input type="checkbox" class="weekly-check" (change)="toggleDay(6)" [checked]="isDaySelected(6)">
-                                        </div>
-                                    </div>
+                                <div class="checkbox">
+                                    <label class="checkbox-wrapper">
+                                        <input type="checkbox" class="checkbox-input" (change)="toggleDay(6)" [checked]="isDaySelected(6)">
+                                        <span class="checkbox-tile">
+                                        <span class="checkbox-icon">
+                                            <i class="fa-solid fa-umbrella-beach"></i>
+                                        </span>
+                                        <span class="checkbox-label">Sobota</span>
+                                        </span>
+                                    </label>
                                 </div>
-                                <div class="column">
-                                    <div class="box day">
-                                        <div class="center">
-                                            <p>Nedelja</p>
-                                            <input type="checkbox" class="weekly-check" (change)="toggleDay(7)" [checked]="isDaySelected(7)">
-                                        </div>
-                                    </div>
+                                <div class="checkbox">
+                                    <label class="checkbox-wrapper">
+                                        <input type="checkbox" class="checkbox-input" (change)="toggleDay(7)" [checked]="isDaySelected(7)">
+                                        <span class="checkbox-tile">
+                                        <span class="checkbox-icon">
+                                            <i class="fa-solid fa-umbrella-beach"></i>
+                                        </span>
+                                        <span class="checkbox-label">Nedelja</span>
+                                        </span>
+                                    </label>
                                 </div>
-                            </div>
+                            </fieldset>
                         </div>
                         <!--Mesečno-->
                         <div class="box" *ngIf="!showMonthly">
@@ -236,7 +250,10 @@
                                     <h6 class="title is-6">Mesecno ponavljajoča</h6>
                                 </div>
                                 <div class="column">
-                                    <input type="radio" value='Mesecno' formControlName="ItemRepeating">
+                                    <label class="switch">
+                                        <input #switchElement class="switch" type="radio" value='Mesecno' formControlName="ItemRepeating">
+                                        <span class="slider round"></span>
+                                    </label>
                                 </div> 
                             </div>
                         </div>
@@ -247,14 +264,27 @@
                                     <h6 class="title is-6">Letno ponavljajoča</h6>
                                 </div>
                                 <div class="column">
-                                    <input type="radio" value='Letno' formControlName="ItemRepeating">
+                                    <label class="switch">
+                                        <input #switchElement class="switch" type="radio" value='Letno' formControlName="ItemRepeating">
+                                        <span class="slider round"></span>
+                                    </label>
                                 </div> 
                             </div>
                         </div>
                         <!--Custom-->
                         <div class="box" *ngIf="!showCustom">
-                            <h6 class="title is-6">Po izbiri ponavljajoča</h6>
-                            <input type="date" class="input" formControlName="ReapeatCustom">
+                            <div class="columns">
+                                <div class="column">
+                                    <h6 class="title is-6">Po izbiri ponavljajoča</h6>
+                                </div>
+                                <div class="column">
+                                    <label class="switch">
+                                        <input #switchElement class="switch" type="radio" value='Custom' formControlName="ItemRepeating">
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <input type="date" class="input" formControlName="ReapeatCustom">
+                                </div> 
+                            </div>
                         </div>
                        </div>
                     </div>

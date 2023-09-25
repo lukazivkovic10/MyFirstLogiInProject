@@ -1,3 +1,9 @@
+.modal-card
+{
+  z-index: 250;
+  border: solid 2px hsl(0, 0%, 45%);
+  border-radius: 10px;
+}
 button
 {
     box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
