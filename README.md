@@ -53,3 +53,12 @@
         - Naloga se lahko dodeli na več zaposlenih
         - Reminderji preko NTFY - network chuck tutorial
         - Refector baze - no JSON!!!!
+
+9. Bugfixes (2.10.2023)
+       - Logout te naj pelje na login page
+       - Ko shraniš nalogo se ne prikaže download na seznamu dokler ne refreshaš
+       - Fix responsivness
+       - Bugfix reminders
+       - Bugfix - authguard
+
+   
