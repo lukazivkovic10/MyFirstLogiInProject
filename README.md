@@ -1,6 +1,7 @@
 # TO-DO
 
 # MyFirstToDoProject
+
   1. Naredi GIT PROJEKT - MyFirstLogiInProject:
         - Deli celotno zadevo z mano, tako kot si v prejšnji nalogi na gitu
         - Drži se GIT logike čez celotno delo in sicer večkrat commitaj in v message napiši za katero funkcionalnost se gre ko je koda pushana
@@ -33,7 +34,7 @@
        - Filter "Dokončano" v frontend
        - Jasnost v filtrih
      
-  6. Dopolnilne naloge (28. 8. 2023)
+  5. Dopolnilne naloge (28. 8. 2023)
       - Dodajanje izpisa roka opravila po odkljukanem opravilu. Torej sta razvidna datum zaključka in rok opravila.
       - Navbar unification, ena vrstica z gumbi, dropdowni...
       - Izbira knjižnice visualizacije podatkov (chart.js, D3, izberi sam, preglej in debatirava naslednjič o izbiri)
@@ -42,23 +43,21 @@
             - Procent uspešnosti tekočega meseca (pazi na ničelne vrednosti, ko je število vseh 0)
             - Najhitrejše zaključena opravila, katera, pod katero kategorijo spada, kdaj nsarejena in kdaj zaključena in ali so bila zaključena v roku.
       
-  7. Dopolnilne naloge (4. 9. 2023) //2 tedna časa ali ko končaš, napiši Žigi
+  6. Dopolnilne naloge (4. 9. 2023) //2 tedna časa ali ko končaš, napiši Žigi
         - Reminderji - cronjob, nek scheduler, ki preverja roke nalog, reminderje lahko user nastavi sam. Če ga ne nastavi ga ni. Lahko jih tudi pogleda na ločeni podstrani, vsi reminderji razvrščeni po datumu (logični izpis)
         - Dodajanje datotek k nalogi. Prav tako dodana funkcionalnost za prenos teh datotek.
         - Ponavljajoče naloge - dnevno (delovni dnevi, vikend, custom), tedensko, mesečno, letno.
         - Tabelo uporabnikov seli na svojo stran
 
-  8. Dopolnilne naloge (18. 9. 2023)
+  7. Dopolnilne naloge (18. 9. 2023)
         - Dopolnitev GUI glede na prejšnjo nalogo
         - Naloga se lahko dodeli na več zaposlenih
         - Reminderji preko NTFY - network chuck tutorial
         - Refector baze - no JSON!!!!
-
-  9. Bugfixes (2.10.2023)
+        
+  8. Bugfixes (2.10.2023)
        - Logout te naj pelje na login page
        - Ko shraniš nalogo se ne prikaže download na seznamu dokler ne refreshaš
        - Fix responsivness
        - Bugfix reminders
        - Bugfix - authguard
-
-   
