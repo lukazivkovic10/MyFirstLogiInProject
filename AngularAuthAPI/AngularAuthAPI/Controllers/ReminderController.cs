@@ -51,7 +51,7 @@ namespace AngularAuthAPI.Controllers
                 var ReminderDescription = "Opravilo " + reminderDto.ItemName + " bo poteklo čez 24ur.";
 
 
-                var query = "INSERT INTO Reminder (Tag, ItemName, completeDate, ReminderDate, ReminderSent, ReminderDescription) VALUES (@Tag, @ItemName, @completeDate, @ReminderDate, 0, @ReminderDescription)";
+                var query = "INSERT INTO Reminder (Tag, ItemName, completeDate, ReminderDate, ReminderSent) VALUES (@Tag, @ItemName, @completeDate, @ReminderDate, 0)";
 
                 await connection.ExecuteAsync(query, new
                 {

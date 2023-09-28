@@ -31,6 +31,7 @@ import { UserListComponent } from './componets/user-list/user-list.component';
 import { FileDownloadComponent } from './componets/dashboard/file-download/file-download.component';
 import { ByteSizePipe } from './byte-size.pipe';
 import { CalanderComponent } from './componets/dashboard/models/model-content/month-calander/calander/calander.component';
+import { TodoCardComponent } from './componets/dashboard/todo-card/todo-card.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { CalanderComponent } from './componets/dashboard/models/model-content/mo
     UserListComponent,
     FileDownloadComponent,
     ByteSizePipe,
-    CalanderComponent
+    CalanderComponent,
+    TodoCardComponent
   ],
   imports: [
     FileUploadModule,

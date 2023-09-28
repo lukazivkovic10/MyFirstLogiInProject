@@ -144,8 +144,8 @@ public class ReminderWorker : BackgroundService
                 {
                     _logger.LogError($"Error in ReminderWorker: {ex}");
                 }
-
-                await Task.Delay(TimeSpan.FromSeconds(15), stoppingToken);
+                _logger.LogInformation("---------------------------------------------------------------------------------------");
+                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
             }
         }
     }

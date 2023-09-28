@@ -4,8 +4,11 @@ using Dapper;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using Microsoft.Extensions.Logging;
 using System.Data.Common;
+using System.Data.SqlTypes;
 using System.Text.RegularExpressions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace AngularAuthAPI.Services
 {
@@ -28,7 +31,11 @@ namespace AngularAuthAPI.Services
             {
                 dbConnection.Open();
 
-                var todoItems = dbConnection.Query<Items>("SELECT * FROM Items WHERE ItemRepeating IS NOT NULL").ToList();
+                var todoItems = dbConnection.Query<dynamic>(
+                    "SELECT r.*, i.completeDate, i.DateOfCompletion, i.CreatedDate " +
+                    "FROM RepeatingItem r " +
+                    "INNER JOIN Items i ON r.Tag = i.Tag AND r.ItemName = i.ItemName " +
+                    "WHERE r.TypeOfReapeating IS NOT NULL;").ToList();
 
                 foreach (var item in todoItems)
                 {
@@ -47,39 +54,61 @@ namespace AngularAuthAPI.Services
             }
         }
 
-        private DateTime CalculateNextActivationDate(Items todoItem)
+        private DateTime CalculateNextActivationDate(dynamic todoItem)
         {
             DateTime nextActivationDate = todoItem.CreatedDate;
 
-            switch (todoItem.ItemRepeating)
+            switch (todoItem.TypeOfReapeating)
             {
                 case "Dnevno":
                     // For daily reactivation, set the next activation date to one day from now
+                    if(nextActivationDate < SqlDateTime.MinValue.Value || nextActivationDate < SqlDateTime.MaxValue.Value)
+                    {
+                        nextActivationDate = todoItem.CreatedDate.AddDays(1);
+                    }
+                    else
                     nextActivationDate = nextActivationDate.AddDays(1);
                     break;
                 case "Tedensko":
-                    // For weekly reactivation, get the selected days of the week as an array of numbers
-                    int[] selectedDays = todoItem.ItemDaysOfWeek
+                    if (nextActivationDate < SqlDateTime.MinValue.Value || nextActivationDate < SqlDateTime.MaxValue.Value)
+                    {
+                        nextActivationDate = todoItem.CreatedDate;
+                    }
+                    else
+                    {
+                        // For weekly reactivation, get the selected days of the week as an array of numbers
+                        int[] selectedDays = ((string)todoItem.ItemDaysOfWeek)
                         .Split(',')
                         .Select(int.Parse)
                         .ToArray();
 
-                    // Calculate the next reactivation date based on the selected days
-                    nextActivationDate = GetNextReactivationDate(nextActivationDate, selectedDays);
+                        // Calculate the next reactivation date based on the selected days
+                        nextActivationDate = GetNextReactivationDate(nextActivationDate, selectedDays);
+                    }
                     break;
                 case "Mesecno":
                     // For monthly reactivation, set the next activation date to one month from now
-                    nextActivationDate = nextActivationDate.AddMonths(1);
+                    if (nextActivationDate < SqlDateTime.MinValue.Value || nextActivationDate < SqlDateTime.MaxValue.Value)
+                    {
+                        nextActivationDate = todoItem.CreatedDate.AddMonths(1);
+                    }
+                    else
+                        nextActivationDate = nextActivationDate.AddMonths(1);
                     break;
                 case "Letno":
                     // For yearly reactivation, set the next activation date to one year from now
-                    nextActivationDate = nextActivationDate.AddYears(1);
+                    if (nextActivationDate < SqlDateTime.MinValue.Value || nextActivationDate < SqlDateTime.MaxValue.Value)
+                    {
+                        nextActivationDate = todoItem.CreatedDate.AddYears(1);
+                    }
+                    else
+                        nextActivationDate = nextActivationDate.AddYears(1);
                     break;
                 case "custom":
                     // Implement custom logic to calculate the next activation date
                     break;
                 default:
-                    _logger.LogError($"Unknown reactivation type: {todoItem.ItemRepeating}");
+                    _logger.LogError($"Unknown reactivation type: {todoItem.TypeOfReapeating}");
                     // Handle invalid or unknown reactivation type
                     break;
             }
@@ -100,18 +129,19 @@ namespace AngularAuthAPI.Services
             return nextActivationDate;
         }
 
-        private void CalculateReactivationDates(Items todoItem, string itemRepeating)
+        private void CalculateReactivationDates(dynamic todoItem, string TypeOfReapeating)
         {
-            switch (itemRepeating)
+
+            switch (TypeOfReapeating)
             {
                 case "Dnevno":
-                    todoItem.CreatedDate = todoItem.NextActivationDate.AddDays(1);
-                    todoItem.CompleteDate = todoItem.NextActivationDate.AddDays(1 * 2);
+                     todoItem.CreatedDate = todoItem.NextActivationDate.AddDays(1);
+                     todoItem.CompleteDate = todoItem.NextActivationDate.AddDays(1 * 2);
                     break;
                 case "Tedensko":
                     // Implement logic for weekly reactivation
                     // Get the selected days of the week as an array of numbers
-                    int[] selectedDays = todoItem.ItemDaysOfWeek
+                    int[] selectedDays = ((string)todoItem.ItemDaysOfWeek)
                         .Split(',')
                         .Select(int.Parse)
                         .ToArray();
@@ -136,10 +166,11 @@ namespace AngularAuthAPI.Services
                     // Set the CreatedDate to a custom date (e.g., 30 days from the CompleteDate)
                     break;
                 default:
-                    _logger.LogError($"Unknown reactivation type: {itemRepeating}");
+                    _logger.LogError($"Unknown reactivation type: {TypeOfReapeating}");
                     // Handle invalid or unknown reactivation type
                     break;
             }
+
         }
 
         private DateTime GetNextReactivationDate(DateTime completeDate, int[] selectedDays)
@@ -155,7 +186,7 @@ namespace AngularAuthAPI.Services
             return nextDate;
         }
 
-        private void PerformReactivation(Items todoItem)
+        private void PerformReactivation(dynamic todoItem)
         {
             using (IDbConnection dbConnection = new SqlConnection(_connectionString))
             {
@@ -165,20 +196,21 @@ namespace AngularAuthAPI.Services
                 // For example, you can create a new version of the item, update database records, notify clients, etc.
 
                 // Calculate the next activation date for the item
-                CalculateReactivationDates(todoItem, todoItem.ItemRepeating);
+                CalculateReactivationDates(todoItem, todoItem.TypeOfReapeating);
 
                 // Update the database with the new item or reactivation information
                 dbConnection.Execute(
-                    "UPDATE Items SET CreatedDate = @CreatedDate, CompleteDate = @CompleteDate WHERE Id = @Id",
+                "UPDATE Items SET CreatedDate = @CreatedDate, CompleteDate = @CompleteDate WHERE ItemName = @ItemName AND Tag = @Tag",
                     new
                     {
-                        todoItem.CreatedDate,
-                        todoItem.CompleteDate,
-                        Id = todoItem.Id
+                        CreatedDate = todoItem.CreatedDate,
+                        CompleteDate = todoItem.CompleteDate,
+                        ItemName = todoItem.ItemName,
+                        Tag = todoItem.Tag
                     });
 
                 // Notify clients through SignalR (NotificationHub)
-                _hubContext.Clients.All.SendAsync("ReactivationPerformed", todoItem.Id);
+                _hubContext.Clients.All.SendAsync("ReactivationPerformed");
             }
         }
     }

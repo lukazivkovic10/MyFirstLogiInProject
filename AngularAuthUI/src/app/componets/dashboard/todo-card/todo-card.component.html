@@ -1,0 +1,195 @@
+<div class="box" *ngIf="shouldShowCard(item_ItemStatus, item_Active)" [ngClass]="getCardStatus(item_ItemStatus, item_Active)" [hidden]="">
+    <div class="columns">
+        <div class="column">
+            <div class="tooltip" data-tooltip="Opravljeno" *ngIf="item_ItemStatus==1 && item_Active==1">
+                <button (click)="doneCurrent(item)" class="button checkbox-type">
+                    <div class="icons">
+                        <i class="fas fa-check checkbox-type-icon"> </i>
+                    </div>
+                </button>  
+            </div>
+            <div class="tooltip" data-tooltip="Izbrisano" *ngIf="item_ItemStatus==0">
+                <div class="icon is-large">
+                    <i class="fa-solid fa-trash fa-2x"></i>
+                </div> 
+            </div>
+            <div class="tooltip" data-tooltip="Še ne opravljeno" *ngIf="item_ItemStatus==1 && item_Active==0">
+                <button (click)="notDoneCurrent(item)" class="button checkbox-type-done">
+                    <div class="icons">
+                        <i class="fas  fa-check checkbox-type-icon-done"></i>
+                    </div>
+                </button>  
+            </div>
+            <div class="tooltip" data-tooltip="Pretekel rok" *ngIf="item_ItemStatus == 2 && item_Active != 0">
+                <span class="icon is-large has-text-danger-dark">
+                    <i class="fas fa-x fa-2x"></i>
+                </span>  
+            </div>
+            <div class="tooltip" data-tooltip="Opravljeno v roku" *ngIf="item_ItemStatus==2 && item_Active==0">
+                <div class="icon is-large has-text-success-dark">
+                    <i class="fa-solid fa-check fa-2x"></i>
+                </div> 
+            </div>
+        </div>
+        <div class="column is-3">
+            <div class="columns">
+                <div class="column">
+                    <div class="tooltip" data-tooltip="Opomnik" *ngIf="item_ItemStatus==1 && item_Active==1">
+                        <button class="ReminderChkbox" (click)="createNotification(item)">
+                            <span class="icon">
+                                <i class="fa-solid fa-bell ReminderIcon"></i>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="tooltip" data-tooltip="Dodeli opravilo uporabniku" *ngIf="item_ItemStatus==1 && item_Active==1">
+                        <span class="user-button-item">
+                            <button class="circle-btn">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                            <ul class="menu-user-list">
+                                <div class="control has-icons-left">
+                                    <div class="form" [formGroup]="addUserForm">
+                                        <div class="select">
+                                            <select formControlName="UserMail" placeholder="Dodaj uporabnika">
+                                                <option value="" disabled selected>Dodaj uporabnika</option>
+                                                <option *ngFor="let user of users.data" [value]="user.email">{{user.email}}</option>
+                                            </select>
+                                            <span class="icon is-left">
+                                                <i class="fas fa-tag"></i>
+                                              </span>
+                                        </div>
+                                    </div>
+                                    <button class="button" (invalid)="!addUserForm" (click)="asignUserToItem(item_Tag, item_ItemName, addUserForm.get('UserMail')?.value)">Dodaj</button>
+                                </div>
+                            </ul>
+                        </span>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="tooltip" data-tooltip="Dodatne nastavitve">
+                        <span class="button-item">
+                            <button class="show-menu-button">
+                                <span class="icon button-item">
+                                    <i class="fa-solid fa-angles-down"></i>
+                                </span>
+                            </button>
+                            <ul class="menu-sub-list">
+                                <li class="menu-item" style="--i:2;">
+                                    <button class="menu-button center" (click)="parentComponent.modelOpenDelete()">
+                                        <span class="icon">
+                                            <i class="fa-solid fa-delete-left fa-2x"></i>
+                                        </span>
+                                    </button>
+                                </li>
+                                <li class="menu-item " style="--i:1;">
+                                    <button class="menu-button center" (click)="parentComponent.modelOpenEdit()">
+                                        <span class="icon">
+                                            <i class="fa-solid fa-pen-to-square fa-2x"></i>
+                                        </span>
+                                    </button>
+                                </li>
+                            </ul>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tooltip" data-tooltip="Še ne opravljeno">
+        <h2 class="todo-title">{{item_ItemName}}</h2>
+    </div>
+    <p class="description">{{item_ItemDesc}}</p>
+    <div class="tooltip" data-tooltip="Priloge" style="width: 100%;" *ngIf="shouldShowPriloge()">
+        <h5 class="subtitle is-5 liner has-text-grey-lighter">Priloge</h5>
+    </div>
+    <div class="list" *ngFor="let file of files.data">
+        <span *ngIf="file.tag == item.tag && file.itemName == item.itemName">
+            <div class="tooltip" data-tooltip="Prenesi prilogo">
+                <div class="file_c">
+                    <button class="button" (click)="downloadFile(file.id,file.fileName)">
+                        <span class="icon-text">
+                            <span class="icon is-small">
+                                <i [ngClass]="getFileIconClass(file.fileName)" class="fas fa-1x"></i> 
+                            </span>
+                            <span> {{file.fileName}} | {{file.fileSize | byteSize}}</span>
+                            <span class="icon">
+                                <i class="fa-regular fa-circle-down"></i>
+                            </span>
+                        </span>
+                    </button>
+                </div>   
+            </div>
+        </span>
+    </div>
+    <hr class="slim">
+    <div class="field">
+        <div class="columns">
+            <div class="column is-3">
+                <div class="box time-box">
+                    <div class="tooltip center" data-tooltip="Zastavljen datum oddaje: ">
+                        <span [ngClass]="textColor(item_ItemStatus, item_Active)">
+                            <div class="icon">
+                                <i [ngClass]="getTimerIcon(item_ItemStatus, item_Active)"></i>
+                            </div>
+                            <ng-container *ngIf="item_ItemStatus === 2 && item_Active === 0; else defaultDate">
+                                <div class="icon">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                                <b>{{ item_dateOfCompletion | date:'HH:mm dd.MM.yyyy' }}</b> |
+                                <div class="icon">
+                                    <i class="fa-solid fa-hourglass-end"></i>
+                                </div>
+                                <b>{{ item_completeDate | date:'HH:mm dd.MM.yyyy' }}</b>
+                            </ng-container>
+                            <ng-template #defaultDate>
+                                <b>{{ item_completeDate | date:'HH:mm dd.MM.yyyy' }}</b>
+                            </ng-template>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="column is-1">
+                <div class="tooltip" data-tooltip="Dodeljeni uporabniki">
+                    <span class="user-button-item">
+                        <button class="circle-btn">
+                            <i class="fa-solid fa-users"></i>
+                        </button>
+                        <ul class="menu-user-list">
+                            <span *ngFor="let auser of assignedUsers.data">
+                                <li *ngIf="auser.tag === item.tag && auser.itemName === item.itemName">
+                                    <div class="columns">
+                                        <div class="column is-1">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-clipboard-user"></i>
+                                            </span>
+                                        </div>
+                                        <div class="column">
+                                            <span>{{auser.userMail}}</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </span>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+            <div class="column"></div>
+            <div class="column is-1">
+                <div class="tooltip" data-tooltip="Ime oznake">
+                    <div class="tags has-addons end">
+                        <span class="tag is-rounded is-medium">
+                            <div class="icons">
+                                <i class="fas fa-tag"></i>
+                            </div>
+                        </span>
+                    <span [ngClass]="tagColor(item_ItemStatus, item_Active)">
+                            <b>{{item_Tag}}</b> 
+                    </span>
+                    </div> 
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
