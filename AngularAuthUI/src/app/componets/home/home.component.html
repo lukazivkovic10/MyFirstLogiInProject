@@ -4,44 +4,7 @@
       Grafi opravil
     </p>
     <div class="columns" id="flex1">
-      <div id="grid">
-        <div class="tooltip" data-tooltip="Število vseh opravil">
-          <div class="box" id="grid-box">
-            <h6 class="subtitle is-6">Vsa Opravila</h6>
-            <h1 class="title is-1"><b>{{tasks.data.Vse}}</b></h1>
-            <div class="icon is-large" id="grid-icon">
-              <i class="fa-solid fa-list-check fas fa-10x"></i>
-            </div>
-          </div>
-        </div>
-        <div class="tooltip" data-tooltip="Število vseh dokončanih opravil">
-          <div class="box" id="grid-box">
-            <h6 class="subtitle is-6">Dokončana opravila</h6>
-            <h1 class="title is-1"><b>{{tasks.data.Dokoncano}}</b></h1>
-            <div class="icon is-large" id="grid-icon">
-              <i class="fa-solid fa-check fas fa-10x"></i>
-            </div>
-          </div>
-        </div>
-        <div class="tooltip" data-tooltip="Število vseh ne dokončanih opravil">
-          <div class="box" id="grid-box">
-            <h6 class="subtitle is-6">Ne dokončana opravila</h6>
-            <h1 class="title is-1"><b>{{tasks.data.Nedokoncano}}</b></h1>
-            <div class="icon is-large" id="grid-icon">
-              <i class="fa-solid fa-hourglass-half fas fa-10x"></i>
-            </div>
-          </div>
-        </div>
-        <div class="tooltip" data-tooltip="Število vseh preteklih opravil">
-          <div class="box" id="grid-box">
-            <h6 class="subtitle is-6">Pretekla opravila</h6>
-            <h1 class="title is-1"><b>{{tasks.data.Preteklo}}</b></h1>
-            <div class="icon is-large" id="grid-icon">
-              <i class="fa-solid fa-x fas fa-10x"></i>
-            </div>
-          </div>
-        </div>
-      </div>
+      <app-data-sqare-card class="center-on-mobile"></app-data-sqare-card>
       <div class="box stacked-chart" id="stacked-chart">
         <h4 class="title is-4">Opravila v zadnjih treh mescih</h4>
         <app-stacked-graph></app-stacked-graph> 

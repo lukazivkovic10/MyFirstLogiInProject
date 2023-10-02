@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgToastService } from 'ng-angular-popup';
 import { ListService } from 'src/app/services/list.service';
 import { TagsService } from 'src/app/services/tags.service';
 
@@ -25,7 +26,7 @@ export class ModelContentDeleteComponent {
   };
   @Output() close = new EventEmitter<void>();
 
-  constructor(private list: ListService,private fb: FormBuilder, private tagService: TagsService) 
+  constructor(private list: ListService,private fb: FormBuilder, private tagService: TagsService, private toast: NgToastService) 
   { };
 
   ngOnInit() {
@@ -56,6 +57,8 @@ export class ModelContentDeleteComponent {
           res=>{
             this.errors = res;
             this.deleteForm.reset();
+            this.modelCloseDelete;
+            this.toast.success({ detail: "Uspešno izbrisano opravilo.", duration: 2500 });
           }
         )
       })

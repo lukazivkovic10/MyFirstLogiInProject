@@ -59,3 +59,58 @@
       </div>
     </div>
 </nav>
+<nav class="bottom-navbar">
+  <div class="bottom-navbar-items buttons">
+    <button class="button is-stati" routerLink="/dashboard">
+      <div class="icon">
+        <i class="fa-solid fa-rectangle-list"></i>
+      </div>
+    </button>
+    <button class="button" routerLink="/home">
+      <div class="icon">
+        <i class="fa-solid fa-house-chimney-window"></i>
+      </div>
+    </button>
+    <div>
+      <button class="button" (click)="showMenuBtn()">
+        <span class="icon">
+          <i class="fa-solid fa-circle-user fas fa-lg"></i>
+        </span>
+      </button>
+      <div [ngClass]="showMenu()">
+        <span class="navbar-item" *ngIf="showProfile()===false">
+          <button class="button" routerLink="/login">
+            <div class="icon">
+              <i class="fa-solid fa-id-badge"></i>
+            </div>
+            <span>Prijava</span>
+            </button>
+        </span>
+        <span class="navbar-item" *ngIf="showProfile()===false">
+          <button class="button" routerLink="/signup">
+            <div class="icon">
+              <i class="fa-solid fa-address-card"></i>
+            </div>
+            <span>Registracija</span>
+          </button>
+        </span>
+        <span class="navbar-item" *ngIf="showProfile()===true">
+          <button class="button has-text-dark" routerLink="/user-list">
+            <div class="icon">
+              <i class="fa-solid fa-users-between-lines"></i>
+            </div>
+            <span class="has-text-dark">Uporabniki</span>
+          </button>
+        </span>
+        <span class="navbar-item" *ngIf="showProfile()===true">
+          <button (click)="logout()" class="button has-text-dark">
+            <div class="icon">
+              <i class="fa-solid fa-right-to-bracket"></i>
+            </div>
+            <span class="has-text-dark">Odjava</span>
+          </button>
+        </span>
+      </div>
+    </div>
+  </div>
+</nav>

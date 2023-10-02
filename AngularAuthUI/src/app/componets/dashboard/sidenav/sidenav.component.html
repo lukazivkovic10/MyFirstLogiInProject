@@ -1,0 +1,141 @@
+<!-- Sidenav -->
+<div class="sidebar" [ngClass]="{ 'isExpanded': isExpanded }">
+    <div class="menu_container">
+        <button class="sidebar-btn" (click)="toggleExpanded()">
+            <span class="icon">
+                <i [ngClass]="getBarStatus()"></i>
+            </span>
+        </button>
+        <ul class="menu_item">
+            <div class="item-title" (click)="toggleExpanded()">
+                <span class="line"></span>
+                <div class="link flex">
+                  <div class="icon sb-icon">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                  </div>
+                  <span class="sb-text"><b>IŠČI</b></span>
+                </div>
+            </div>
+            <li class="item">
+                <app-search></app-search>
+            </li>
+            <div class="item-title" (click)="toggleExpanded()">
+                <span class="line"></span>
+                <div class="link flex">
+                    <div class="icon sb-icon">
+                        <i class="fa-solid fa-filter"></i>
+                    </div>
+                    <span class="sb-text"><b>FILTRI</b></span>
+                </div>
+            </div>
+            <li class="item">
+                <div class="navbar-item">
+                    <span class="dropdown" [ngClass]="{ 'showFilter': showFilter }" (click)="toggleFilter()">
+                        <span class="icon">
+                            <i class="fa-solid fa-user-ninja"></i>
+                        </span>
+                        <span class="unselectable">Skrij</span>
+                        <span class="icon">
+                            <i class="fa-solid fa-caret-down"></i>
+                        </span>
+                    </span>
+                </div>
+                <div class="sub-menu" [ngClass]="{ 'showFilter': showFilter }">
+                    <div class="sub-item">
+                        <label for="done">
+                        <input type="checkbox" [disabled]="!showFilter" id="done" (change)="DashComp.toggleHideDone()">
+                        <span class="pl-2">
+                            <i class="fas fa-check has-text-success-dark"></i>
+                            Dokončane
+                        </span>
+                        </label>
+                    </div>
+                    <div class="sub-item">
+                        <label for="notDoneYet">
+                        <input type="checkbox" [disabled]="!showFilter" id="notDoneYet" (change)="DashComp.toggleHideNotDone()">
+                        <span class="pl-2">
+                            <i class="fa-solid fa-hourglass-half has-text-link-dark"></i>
+                            Ne dokončane
+                        </span>
+                       </label>
+                    </div>
+                    <div class="sub-item">
+                        <label for="hide">
+                        <input type="checkbox" [disabled]="!showFilter" id="hide" (change)="DashComp.toggleHideExpired()">
+                        <span class="pl-2">
+                            <i class="fa-solid fa-hourglass has-text-danger-dark"></i>
+                            Pretekle
+                        </span>
+                        </label>
+                    </div>
+                    <div class="sub-item">
+                        <label for="deleted">
+                        <input type="checkbox" [disabled]="!showFilter" id="deleted" (change)="DashComp.toggleHideDeleted()">
+                        <span class="pl-2">
+                            <i class="fa-solid fa-trash"></i>
+                            Izbrisane
+                        </span>
+                       </label>
+                    </div>
+                </div>
+            </li>
+            <div class="item-title" (click)="toggleExpanded()">
+                <span class="line"></span>
+                <div class="link flex">
+                    <div class="icon sb-icon">
+                        <i class="fa-solid fa-tags"></i>
+                    </div>
+                    <span class="sb-text"><b>OZNAKE</b></span>
+                </div>
+            </div>
+            <li class="item">
+                <div class="navbar-item" (click)="toggleExpanded()">
+                    <button class="button" [disabled]="!isExpanded" (click)="DashComp.modelOpenTags()">
+                        <div class="icon">
+                            <i class="fa-solid fa-tag"></i> 
+                        </div>
+                        <span class="btn-text">Oznake</span>
+                    </button>
+                </div>
+            </li>
+            <div class="item-title" (click)="toggleExpanded()">
+                <span class="line"></span>
+                <div class="link flex">
+                    <div class="icon sb-icon">
+                        <i class="fa-solid fa-list-check"></i>
+                    </div>
+                    <span class="sb-text"><b>OPRAVILA</b></span>
+                </div>
+            </div>
+            <li class="item" >
+                <div class="navbar-item" (click)="toggleExpanded()">
+                    <!--Ustvari-->
+                    <button class="button" [disabled]="!isExpanded" (click)="DashComp.modelOpenCreate()">
+                        <div class="icon is-large">
+                            <i class="far fa-calendar-plus"></i>
+                        </div>
+                        <span>Ustvari opravilo</span>
+                    </button>
+                </div>
+                <div class="navbar-item" (click)="toggleExpanded()">
+                    <!--Uredi-->
+                    <button (click)="DashComp.modelOpenEdit()" [disabled]="!isExpanded" class="button">
+                        <div class="icon is-large">
+                            <i class="fas fa-square-pen"></i>
+                        </div>
+                        <span>Uredi opravilo</span>
+                    </button>
+                </div>
+                <div class="navbar-item" (click)="toggleExpanded()">
+                    <!--Izbrisi-->
+                    <button class="button" [disabled]="!isExpanded" (click)="DashComp.modelOpenDelete()">
+                        <div class="icon is-large is-right">
+                            <i class="far fa-calendar-minus"></i>
+                        </div>
+                        <span>Izbriši opravilo</span>
+                    </button>
+                </div>
+            </li>
+        </ul>
+</div>
+</div>

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgToastComponent, NgToastService } from 'ng-angular-popup';
 import { TagsService } from 'src/app/services/tags.service';
 
 interface Tag
@@ -26,7 +27,7 @@ export class ModelTagsComponent implements OnInit {
     data: []
   };
 
-  constructor(private auth: TagsService,private fb: FormBuilder, private router: Router){}
+  constructor(private auth: TagsService,private fb: FormBuilder, private router: Router, private toast: NgToastService){}
   ngOnInit(): void {
     this.auth.GetTags().subscribe(
       (res:any)=>{
@@ -59,6 +60,7 @@ export class ModelTagsComponent implements OnInit {
           {
             this.tagCreateForm.reset();
             this.getTags();
+            this.toast.success({ detail: "Uspešno ustvarjena oznaka.", duration: 2500 });
           }
           )
       }
@@ -73,6 +75,7 @@ export class ModelTagsComponent implements OnInit {
         next:(
           res=>{
             this.getTags();
+            this.toast.success({ detail: "Uspešno izbrisana oznaka.", duration: 2500 });
           }
         )
       });

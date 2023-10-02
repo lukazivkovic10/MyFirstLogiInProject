@@ -1,14 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgToastService } from 'ng-angular-popup';
 import { ListService } from 'src/app/services/list.service';
 import { SearchTagService } from 'src/app/services/search-tag.service';
 import { SharedDataService } from 'src/app/services/shared-data-service.service';
-import { Router } from '@angular/router';
-import { FileUploadService } from 'src/app/services/file-upload.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { SignalRService } from 'src/app/services/signal-r.service';
-import { AssignUserService } from 'src/app/services/assign-user.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 interface Item
 {
@@ -26,30 +22,6 @@ interface Item
   ItemRepeating: string;
 }
 
-interface User
-{
-  firstName: string;
-  lastName: string;
-  email: string;
-}
-
-interface File
-{
-  id: number;
-  tag: string;
-  itemName: string;
-  fileSize: number;
-  filePath: string;
-  fileName: string;
-}
-
-interface UserAsign
-{
-  tag:string;
-  itemName:string;
-  userMail:string;
-}
-
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -59,27 +31,6 @@ interface UserAsign
 export class DashboardComponent implements OnInit{
 
   public items: { success: boolean; error: number; message: string; data: Item[] } = {
-    success: false,
-    error: 0,
-    message: '',
-    data: []
-  };
-
-  public users: { success: boolean; error: number; message: string; data: User[] } = {
-    success: false,
-    error: 0,
-    message: '',
-    data: []
-  };
-
-  public assignedUsers: { success: boolean; error: number; message: string; data: UserAsign[] } = {
-    success: false,
-    error: 0,
-    message: '',
-    data: []
-  };
-
-  public files: { success: boolean; error: number; message: string; data: File[] } = {
     success: false,
     error: 0,
     message: '',
@@ -98,20 +49,12 @@ export class DashboardComponent implements OnInit{
     message: '',
     data: ''
   }
-  addUserForm!: FormGroup;
 
   public savedTag: string = "";
 
-  showModalCreate: boolean = false;
-  showModalEdit: boolean = false;
-  showModalDelete: boolean = false;
-  showModalTags: boolean = false;
-
   constructor(private auth: ListService, private sharedData: SharedDataService, 
     private searchService: SearchTagService,private toast: NgToastService, 
-    private router: Router, private fileS: FileUploadService, 
-    private notificationService: NotificationService, private signalRService: SignalRService,
-    private UserAsign: AssignUserService, private fb: FormBuilder)
+    private notificationService: NotificationService, private signalRService: SignalRService,)
   {};
 
   ngOnInit() {
@@ -155,7 +98,7 @@ export class DashboardComponent implements OnInit{
           icon: '../assets/check-to-slot-solid.svg' // URL to an icon image
         }
       );
-    }, 5000); // 5 seconds (5,000 milliseconds)
+    }, 0); // 5 seconds (5,000 milliseconds)
   
     // Subscribe to the custom notificationClick event
     this.notificationService.notificationClick.subscribe(() => {
@@ -211,36 +154,17 @@ toggleHideExpired() {
   this.hideExpiredCards = !this.hideExpiredCards;
 }
 
-
-  doneCurrent(current:any)
-  {
-    console.log(current);
-      this.auth.DoneItem(current)
-      .subscribe({
-        next:(
-          res=>{
-            this.showAll();
-          }
-        )
-      });
-  }
-
   saveTag(current:string)
   {
     this.savedTag = current;
   }
 
-  notDoneCurrent(Ncurrent:any)
-  {
-      this.auth.NotDoneItem(Ncurrent)
-      .subscribe({
-        next:(
-          res=>{
-            this.showAll();
-          }
-        )
-      })
-  }
+  //Odpiranje modals
+
+  showModalCreate: boolean = false;
+  showModalEdit: boolean = false;
+  showModalDelete: boolean = false;
+  showModalTags: boolean = false;
 
   modelOpenCreate() 
   {

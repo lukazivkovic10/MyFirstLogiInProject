@@ -3,38 +3,21 @@ body
     padding-top: 56px;
 }
 
+@media (max-width: 1024px) {
+    body
+    {
+        padding-top: 0px;
+    }
+}
+
+.center-on-mobile
+{}
+
 .vl {
     border-left: 6px solid;
     border-radius: 5px;
     opacity: 0.25;
   }
-
-#grid
-{
-    display: grid;
-    grid-template-columns: auto auto;
-    grid-template-rows: auto auto;
-    column-gap: 25px;
-    row-gap: 10px;
-    height: 550px;
-    width: 550px;
-}
-
-#grid-box
-{
-    height: 250px;
-    width: 250px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    border-radius: 25px;
-}
-#grid-icon
-{
-    position: absolute;
-    opacity: 10%;
-}
 #stacked-chart
 {
     display: inline;
@@ -49,6 +32,7 @@ body
     width: 100%;
     column-gap: 25px;
 }
+
 #flex2
 {
     display: flex;
@@ -82,10 +66,29 @@ body
     color: hsl(217, 71%, 53%);
 }
 
-@media (max-width: 775px) {
+@media (max-width: 1000px) {
 
     .timeline-chart
     {
         width: 100%;
+    }
+    #flex1
+    {
+        display: block;
+        flex-direction: column;
+        padding-bottom: 25px;
+    }
+    #flex2
+    {
+        flex-direction: column;
+    }
+    #percentage-graph
+    {
+        width: 100%;
+    }
+    .center-on-mobile
+    {
+        justify-self: center;
+        align-self: center;
     }
 }

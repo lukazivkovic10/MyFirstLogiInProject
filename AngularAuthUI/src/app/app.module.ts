@@ -32,6 +32,8 @@ import { FileDownloadComponent } from './componets/dashboard/file-download/file-
 import { ByteSizePipe } from './byte-size.pipe';
 import { CalanderComponent } from './componets/dashboard/models/model-content/month-calander/calander/calander.component';
 import { TodoCardComponent } from './componets/dashboard/todo-card/todo-card.component';
+import { DataSqareCardComponent } from './componets/home/data-sqare-card/data-sqare-card.component';
+import { SidenavComponent } from './componets/dashboard/sidenav/sidenav.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +56,9 @@ import { TodoCardComponent } from './componets/dashboard/todo-card/todo-card.com
     FileDownloadComponent,
     ByteSizePipe,
     CalanderComponent,
-    TodoCardComponent
+    TodoCardComponent,
+    DataSqareCardComponent,
+    SidenavComponent
   ],
   imports: [
     FileUploadModule,

@@ -3,6 +3,11 @@
     border-left: 5px solid hsl(348, 100%, 61%); /* red */
 }
 
+.ng-valid:not(form) 
+{
+    border-left: 5px solid hsl(141, 71%, 48%)	; /* sucess */
+}
+
 .notification
 {
     padding: 0.25rem 0.5rem 0.25rem 0.5rem;
@@ -19,8 +24,18 @@
 }
 
 @media (max-width: 1200px) {
-    .container
+   .container
    {
-    width: 500px;
+    padding-top: 15vh;
+    width: 130%;
+    left: -15%;
+   }
+   .showpassword
+   {
+    width: 25px;
+   }
+   .section
+   {
+    height: 100vh;
    }
 }

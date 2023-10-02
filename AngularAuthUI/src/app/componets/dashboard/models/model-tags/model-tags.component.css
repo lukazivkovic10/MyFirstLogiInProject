@@ -1,9 +1,14 @@
+.modal.is-active
+{
+  backdrop-filter: blur(2px);
+}
+
 .modal-card
 {
-  z-index: 250;
-  border: solid 2px hsl(0, 0%, 45%);
   border-radius: 10px;
+  box-shadow: 2px 3px 5px 0px hsl(0, 0%, 68%);
 }
+
 button
 {
     box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);

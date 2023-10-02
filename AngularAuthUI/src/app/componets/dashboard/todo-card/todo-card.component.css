@@ -20,7 +20,7 @@
     content: '';
     min-width: 20px;
     margin: auto;
-    width: 90%;
+    width: 95%;
     height: 1px;
     background-image: linear-gradient(90deg, transparent 5px, hsl(0, 0%, 86%) 5px, hsl(0, 0%, 86%) 20px, transparent 15px);
     background-size: 20px 1px;
@@ -428,6 +428,7 @@ border-radius: 5px;
     border-radius: 10px;
     background-color: hsl(0, 0%, 96%);
     color: hsl(0, 0%, 9%);
+    height: auto;
     transition: 0.5s;
 }
 
@@ -443,4 +444,33 @@ border-radius: 5px;
   display: flex;
   align-items: start;
   justify-content: start;
+}
+
+@media (max-width: 1645px) and (min-width: 1500px) {
+  .liner::after
+  {
+    width: 87%;
+  }
+}
+
+
+@media (max-width: 1500px) and (min-width: 700px) {
+  .liner::after
+  {
+    width: 85%;
+  }
+}
+
+@media (max-width: 700px) {
+  .liner::after
+  {
+    width: 80%;
+  }
+}
+
+.end
+{
+  display: flex;
+  justify-content: flex-end;
+  align-content: center;
 }

@@ -9,8 +9,8 @@ import { HomeComponent } from './componets/home/home.component';
 import { FileDownloadComponent } from './componets/dashboard/file-download/file-download.component';
 
 const routes: Routes = [
-  {path:'login',canActivate: [authGuard], component: LoginComponent},
-  {path:'signup',canActivate: [authGuard], component: SignupComponent},
+  {path:'login', canActivate: [authGuard], component: LoginComponent},
+  {path:'signup', canActivate: [authGuard], component: SignupComponent},
   {path: '', redirectTo: 'home', pathMatch: 'full' },
   {path: 'dashboard', component: DashboardComponent},
   {path: 'user-list', component: UserListComponent},

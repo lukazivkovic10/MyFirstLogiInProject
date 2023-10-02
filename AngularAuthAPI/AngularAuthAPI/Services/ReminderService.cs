@@ -46,7 +46,7 @@ namespace AngularAuthAPI.Services
                         {
                             _logger.LogInformation($"Sending reminder for '{reminder.ItemName}'");
                             // Send the reminder using SignalR
-                            await SendNotification($"Reminder for '{reminder.ItemName}': {reminder.ReminderDescription}");
+                            await SendNotification($"Reminder for '{reminder.ItemName}'");
 
                             await SendNotificationNtfy($"Potekel bo rok za opravilo {reminder.Tag}, {reminder.ItemName} čez 24 ur. Klikni me, da opravilo označiš kot dokončano.");
 

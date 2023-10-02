@@ -1,6 +1,6 @@
 <div class="box" *ngIf="shouldShowCard(item_ItemStatus, item_Active)" [ngClass]="getCardStatus(item_ItemStatus, item_Active)" [hidden]="">
-    <div class="columns">
-        <div class="column">
+    <div class="columns is-mobile">
+        <div class="column ">
             <div class="tooltip" data-tooltip="Opravljeno" *ngIf="item_ItemStatus==1 && item_Active==1">
                 <button (click)="doneCurrent(item)" class="button checkbox-type">
                     <div class="icons">
@@ -31,8 +31,8 @@
                 </div> 
             </div>
         </div>
-        <div class="column is-3">
-            <div class="columns">
+        <div class="column is-3-desktop">
+            <div class="columns is-mobile">
                 <div class="column">
                     <div class="tooltip" data-tooltip="Opomnik" *ngIf="item_ItemStatus==1 && item_Active==1">
                         <button class="ReminderChkbox" (click)="createNotification(item)">
@@ -126,7 +126,7 @@
     <hr class="slim">
     <div class="field">
         <div class="columns">
-            <div class="column is-3">
+            <div class="column">
                 <div class="box time-box">
                     <div class="tooltip center" data-tooltip="Zastavljen datum oddaje: ">
                         <span [ngClass]="textColor(item_ItemStatus, item_Active)">
@@ -150,7 +150,7 @@
                     </div>
                 </div>
             </div>
-            <div class="column is-1">
+            <div class="column is-4-desktop is-mobile">
                 <div class="tooltip" data-tooltip="Dodeljeni uporabniki">
                     <span class="user-button-item">
                         <button class="circle-btn">
@@ -175,8 +175,7 @@
                     </span>
                 </div>
             </div>
-            <div class="column"></div>
-            <div class="column is-1">
+            <div class="column is-mobile is-2-desktop end">
                 <div class="tooltip" data-tooltip="Ime oznake">
                     <div class="tags has-addons end">
                         <span class="tag is-rounded is-medium">

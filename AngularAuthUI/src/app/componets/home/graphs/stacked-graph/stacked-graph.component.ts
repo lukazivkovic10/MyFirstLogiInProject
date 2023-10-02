@@ -38,7 +38,6 @@ export class StackedGraphComponent {
   ngOnInit() {
     this.graphService.StackedData().subscribe(
       (data: any) => {
-        console.log(data);
         if (Array.isArray(data.data)) {
           const chartSeries: any = [];
           const xaxisNames = data.data.map((item: any) => item.name);

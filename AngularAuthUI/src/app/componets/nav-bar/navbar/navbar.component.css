@@ -1,11 +1,6 @@
-.circle{
-    height: 50px;
-    border-radius: 50px;
-}
-
 .navbar
 {
-    z-index: 10000;
+    z-index: 100;
     height: 56px;
     padding-left: 75px;
     padding-right: 65px;
@@ -27,5 +22,54 @@
     transform: scale(1.05);
 }
 
-@media (max-width: 1025px) {
+.bottom-navbar {
+    box-shadow: 0px -5px 5px hsl(0, 0%, 50%, 0.25);
+    position: none;
+    bottom: 0px;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    height: 56px;
+    background-color: hsl(0, 0%, 98%);
+  }
+
+  .bottom-navbar-items {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 50px;
+  }
+  
+  .bottom-navbar-items button {
+    margin: 0 10px;
+  }
+
+  .navbar-dropup
+  {
+    position: absolute;
+    bottom: -250px;
+    width: 180px;
+    left: calc(50% + 20px);
+    position: fixed;
+    background-color: hsl(0, 0%, 98%);
+    border-radius: 10px 10px 0 0;
+    transform: all 0.5s ease-in-out;
+  }
+
+  .navbar-dropup.isActive
+  {
+    bottom: 56px;
+  }
+
+@media (max-width: 1024px) {
+    .navbar {
+        display: none;
+    }
+    .bottom-navbar
+    {
+        position: fixed;
+        height: 56px;
+    }
+
 }

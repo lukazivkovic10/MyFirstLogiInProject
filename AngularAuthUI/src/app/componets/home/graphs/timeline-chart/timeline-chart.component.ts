@@ -64,7 +64,6 @@ export class TimelineChartComponent {
 
   ngOnInit() {
     this.graphService.TimelineData().subscribe((data: any) => {
-      console.log(data);
       const chartData = data.data.map((item: any) => ({
         x: [item.tag, item.itemName],
         y: [

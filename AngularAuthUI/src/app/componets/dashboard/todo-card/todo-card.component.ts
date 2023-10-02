@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { AuthService } from 'src/app/services/auth.service';
 import { ListService } from 'src/app/services/list.service';
 import { DashboardComponent } from '../dashboard.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';

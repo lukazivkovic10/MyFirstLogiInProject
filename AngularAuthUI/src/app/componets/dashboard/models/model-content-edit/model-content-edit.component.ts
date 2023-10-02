@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgToastService } from 'ng-angular-popup';
 import { ListService } from 'src/app/services/list.service';
 import { TagsService } from 'src/app/services/tags.service';
 
@@ -26,7 +27,7 @@ export class ModelContentEditComponent {
   };
 
   @Output() close = new EventEmitter<void>();
-  constructor(private list: ListService,private fb: FormBuilder, private router: Router, private tagService: TagsService) 
+  constructor(private list: ListService,private fb: FormBuilder, private router: Router, private tagService: TagsService, private toast: NgToastService) 
   { };
 
   ngOnInit() {
@@ -69,6 +70,7 @@ export class ModelContentEditComponent {
         res=>{
           this.errors = res;
           this.updateForm.get('ItemDesc')?.reset();
+          this.toast.success({ detail: "Uspešno posodobljen opis.", duration: 2500 });
         }
       )
       })
@@ -85,6 +87,7 @@ export class ModelContentEditComponent {
         res=>{
           this.errors = res;
           this.updateForm.get('CompleteDate')?.reset();
+          this.toast.success({ detail: "Uspešno zastavljen datum konca opravila.", duration: 2500 });
         }
       )
       })
@@ -101,6 +104,7 @@ export class ModelContentEditComponent {
         res=>{
           this.errors = res;
           this.updateForm.get('Active')?.reset();
+          this.toast.success({ detail: "Uspešno spremenjen status opravila.", duration: 2500 });
         }
       )
       })

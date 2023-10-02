@@ -1,163 +1,26 @@
 <body>
-    <nav class="sidebar">
-        <div class="menu_container">
-                <ul class="menu_item">
-                    <div class="item-title">
-                        <span class="line"></span>
-                        <div class="link flex">
-                          <div class="icon sb-icon">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                          </div>
-                          <span class="sb-text"><b>IŠČI</b></span>
-                        </div>
-                    </div>
-                    <li class="item">
-                        <app-search></app-search>
-                    </li>
-                    <div class="item-title">
-                        <span class="line"></span>
-                        <div class="link flex">
-                            <div class="icon sb-icon">
-                                <i class="fa-solid fa-filter"></i>
-                            </div>
-                            <span class="sb-text"><b>FILTRI</b></span>
-                        </div>
-                    </div>
-                    <li class="item">
-                        <div class="navbar-item dropdown">
-                                <span class="icon">
-                                    <i class="fa-solid fa-user-ninja"></i>
-                                </span>
-                                <span>Skrij</span>
-                                <span class="icon">
-                                    <i class="fa-solid fa-caret-down"></i>
-                                </span>
-                        </div>
-                        <div class="sub-menu">
-                            <div class="sub-item">
-                                <label for="done">
-                                <input type="checkbox" id="done" (change)="toggleHideDone()">
-                                <span class="pl-2">
-                                    <i class="fas fa-check has-text-success-dark"></i>
-                                    Dokončane
-                                </span>
-                                </label>
-                            </div>
-                            <div class="sub-item">
-                                <label for="notDoneYet">
-                                <input type="checkbox" id="notDoneYet" (change)="toggleHideNotDone()">
-                                <span class="pl-2">
-                                    <i class="fa-solid fa-hourglass-half has-text-link-dark"></i>
-                                    Ne dokončane
-                                </span>
-                               </label>
-                            </div>
-                            <div class="sub-item">
-                                <label for="hide">
-                                <input type="checkbox" id="hide" (change)="toggleHideExpired()">
-                                <span class="pl-2">
-                                    <i class="fa-solid fa-hourglass has-text-danger-dark"></i>
-                                    Pretekle
-                                </span>
-                                </label>
-                            </div>
-                            <div class="sub-item">
-                                <label for="deleted">
-                                <input type="checkbox" id="deleted" (change)="toggleHideDeleted()">
-                                <span class="pl-2">
-                                    <i class="fa-solid fa-trash"></i>
-                                    Izbrisane
-                                </span>
-                               </label>
-                            </div>
-                        </div>
-                    </li>
-                    <div class="item-title">
-                        <span class="line"></span>
-                        <div class="link flex">
-                            <div class="icon sb-icon">
-                                <i class="fa-solid fa-tags"></i>
-                            </div>
-                            <span class="sb-text"><b>OZNAKE</b></span>
-                        </div>
-                    </div>
-                    <li class="item">
-                        <div class="navbar-item">
-                            <button class="button" (click)="modelOpenTags()">
-                                <div class="icon">
-                                    <i class="fa-solid fa-tag"></i> 
-                                </div>
-                                <span class="btn-text">Oznake</span>
-                            </button>
-                            <div *ngIf="showModalTags">
-                                <app-model-tags *ngIf="showModalTags" (close)="modelCloseTags()"></app-model-tags>
-                            </div>
-                        </div>
-                    </li>
-                    <div class="item-title">
-                        <span class="line"></span>
-                        <div class="link flex">
-                            <div class="icon sb-icon">
-                                <i class="fa-solid fa-list-check"></i>
-                            </div>
-                            <span class="sb-text"><b>OPRAVILA</b></span>
-                        </div>
-                    </div>
-                    <li class="item">
-                        <div class="navbar-item">
-                            <!--Ustvari-->
-                            <button class="button" (click)="modelOpenCreate()">
-                                <div class="icon is-large">
-                                    <i class="far fa-calendar-plus"></i>
-                                </div>
-                                <span>Ustvari opravilo</span>
-                            </button>
-                             <div *ngIf="showModalCreate">
-                                        <app-model-content *ngIf="showModalCreate" (close)="modelCloseCreate()"></app-model-content>
-                             </div>
-                        </div>
-                        <div class="navbar-item">
-                            <!--Uredi-->
-                            <button (click)="modelOpenEdit()" class="button">
-                                <div class="icon is-large">
-                                    <i class="fas fa-square-pen"></i>
-                                </div>
-                                <span>Uredi opravilo</span>
-                            </button>
-                            <div *ngIf="showModalEdit">
-                                <app-model-content-edit *ngIf="showModalEdit" (close)="modelCloseEdit()"></app-model-content-edit>
-                            </div>
-                        </div>
-                        <div class="navbar-item">
-                            <!--Izbrisi-->
-                            <button class="button" (click)="modelOpenDelete()">
-                                <div class="icon is-large is-right">
-                                    <i class="far fa-calendar-minus"></i>
-                                </div>
-                                <span>Izbriši opravilo</span>
-                            </button>
-                            <div  *ngIf="showModalDelete">
-                                <app-model-content-delete *ngIf="showModalDelete" (close)="modelCloseDelete()"></app-model-content-delete>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-        </div>
+    <nav>
+
+        <!--sidenav component-->
+        <app-sidenav></app-sidenav>
     </nav>
     <div class="page-container">
-        <div class="content pt-2">
+        <div class="content">
             <div class="columns">
                 <div class="column">
                     <h1 class="title">
                         <b>Opravila</b>
                     </h1>
                 </div>
+
+                <!--Button for create todo modal -->
                 <div class="column is-1">
                     <button class="circle-btn" (click)="modelOpenCreate()">
                         <i class="fa-solid fa-plus"></i>
                     </button>
                 </div>
             </div>
+            <!--Shows the searched item as tag-->
             <div *ngIf="searchData.search!''" class="tag is-link is-medium is-rounded">
                 {{searchData.search}}
                 <button (click)="showAll()" class="delete py-1"></button>
@@ -165,6 +28,8 @@
         </div>
         <div class="content">
             <div class="pt-3" *ngFor="let item of items.data">
+
+                <!--Shows the tag titles-->
                 <div class="box title-box" *ngIf="item.tag!=savedTag">
                     <div class="tooltip" data-tooltip="Ime oznake">
                         <h2 class="title is-2 has-text-white-bis">
@@ -173,6 +38,20 @@
                         </h2>
                     </div>
                 </div>
+
+                <!--Show create todo modal-->
+                <app-model-content *ngIf="showModalCreate" (close)="modelCloseCreate()"></app-model-content>
+
+                <!--Show delete todo modal-->
+                <app-model-content-delete *ngIf="showModalDelete" (close)="modelCloseDelete()"></app-model-content-delete>
+
+                <!--Show edit todo modal-->
+                <app-model-content-edit *ngIf="showModalEdit" (close)="modelCloseEdit()"></app-model-content-edit>
+
+                <!--Show create tag modal-->
+                <app-model-tags *ngIf="showModalTags" (close)="modelCloseTags()"></app-model-tags>
+
+                <!--todo card component-->
                 <app-todo-card 
                 [item]="item" 
                 [item_Tag]="item.tag" 

@@ -125,7 +125,6 @@ export class ModelContentComponent {
 
   onCreate()
   {
-    console.log(this.createForm)
     if(this.createForm.valid)
     {
       this.onUpload();
@@ -135,9 +134,17 @@ export class ModelContentComponent {
           res=>{
             this.errors = res;
             this.createForm.reset();
+            this.modelCloseCreate();
+            this.toast.success({ detail: "Uspešno ustavrjeno opravilo.", duration: 2500 });
           }
-        )
+        ),
+        error: (err) => {
+          this.toast.error({ detail: "NAPAKA", duration: 2500 });
+        }
       })
+    }else
+    {
+      this.toast.error({ detail: "NAPAKA", summary: "Manjkajo zahtevana polja.", duration: 2500 });
     }
   }
 
@@ -196,6 +203,13 @@ toggleContent() {
   // Toggle the content based on the switch state
   this.isSwitchChecked = !this.isSwitchChecked;
   this.switchElement.nativeElement.checked = this.isSwitchChecked;
+
+  if (!this.isSwitchChecked) {
+    this.createForm.patchValue({
+      ItemRepeating: '',
+      ReapeatWeekly: []
+    });
+  }
 }
 
 public showDaily: boolean = true;

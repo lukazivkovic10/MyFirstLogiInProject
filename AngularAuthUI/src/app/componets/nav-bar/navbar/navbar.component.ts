@@ -18,4 +18,18 @@ export class NavbarComponent {
   logout(){
     this.auth.signOut();
   }
+
+  isActive = false;
+
+  showMenuBtn() {
+    this.isActive = !this.isActive;
+  }
+
+  showMenu() {
+    if (this.isActive == true) {
+      return 'navbar-dropup isActive';
+    } else {
+      return 'navbar-dropup';
+    }
+  }
 }
