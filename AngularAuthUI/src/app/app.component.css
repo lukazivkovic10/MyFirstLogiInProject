@@ -24,11 +24,30 @@ html, body {
   position: sticky;
   width: 100%;
   bottom: 0;
-  z-index: 2;
+  z-index: 0;
+}
+
+.hidden-list-decorations-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.hidden-list-decorations {
+  list-style: none;
+  margin-left: 0;
 }
 
 @media screen and (orientation: landscape) {
   .site-content {
     min-height: 100vw;
+  }
+}
+
+@media (max-width: 1024px) {
+  .footer
+  {
+    padding-bottom: 71px;
   }
 }

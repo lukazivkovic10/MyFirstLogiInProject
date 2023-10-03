@@ -302,4 +302,21 @@ doneCurrent(current:any)
     return 'fas fa-file';
   }
   }
+
+  isActive = false;
+
+  toggleSubmenu() {
+    this.isActive = !this.isActive;
+  }
+
+  isActiveUser = false;
+
+  toggleUserMenu() {
+    this.isActiveUser = !this.isActiveUser;
+  }
+
+  isActiveSettings = false;
+  toggleSettingsMenu() {
+    this.isActiveSettings = !this.isActiveSettings;
+  }
 }

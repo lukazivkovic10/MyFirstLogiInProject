@@ -71,5 +71,15 @@
         position: fixed;
         height: 56px;
     }
+}
 
+@media (max-height: 700px) {
+  .navbar {
+    display: none;
+}
+.bottom-navbar
+{
+    position: fixed;
+    height: 56px;
+}
 }

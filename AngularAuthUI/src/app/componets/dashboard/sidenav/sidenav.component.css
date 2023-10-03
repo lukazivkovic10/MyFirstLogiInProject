@@ -15,12 +15,6 @@
     color: hsl(217, 71%, 53%);
   }
 
-  @media (max-width: 1024px) {
-    .sidebar-btn {
-        top: 12px;
-    }
-  }
-
 .sidebar.isExpanded .sidebar-btn
 {
     left: 190px;
@@ -229,7 +223,7 @@
       transform: scale(1.05);
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     .sidebar {
         left: -70px;
       }
@@ -241,5 +235,26 @@
     .line
     {
         display: none;
+    }
+    .sidebar-btn {
+      top: 12px;
+    }
+  }
+
+  @media (max-height: 700px) {
+    .sidebar {
+        left: -70px;
+      }
+      
+      .sidebar.isExpanded{
+        left: 0px;
+        padding-bottom: 100px;
+      }
+    .line
+    {
+        display: none;
+    }
+    .sidebar-btn {
+      top: 12px;
     }
   }

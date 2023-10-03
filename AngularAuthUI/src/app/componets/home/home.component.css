@@ -8,6 +8,18 @@ body
     {
         padding-top: 0px;
     }
+    .section
+    {
+        padding-top: 16px;
+    }
+}
+
+/*Da je v centru*/
+.center 
+{
+  display: flex;
+  justify-content: center;
+  align-content: center;
 }
 
 .center-on-mobile
@@ -77,6 +89,10 @@ body
         display: block;
         flex-direction: column;
         padding-bottom: 25px;
+    }
+    #stacked-chart
+    {
+        display: block;
     }
     #flex2
     {

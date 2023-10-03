@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgToastService } from 'ng-angular-popup';
 import { ListService } from 'src/app/services/list.service';
 import { SearchTagService } from 'src/app/services/search-tag.service';
 import { SharedDataService } from 'src/app/services/shared-data-service.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { SignalRService } from 'src/app/services/signal-r.service';
+import { GraphService } from 'src/app/services/graph.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 interface Item
 {
@@ -37,6 +39,13 @@ export class DashboardComponent implements OnInit{
     data: []
   };
 
+  public tasks: { success: boolean; error: number; message: string; data: any } = {
+    success: false,
+    error: 0,
+    message: '',
+    data: []
+  };
+
   public searchData: {search: string} = 
   {
     search: ''
@@ -50,19 +59,9 @@ export class DashboardComponent implements OnInit{
     data: ''
   }
 
-  public savedTag: string = "";
-
-  constructor(private auth: ListService, private sharedData: SharedDataService, 
-    private searchService: SearchTagService,private toast: NgToastService, 
-    private notificationService: NotificationService, private signalRService: SignalRService,)
-  {};
-
   ngOnInit() {
-    this.auth.GetAllItems().subscribe(
-      (res: any) => {
-        this.items = res;
-      }
-    );
+    this.getTotalItems();
+    this.loadItems();
     this.sharedData.searchResult$.subscribe((res: any) => {
       if (res) {
         this.items = res;
@@ -87,6 +86,23 @@ export class DashboardComponent implements OnInit{
     });
   });
   }
+
+  currentPage = 1;
+  pageSize = 10;
+  public totalItems: number = 0;
+  totalPages:number = 1;
+  isLoading = false;
+
+  public savedTag: string = "";
+
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+
+  constructor(private auth: ListService, private sharedData: SharedDataService, 
+    private searchService: SearchTagService,private toast: NgToastService, 
+    private notificationService: NotificationService, private signalRService: SignalRService,
+    private gServ: GraphService, private cdr: ChangeDetectorRef)
+  {
+  };
 
   sendNotification(): void {
     // Example: Send a notification from this component
@@ -117,19 +133,61 @@ export class DashboardComponent implements OnInit{
     this.isHovered = false;
   }
 
+  getTotalItems(): void {
+    this.gServ.NumberOfAllTasks().subscribe((res: any) => {
+      console.log(res); // Log response for debugging
+      this.tasks = res;
+      this.totalItems = this.tasks.data.Vse;
+      this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+      console.log(this.totalItems); // Log totalItems for debugging
+    });
+  }
 
-  showAll(){
-    this.auth.GetAllItems().subscribe(
+
+  loadItems(): void {
+    this.isLoading = true;
+    this.auth.GetAllItems(this.currentPage, this.pageSize).subscribe(
       (res: any) => {
-        this.items = res;
-        this.searchData.search = "";
-        this.error = {
-          success: true,
-          error: 404,
-          message: '',
-          data: ''}
+        if (res) {
+          // Check if data is an array
+          this.items = res;
+        }
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      (err: any) => {
+        console.error(err);
+        this.isLoading = false;
       }
     );
+  }
+
+  onPageChange(event: any): void {
+    this.currentPage = event;
+    this.loadItems(); // Call loadItems() with the new page number
+  }
+
+  showAll()
+  {
+    this.auth.GetAllItems(this.currentPage, this.pageSize).subscribe(
+      (res:any)=>{
+        if(res){
+          this.items = res;
+        }
+      }
+    )
+  }
+
+  onScroll(): void {
+    const container = this.scrollContainer.nativeElement;
+    const scrollHeight = container.scrollHeight;
+    const scrollTop = container.scrollTop;
+    const clientHeight = container.clientHeight;
+
+    if (scrollTop + clientHeight >= scrollHeight) {
+      this.currentPage++;
+      this.loadItems();
+    }
   }
 
 hideDoneCards = false;

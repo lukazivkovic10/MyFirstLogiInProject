@@ -32,11 +32,13 @@ export class LoginComponent {
     this.isText ? this.type = "text" : this.type = "password"; //to pa če je true spremeni type v text drugače pa v password
   };
 
+  encryptedPassword: string = '';
+
   onLogin() {
-    const encryptedPassword = this.passwordService.encrypt(this.loginForm.value.password);
+    this.encryptedPassword = this.passwordService.encrypt(this.loginForm.value.password);
   
     this.loginForm.patchValue({
-      password: encryptedPassword
+      password: this.encryptedPassword
     });
   
     // Proceed with the login

@@ -9,15 +9,22 @@ import { DashboardComponent } from '../dashboard.component';
 export class SidenavComponent {
   isExpanded = false;
   showFilter = false;
+  barStatus: string = '';
 
-getBarStatus()
-{
-  if (this.isExpanded == true) {
-    return 'fa-solid fa-caret-left fa-2x';
-  } else {
-    return 'fa-solid fa-caret-right fa-2x';
+  
+
+  @HostListener('window:resize', ['$event'])
+  onResize(vent: Event) {
+    this.updateBarStatus();
   }
-}
+
+  updateBarStatus() {
+    if (window.innerWidth > 1024) {
+      return this.isExpanded ? 'fa-solid fa-caret-left fa-2x' : 'fa-solid fa-caret-right fa-2x';
+    } else {
+      return this.isExpanded ? 'fa-solid fa-xmark fa-2x' : 'fa-solid fa-bars fa-2x';
+    }
+  }
 
   toggleExpanded() {
     this.isExpanded = !this.isExpanded;
@@ -33,5 +40,8 @@ getBarStatus()
   toggleFilter() {
     this.showFilter = !this.showFilter;
   }
-  constructor(public DashComp: DashboardComponent, private elementRef: ElementRef ) {}
+  constructor(public DashComp: DashboardComponent, private elementRef: ElementRef ) 
+  {
+    this.updateBarStatus();
+  }
 }

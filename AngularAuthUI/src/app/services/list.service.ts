@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -14,9 +14,12 @@ export class ListService {
     return this.http.delete(`${this.baseUrl}SoftDelete`+deleteObj.ItemName);
   }
 
-  GetAllItems()
-  {
-    return this.http.get(`${this.baseUrl}IskanjeListaVseh`);
+  GetAllItems(page: number, pageSize: number) {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+  
+    return this.http.get(`${this.baseUrl}IskanjeListaVseh`, { params });
   }
 
   GetAllDoneItems()

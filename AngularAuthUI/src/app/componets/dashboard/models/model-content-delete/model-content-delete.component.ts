@@ -62,6 +62,9 @@ export class ModelContentDeleteComponent {
           }
         )
       })
+    }else
+    {
+      this.toast.warning({ detail: "OPOZORILO", summary: "Manjkajo zahtevana polja.", duration: 2500 });
     }
   }
 }

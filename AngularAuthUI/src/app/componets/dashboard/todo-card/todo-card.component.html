@@ -45,10 +45,10 @@
                 <div class="column">
                     <div class="tooltip" data-tooltip="Dodeli opravilo uporabniku" *ngIf="item_ItemStatus==1 && item_Active==1">
                         <span class="user-button-item">
-                            <button class="circle-btn">
+                            <button class="circle-btn" (click)="toggleUserMenu()">
                                 <i class="fa-solid fa-plus"></i>
                             </button>
-                            <ul class="menu-user-list">
+                            <ul class="menu-user-list" [ngClass]="{ 'isActive': isActiveUser }">
                                 <div class="control has-icons-left">
                                     <div class="form" [formGroup]="addUserForm">
                                         <div class="select">
@@ -70,12 +70,12 @@
                 <div class="column">
                     <div class="tooltip" data-tooltip="Dodatne nastavitve">
                         <span class="button-item">
-                            <button class="show-menu-button">
+                            <button class="show-menu-button" (click)="toggleSettingsMenu()">
                                 <span class="icon button-item">
                                     <i class="fa-solid fa-angles-down"></i>
                                 </span>
                             </button>
-                            <ul class="menu-sub-list">
+                            <ul class="menu-sub-list" [ngClass]="{'isActive': isActiveSettings}">
                                 <li class="menu-item" style="--i:2;">
                                     <button class="menu-button center" (click)="parentComponent.modelOpenDelete()">
                                         <span class="icon">
@@ -153,10 +153,10 @@
             <div class="column is-4-desktop is-mobile">
                 <div class="tooltip" data-tooltip="Dodeljeni uporabniki">
                     <span class="user-button-item">
-                        <button class="circle-btn">
+                        <button class="circle-btn" (click)="toggleSubmenu()">
                             <i class="fa-solid fa-users"></i>
                         </button>
-                        <ul class="menu-user-list">
+                        <ul class="menu-user-list" [ngClass]="{ 'isActive': isActive }">
                             <span *ngFor="let auser of assignedUsers.data">
                                 <li *ngIf="auser.tag === item.tag && auser.itemName === item.itemName">
                                     <div class="columns">

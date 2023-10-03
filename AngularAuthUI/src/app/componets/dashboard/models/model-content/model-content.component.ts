@@ -144,7 +144,7 @@ export class ModelContentComponent {
       })
     }else
     {
-      this.toast.error({ detail: "NAPAKA", summary: "Manjkajo zahtevana polja.", duration: 2500 });
+      this.toast.warning({ detail: "OPOZORILO", summary: "Manjkajo zahtevana polja.", duration: 2500 });
     }
   }
 

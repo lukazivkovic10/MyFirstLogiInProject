@@ -20,15 +20,24 @@ namespace AngularAuthAPI.Controllers
         }
 
         [HttpGet("IskanjeListaVseh")]
-        public async Task<ActionResult<Response<object>>> GetAllItems()
+        public async Task<ActionResult<Response<object>>> GetAllItems(int page = 1, int pageSize = 10)
         {
             using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            IEnumerable<Items> items = await SelectAllItems(connection);
-            ////Preveri
-            if (items == null)
+
+            var items = await connection.QueryAsync<Items>(
+                @"SELECT * FROM Items
+                ORDER BY Tag
+                OFFSET @Offset ROWS
+                FETCH NEXT @PageSize ROWS ONLY",
+                new { Offset = (page - 1) * pageSize, PageSize = pageSize });
+
+            // Get total number of items
+            var totalItems = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Items");
+
+            // Check if items exist
+            if (items == null || !items.Any())
             {
-                //Error 404
-                var erorrResponse = new Response<object>
+                var errorResponse = new Response<object>
                 {
                     Success = false,
                     Error = 404,
@@ -36,34 +45,35 @@ namespace AngularAuthAPI.Controllers
                     Data = "404"
                 };
 
-                return erorrResponse;
+                return errorResponse;
             }
             else
             {
-                //Uspesno
-
+                // Update item status
                 DateTime currentDate = DateTime.Now;
-                List<Items> data = new List<Items>();
 
                 foreach (var item in items)
                 {
                     if (currentDate > item.CompleteDate)
                     {
-                        PosodobiStatus(connection, item.Id, 2);
+                        await connection.ExecuteAsync(
+                            "UPDATE Items SET ItemStatus = @Status WHERE Id = @Id",
+                            new { Status = 2, Id = item.Id });
                     }
                     else if (currentDate < item.CompleteDate)
                     {
-                        PosodobiStatus(connection, item.Id, 1);
+                        await connection.ExecuteAsync(
+                            "UPDATE Items SET ItemStatus = @Status WHERE Id = @Id",
+                            new { Status = 1, Id = item.Id });
                     }
-
-                    data.Add(item);
                 }
+
                 var successResponse = new Response<object>
                 {
                     Success = true,
                     Error = 200,
                     Message = "Pridobljeni podatki.",
-                    Data = data
+                    Data = items.ToList()
                 };
 
                 return successResponse;

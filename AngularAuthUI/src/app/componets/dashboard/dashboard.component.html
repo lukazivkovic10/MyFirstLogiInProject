@@ -7,16 +7,32 @@
     <div class="page-container">
         <div class="content">
             <div class="columns">
-                <div class="column">
+                <div class="column is-2-desktop is-fullwidth-mobile center">
                     <h1 class="title">
                         <b>Opravila</b>
                     </h1>
                 </div>
 
+                <div class="column is-fullwidth-mobile">
+                    <div class="columns is-mobile">
+                        <div class="column center">
+                            <button class="button" id="page" (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
+                        </div>
+                        <div class="column center">
+                            <b class="pt-2">Page {{currentPage}} of {{totalPages}}</b>
+                        </div>
+                        <div class="column center">
+                            <button class="button" id="page" (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages">Next</button>
+                        </div>
+                    </div>
+                </div>
+
                 <!--Button for create todo modal -->
-                <div class="column is-1">
+                <div class="column is-1-desktop">
                     <button class="circle-btn" (click)="modelOpenCreate()">
-                        <i class="fa-solid fa-plus"></i>
+                        <span class="icon fas fa-fw">
+                            <i class="fa-solid fa-calendar-plus fa-2x"></i>
+                        </span>
                     </button>
                 </div>
             </div>
@@ -67,6 +83,18 @@
                 [hideNotDoneCards]="hideNotDoneCards"
                 >
                 </app-todo-card>
+            </div>
+
+            <div class="columns pt-3 is-mobile">
+                <div class="column center">
+                    <button class="button" id="page" (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
+                </div>
+                <div class="column center">
+                    <b class="pt-2">Page {{currentPage}} of {{totalPages}}</b>
+                </div>
+                <div class="column center">
+                    <button class="button" id="page" (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages">Next</button>
+                </div>
             </div>
         </div>
     </div>
