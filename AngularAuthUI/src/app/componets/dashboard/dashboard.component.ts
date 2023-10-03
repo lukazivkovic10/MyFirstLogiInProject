@@ -153,6 +153,7 @@ export class DashboardComponent implements OnInit{
           this.items = res;
         }
         this.isLoading = false;
+        this.searchData.search = '';
         this.cdr.detectChanges();
       },
       (err: any) => {

@@ -14,7 +14,7 @@
                 </div>
 
                 <div class="column is-fullwidth-mobile">
-                    <div class="columns is-mobile">
+                    <div class="columns is-mobile" *ngIf="searchData.search === '' || searchData.search === null">
                         <div class="column center">
                             <button class="button" id="page" (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
                         </div>
@@ -39,7 +39,7 @@
             <!--Shows the searched item as tag-->
             <div *ngIf="searchData.search!''" class="tag is-link is-medium is-rounded">
                 {{searchData.search}}
-                <button (click)="showAll()" class="delete py-1"></button>
+                <button (click)="loadItems()" class="delete py-1"></button>
             </div>
         </div>
         <div class="content">
@@ -85,7 +85,7 @@
                 </app-todo-card>
             </div>
 
-            <div class="columns pt-3 is-mobile">
+            <div class="columns pt-3 is-mobile" *ngIf="searchData.search === '' || searchData.search === null">
                 <div class="column center">
                     <button class="button" id="page" (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
                 </div>
