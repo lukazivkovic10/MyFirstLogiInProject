@@ -61,3 +61,8 @@
        - Fix responsivness
        - Bugfix reminders
        - Bugfix - authguard
+    
+  9. Do+opolnilne naloge (4.10.2023)
+      - Filter za samo lastne naloge,
+      - za filtriranje nalog po uporabniku,
+      - electron deployment
