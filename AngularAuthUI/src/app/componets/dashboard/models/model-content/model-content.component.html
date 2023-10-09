@@ -79,15 +79,28 @@
                             <div class="column">
                                 <p>Že opravljeno?</p>
                                 <div class="field">
-                                    <div class="options-container py-1">
-                                        <div class="options">
+                                    <div class="tooltip" data-tooltip="Prednastavljena je na ne"></div>
+                                    <div class="columns">
+                                        <div class="column center">
                                             <input type="radio" value="0" id="radio-1" name="Active" checked="" formControlName="Active">
-                                            <label class="Active" for="radio-1"><i class="fas fa-check"></i></label>
+                                            <label for="radio-1">
+                                                <span>Da</span>
+                                                <div class="icon">
+                                                    <i class="fas fa-check"></i>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        <div class="column center">
                                             <input type="radio" value="1" id="radio-2" name="Active" formControlName="Active">
-                                            <label class="Active" for="radio-2"><i class="fas fa-x"></i></label>
+                                            <label for="radio-2">
+                                                <span>Ne</span>
+                                                <div class="icon">
+                                                    <i class="fas fa-x"></i>
+                                                </div>
+                                            </label>
                                         </div>
                                     </div>
-                            </div>
+                                </div>
                             </div>
                             <div class="column">
                                 <p>Dokončati do</p>
@@ -158,7 +171,7 @@
                                 <div class="column">
                                     <label class="switch">
                                         <input #switchElement class="switch" type="radio" value='Tedensko' formControlName="ItemRepeating" formControlName="ItemRepeating" (change)="onRadioChange('showWeekly')" [checked]="!showYearly">
-                                        <span class="slider round"></span>
+                                        <span class="slider"></span>
                                     </label>
                                 </div>
                             </div>
@@ -252,7 +265,7 @@
                                 <div class="column">
                                     <label class="switch">
                                         <input #switchElement class="switch" type="radio" value='Mesecno' formControlName="ItemRepeating">
-                                        <span class="slider round"></span>
+                                        <span class="slider"></span>
                                     </label>
                                 </div> 
                             </div>
@@ -266,7 +279,7 @@
                                 <div class="column">
                                     <label class="switch">
                                         <input #switchElement class="switch" type="radio" value='Letno' formControlName="ItemRepeating">
-                                        <span class="slider round"></span>
+                                        <span class="slider"></span>
                                     </label>
                                 </div> 
                             </div>
@@ -280,7 +293,7 @@
                                 <div class="column">
                                     <label class="switch">
                                         <input #switchElement class="switch" type="radio" value='Custom' formControlName="ItemRepeating">
-                                        <span class="slider round"></span>
+                                        <span class="slider"></span>
                                     </label>
                                     <input type="date" class="input" formControlName="ReapeatCustom">
                                 </div> 

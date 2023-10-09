@@ -29,7 +29,6 @@
                 </div>
             </div>
             <li class="item">
-                <div class="navbar-item">
                     <span class="dropdown" [ngClass]="{ 'showFilter': showFilter }" (click)="toggleFilter()">
                         <span class="icon">
                             <i class="fa-solid fa-user-ninja"></i>
@@ -39,36 +38,35 @@
                             <i class="fa-solid fa-caret-down"></i>
                         </span>
                     </span>
-                </div>
                 <div class="sub-menu" [ngClass]="{ 'showFilter': showFilter }">
-                    <div class="sub-item">
+                    <li>
                         <label for="done">
-                        <input type="checkbox" [disabled]="!showFilter" id="done" (change)="DashComp.toggleHideDone()">
-                        <span class="pl-2">
-                            <i class="fas fa-check has-text-success-dark"></i>
-                            Dokončane
-                        </span>
-                        </label>
-                    </div>
-                    <div class="sub-item">
+                            <input type="checkbox" [disabled]="!showFilter" id="done" (change)="DashComp.toggleHideDone()">
+                            <span class="pl-2">
+                                <i class="fas fa-check has-text-success-dark"></i>
+                                Dokončane
+                            </span>
+                            </label>
+                    </li>
+                    <li>
                         <label for="notDoneYet">
-                        <input type="checkbox" [disabled]="!showFilter" id="notDoneYet" (change)="DashComp.toggleHideNotDone()">
-                        <span class="pl-2">
-                            <i class="fa-solid fa-hourglass-half has-text-link-dark"></i>
-                            Ne dokončane
-                        </span>
-                       </label>
-                    </div>
-                    <div class="sub-item">
+                            <input type="checkbox" [disabled]="!showFilter" id="notDoneYet" (change)="DashComp.toggleHideNotDone()">
+                            <span class="pl-2">
+                                <i class="fa-solid fa-hourglass-half has-text-link-dark"></i>
+                                Ne dokončane
+                            </span>
+                           </label>
+                    </li>
+                    <li>
                         <label for="hide">
-                        <input type="checkbox" [disabled]="!showFilter" id="hide" (change)="DashComp.toggleHideExpired()">
-                        <span class="pl-2">
-                            <i class="fa-solid fa-hourglass has-text-danger-dark"></i>
-                            Pretekle
-                        </span>
-                        </label>
-                    </div>
-                    <div class="sub-item">
+                            <input type="checkbox" [disabled]="!showFilter" id="hide" (change)="DashComp.toggleHideExpired()">
+                            <span class="pl-2">
+                                <i class="fa-solid fa-hourglass has-text-danger-dark"></i>
+                                Pretekle
+                            </span>
+                            </label>
+                    </li>
+                    <li>
                         <label for="deleted">
                         <input type="checkbox" [disabled]="!showFilter" id="deleted" (change)="DashComp.toggleHideDeleted()">
                         <span class="pl-2">
@@ -76,7 +74,8 @@
                             Izbrisane
                         </span>
                        </label>
-                    </div>
+                    </li>
+                        
                 </div>
             </li>
             <div class="item-title" (click)="toggleExpanded()">
@@ -89,7 +88,7 @@
                 </div>
             </div>
             <li class="item">
-                <div class="navbar-item" (click)="toggleExpanded()">
+                <div (click)="toggleExpanded()">
                     <button class="button" [disabled]="!isExpanded" (click)="DashComp.modelOpenTags()">
                         <div class="icon">
                             <i class="fa-solid fa-tag"></i> 
@@ -108,7 +107,7 @@
                 </div>
             </div>
             <li class="item" >
-                <div class="navbar-item" (click)="toggleExpanded()">
+                <div (click)="toggleExpanded()">
                     <!--Ustvari-->
                     <button class="button" [disabled]="!isExpanded" (click)="DashComp.modelOpenCreate()">
                         <div class="icon is-large">
@@ -117,7 +116,7 @@
                         <span>Ustvari opravilo</span>
                     </button>
                 </div>
-                <div class="navbar-item" (click)="toggleExpanded()">
+                <div (click)="toggleExpanded()">
                     <!--Uredi-->
                     <button (click)="DashComp.modelOpenEdit()" [disabled]="!isExpanded" class="button">
                         <div class="icon is-large">
@@ -126,7 +125,7 @@
                         <span>Uredi opravilo</span>
                     </button>
                 </div>
-                <div class="navbar-item" (click)="toggleExpanded()">
+                <div (click)="toggleExpanded()">
                     <!--Izbrisi-->
                     <button class="button" [disabled]="!isExpanded" (click)="DashComp.modelOpenDelete()">
                         <div class="icon is-large is-right">

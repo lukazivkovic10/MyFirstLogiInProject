@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
+
 export class SearchTagService {
 
   public searchData = new BehaviorSubject<any>([]);

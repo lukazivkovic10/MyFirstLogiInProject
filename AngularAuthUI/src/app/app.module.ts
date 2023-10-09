@@ -34,6 +34,7 @@ import { CalanderComponent } from './componets/dashboard/models/model-content/mo
 import { TodoCardComponent } from './componets/dashboard/todo-card/todo-card.component';
 import { DataSqareCardComponent } from './componets/home/data-sqare-card/data-sqare-card.component';
 import { SidenavComponent } from './componets/dashboard/sidenav/sidenav.component';
+import { UserDashboardComponent } from './componets/user-dashboard/user-dashboard.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { SidenavComponent } from './componets/dashboard/sidenav/sidenav.componen
     CalanderComponent,
     TodoCardComponent,
     DataSqareCardComponent,
-    SidenavComponent
+    SidenavComponent,
+    UserDashboardComponent
   ],
   imports: [
     FileUploadModule,

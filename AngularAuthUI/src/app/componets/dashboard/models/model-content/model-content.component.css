@@ -1,65 +1,13 @@
-.modal.is-active
-{
-  backdrop-filter: blur(2px);
-}
-
 .ng-invalid:not(form) 
 {
     border-left: 5px solid hsl(348, 100%, 61%); /* red */
 }
 
-.ng-valid:not(form) 
-{
-    border-left: 5px solid hsl(141, 71%, 48%)	; /* sucess */
-}
-
-
 .modal-card
 {
   border-radius: 10px;
-  box-shadow: 2px 3px 5px 0px hsl(0, 0%, 68%);
+  box-shadow: 2px 3px 5px 0px hsl(0, 0%, 20%, 0.15);
 }
-
-.options {
-    display: flex;
-    position: relative;
-    padding: 0.35rem;
-    border-radius: 5px;
-    color: hsl(0, 0%, 21%);
-    width: 100px;
-    background-color: hsl(0, 0%, 96%);
-  }
-  
-  .options * {
-    z-index: 2;
-  }
-  
-  .options-container input[type="radio"] {
-    display: none;
-  }
-  
-  .Active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 30px;
-    width: 50px;
-    color: hsl(0, 0%, 21%);
-    border-radius: 5px;
-    cursor: pointer;
-    transition: color 0.15s ease-in;
-  }
-  
-  .options-container input[type="radio"]:checked + label {
-    background-color: hsl(0, 0%, 86%);
-  }
-
-  .list
-  {
-    list-style-type: square;
-    padding-left: 25px;
-    padding-top: 15px;
-  }
 
   /*Switch checkbox*/
 .switch {
@@ -85,6 +33,7 @@
   background-color: #ccc;
   -webkit-transition: .4s;
   transition: .4s;
+  border-radius: 34px;
 }
 
 .slider:before {
@@ -97,29 +46,17 @@
   background-color: white;
   -webkit-transition: .4s;
   transition: .4s;
+  border-radius: 50%;
 }
 
-input.switch:checked + .slider {
+input.switch:checked + .slider, input.switch:focus + .slider {
   background-color: hsl(217, 71%, 45%);
-}
-
-input.switch:focus + .slider {
-  box-shadow: 0 0 1px hsl(217, 71%, 45%);
 }
 
 input.switch:checked + .slider:before {
   -webkit-transform: translateX(15px);
   -ms-transform: translateX(15px);
   transform: translateX(15px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
 }
 
 /*Center*/
@@ -239,10 +176,6 @@ input.switch:checked + .slider:before {
 .checkbox-icon {
 	transition: .375s ease;
 	color: hsl(0, 0%, 29%);
-	svg {
-		width: 3rem;
-		height: 3rem;
-	}
 }
 
 .checkbox-label {

@@ -1,0 +1,33 @@
+<section class="hero is-info">
+    <div class="hero-body">
+        <div class="columns is-mobile">
+            <div class="column is-1-desktop is-3-mobile center">
+                <div class="icon is-large">
+                    <i class="fa-solid fa-user fa-5x"></i>
+                </div>
+            </div>
+            <div class="column is-fullwidth-mobile">
+                <h3 class="subtitle is-5">Uporabnik</h3>
+                <h2 class="title is-4"><b>{{userEmail}}</b></h2>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="page-container p-2">
+    <div *ngFor="let item of items.data" class="pt-2">
+        <!--todo card component-->
+    <app-todo-card 
+    [item]="item" 
+    [item_Tag]="item.tag" 
+    [item_ItemName]="item.itemName" 
+    [item_ItemDesc]="item.itemDesc" 
+    [item_ItemStatus]="item.itemStatus" 
+    [item_Active]="item.active" 
+    [item_completeDate]="item.completeDate" 
+    [item_dateOfCompletion]="item.dateOfCompletion"
+    (refreshData)="getUserItems()"
+    >
+    </app-todo-card>
+    </div>
+</div>

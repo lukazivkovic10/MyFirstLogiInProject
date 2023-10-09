@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { NgToastService } from 'ng-angular-popup';
 import { AuthService } from 'src/app/services/auth.service';
+import { JwtDecodeService } from 'src/app/services/jwt-decode.service';
 
 @Component({
   selector: 'app-navbar',
@@ -7,7 +11,14 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
-  constructor(private auth: AuthService){}
+  userMail: string = '';
+  searchUserText = new FormControl('', [Validators.required, Validators.email]);
+  constructor(private auth: AuthService,private router: Router,
+     private JwtDecode: JwtDecodeService, private toast: NgToastService)
+  {
+    this.userMail= this.JwtDecode.userEmail();
+  }
+
   showProfile():boolean{
     if(this.auth.isLoggedIn())
     {
@@ -17,6 +28,19 @@ export class NavbarComponent {
   }
   logout(){
     this.auth.signOut();
+  }
+
+  navigateToUserDashboard(): void {
+    this.router.navigate(['/dashboard', this.searchUserText.value]);
+  }
+
+  navigateToCurrentLoggedInUserDashboard(): void {
+    this.router.navigate(['/dashboard', this.userMail]);
+  }
+
+  emailErrorMessage()
+  {
+    this.toast.error({ detail: "NAPAKA",summary:"Epoštni ni veljaven." , duration: 2500 });
   }
 
   isActive = false;

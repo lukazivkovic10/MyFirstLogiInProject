@@ -1,13 +1,4 @@
-body
-{
-    padding-top: 56px;
-}
-
 @media (max-width: 1024px) {
-    body
-    {
-        padding-top: 0px;
-    }
     .section
     {
         padding-top: 16px;

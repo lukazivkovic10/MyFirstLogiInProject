@@ -115,14 +115,14 @@ export class StackedGraphComponent {
               horizontalAlign: 'center',
               offsetY: 0,
               labels: {
-                colors: ['hsl(141, 53%, 31%)', 'hsl(217, 71%, 45%)', 'hsl(348, 86%, 43%)'],
+                colors: ['hsl(141, 53%, 31%)', 'hsl(348, 86%, 43%)','hsl(217, 71%, 45%)'],
               },
               markers: {
                 width: 12,
                 height: 12,
                 strokeWidth: 0,
                 strokeColor: '#fff',
-                fillColors: ['hsl(141, 53%, 31%)', 'hsl(217, 71%, 45%)', 'hsl(348, 86%, 43%)'],
+                fillColors: ['hsl(141, 53%, 31%)', 'hsl(348, 86%, 43%)','hsl(217, 71%, 45%)'],
                 radius: 12,
                 offsetX: 0,
                 offsetY: 0,
@@ -130,7 +130,7 @@ export class StackedGraphComponent {
             },
             fill: {
               opacity: 1,
-              colors: ['hsl(141, 53%, 31%)', 'hsl(217, 71%, 45%)', 'hsl(348, 86%, 43%)'],
+              colors: ['hsl(141, 53%, 31%)', 'hsl(348, 86%, 43%)','hsl(217, 71%, 45%)'],
             },
           };
         } else {

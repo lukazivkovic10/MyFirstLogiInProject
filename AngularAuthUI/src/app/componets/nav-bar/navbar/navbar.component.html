@@ -1,116 +1,129 @@
 <nav class="navbar has-background-white-bis is-fixed-top">
-    <div class="navbar-menu">
-      <div class="navbar-start">
-      <div class="buttons">
-      <button class="button is-stati" routerLink="/home">
-        <div class="icon">
-          <i class="fa-solid fa-house-chimney-window"></i>
-        </div>
-        <span>Dom</span>
-      </button>
-    </div>
-      </div>
-      <div class="navbar-item">
-        <button class="button is-stati" routerLink="/dashboard">
-          <div class="icon">
-            <i class="fa-solid fa-rectangle-list"></i>
-          </div>
-            <span>Opravila</span>
-        </button>
-      </div>
-      <div *ngIf="showProfile()===false" class="navbar-item">
-        <div class="buttons">
-          <button class="button" routerLink="/login">
-            <div class="icon">
-              <i class="fa-solid fa-id-badge"></i>
-            </div>
-              <span>Prijava</span>
-            </button>
-          <button class="button" routerLink="/signup">
-            <div class="icon">
-              <i class="fa-solid fa-address-card"></i>
-            </div>
-            <span>Registracija</span>
-          </button>
-        </div>
-      </div>
-      <div *ngIf="showProfile()===true"  class="navbar-item has-dropdown is-hoverable">
-        <div class="buttons">
-            <button class="button circle">
-                <span class="icon">
-                  <i class="fa-solid fa-circle-user fas fa-lg"></i>
-                </span>
-            </button>
-            <div class="navbar-dropdown is-right p-4">
-              <button class="button has-text-dark" routerLink="/user-list">
-                <div class="icon">
-                  <i class="fa-solid fa-users-between-lines"></i>
-                </div>
-                <span class="has-text-dark">Uporabniki</span>
-              </button>
-              <button (click)="logout()" class="button has-text-dark">
-                <div class="icon">
-                  <i class="fa-solid fa-right-to-bracket"></i>
-                </div>
-                <span class="has-text-dark">Odjava</span>
-              </button>
-            </div>
-        </div>
-      </div>
-    </div>
-</nav>
-<nav class="bottom-navbar">
-  <div class="bottom-navbar-items buttons">
-    <button class="button is-stati" routerLink="/dashboard">
-      <div class="icon">
-        <i class="fa-solid fa-rectangle-list"></i>
-      </div>
-    </button>
-    <button class="button" routerLink="/home">
+  <div class="navbar-menu">
+    <div class="navbar-start">
+    <div class="buttons">
+    <button class="button is-stati" routerLink="/home">
       <div class="icon">
         <i class="fa-solid fa-house-chimney-window"></i>
       </div>
+      <span>Dom</span>
     </button>
-    <div>
-      <button class="button" (click)="showMenuBtn()">
-        <span class="icon">
-          <i class="fa-solid fa-circle-user fas fa-lg"></i>
-        </span>
+  </div>
+    </div>
+    <div *ngIf="showProfile()===true" class="navbar-item">
+      <input class="input" placeholder="Išči uporabnika" [formControl]="searchUserText" (keyup.enter)="navigateToUserDashboard()">
+      <button class="button search" (click)="navigateToUserDashboard()">
+        <div class="icon">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
       </button>
-      <div [ngClass]="showMenu()">
-        <span class="navbar-item" *ngIf="showProfile()===false">
-          <button class="button" routerLink="/login">
-            <div class="icon">
-              <i class="fa-solid fa-id-badge"></i>
-            </div>
+    </div>
+    <div class="navbar-item">
+      <button class="button is-stati" routerLink="/dashboard">
+        <div class="icon">
+          <i class="fa-solid fa-rectangle-list"></i>
+        </div>
+          <span>Opravila</span>
+      </button>
+    </div>
+    <div *ngIf="showProfile()===false" class="navbar-item">
+      <div class="buttons">
+        <button class="button" routerLink="/login">
+          <div class="icon">
+            <i class="fa-solid fa-id-badge"></i>
+          </div>
             <span>Prijava</span>
+          </button>
+        <button class="button" routerLink="/signup">
+          <div class="icon">
+            <i class="fa-solid fa-address-card"></i>
+          </div>
+          <span>Registracija</span>
+        </button>
+      </div>
+    </div>
+    <div *ngIf="showProfile()===true"  class="navbar-item has-dropdown is-hoverable">
+      <div class="buttons">
+          <button class="button circle" (click)="navigateToCurrentLoggedInUserDashboard()">
+              <span class="icon">
+                <i class="fa-solid fa-circle-user fas fa-lg"></i>
+              </span>
+          </button>
+          <div class="navbar-dropdown is-right p-4">
+            <button class="button has-text-dark" routerLink="/user-list">
+              <div class="icon">
+                <i class="fa-solid fa-users-between-lines"></i>
+              </div>
+              <span class="has-text-dark">Uporabniki</span>
             </button>
-        </span>
-        <span class="navbar-item" *ngIf="showProfile()===false">
-          <button class="button" routerLink="/signup">
-            <div class="icon">
-              <i class="fa-solid fa-address-card"></i>
-            </div>
-            <span>Registracija</span>
-          </button>
-        </span>
-        <span class="navbar-item" *ngIf="showProfile()===true">
-          <button class="button has-text-dark" routerLink="/user-list">
-            <div class="icon">
-              <i class="fa-solid fa-users-between-lines"></i>
-            </div>
-            <span class="has-text-dark">Uporabniki</span>
-          </button>
-        </span>
-        <span class="navbar-item" *ngIf="showProfile()===true">
-          <button (click)="logout()" class="button has-text-dark">
-            <div class="icon">
-              <i class="fa-solid fa-right-to-bracket"></i>
-            </div>
-            <span class="has-text-dark">Odjava</span>
-          </button>
-        </span>
+            <button (click)="logout()" class="button has-text-dark">
+              <div class="icon">
+                <i class="fa-solid fa-right-to-bracket"></i>
+              </div>
+              <span class="has-text-dark">Odjava</span>
+            </button>
+          </div>
       </div>
     </div>
   </div>
+</nav>
+<nav class="bottom-navbar">
+<div class="bottom-navbar-items buttons">
+  <button class="button is-stati" routerLink="/dashboard">
+    <div class="icon">
+      <i class="fa-solid fa-rectangle-list"></i>
+    </div>
+  </button>
+  <button class="button" (click)="navigateToCurrentLoggedInUserDashboard()">
+    <div class="icon">
+      <i class="fa-solid fa-user-check fas"></i>
+    </div>
+  </button>
+  <button class="button" routerLink="/home">
+    <div class="icon">
+      <i class="fa-solid fa-house-chimney-window"></i>
+    </div>
+  </button>
+  <div>
+    <button class="button" (click)="showMenuBtn()">
+      <span class="icon">
+        <i class="fa-solid fa-circle-user fas fa-lg"></i>
+      </span>
+    </button>
+    <div [ngClass]="showMenu()">
+      <span class="navbar-item" *ngIf="showProfile()===false">
+        <button class="button" routerLink="/login">
+          <div class="icon">
+            <i class="fa-solid fa-id-badge"></i>
+          </div>
+          <span>Prijava</span>
+          </button>
+      </span>
+      <span class="navbar-item" *ngIf="showProfile()===false">
+        <button class="button" routerLink="/signup">
+          <div class="icon">
+            <i class="fa-solid fa-address-card"></i>
+          </div>
+          <span>Registracija</span>
+        </button>
+      </span>
+      <span class="navbar-item" *ngIf="showProfile()===true">
+        <button class="button has-text-dark" routerLink="/user-list">
+          <div class="icon">
+            <i class="fa-solid fa-users-between-lines"></i>
+          </div>
+          <span class="has-text-dark">Uporabniki</span>
+        </button>
+      </span>
+      <span class="navbar-item" *ngIf="showProfile()===true">
+        <button (click)="logout()" class="button has-text-dark">
+          <div class="icon">
+            <i class="fa-solid fa-right-to-bracket"></i>
+          </div>
+          <span class="has-text-dark">Odjava</span>
+        </button>
+      </span>
+    </div>
+  </div>
+</div>
 </nav>

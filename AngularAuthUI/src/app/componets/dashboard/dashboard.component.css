@@ -1,14 +1,3 @@
-body{
-  padding-top: 56px;
-}
-
-@media (max-width: 1024px) {
-  body
-  {
-      padding-top: 0px;
-  }
-}
-
 @media (max-height: 700px) {
   .page-container
   {

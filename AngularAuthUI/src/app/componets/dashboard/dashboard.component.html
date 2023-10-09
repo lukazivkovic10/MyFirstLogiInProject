@@ -1,6 +1,5 @@
 <body>
     <nav>
-
         <!--sidenav component-->
         <app-sidenav></app-sidenav>
     </nav>
@@ -81,6 +80,7 @@
                 [hideDoneCards]="hideDoneCards"
                 [hideExpiredCards]="hideExpiredCards"
                 [hideNotDoneCards]="hideNotDoneCards"
+                (refreshData)="loadItems()"
                 >
                 </app-todo-card>
             </div>

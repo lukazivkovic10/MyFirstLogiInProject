@@ -67,33 +67,6 @@
                         </span>
                     </div>
                 </div>
-                <div class="column">
-                    <div class="tooltip" data-tooltip="Dodatne nastavitve">
-                        <span class="button-item">
-                            <button class="show-menu-button" (click)="toggleSettingsMenu()">
-                                <span class="icon button-item">
-                                    <i class="fa-solid fa-angles-down"></i>
-                                </span>
-                            </button>
-                            <ul class="menu-sub-list" [ngClass]="{'isActive': isActiveSettings}">
-                                <li class="menu-item" style="--i:2;">
-                                    <button class="menu-button center" (click)="parentComponent.modelOpenDelete()">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-delete-left fa-2x"></i>
-                                        </span>
-                                    </button>
-                                </li>
-                                <li class="menu-item " style="--i:1;">
-                                    <button class="menu-button center" (click)="parentComponent.modelOpenEdit()">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-pen-to-square fa-2x"></i>
-                                        </span>
-                                    </button>
-                                </li>
-                            </ul>
-                        </span>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

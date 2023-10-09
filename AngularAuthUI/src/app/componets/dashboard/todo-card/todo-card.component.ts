@@ -1,10 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ListService } from 'src/app/services/list.service';
 import { DashboardComponent } from '../dashboard.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AssignUserService } from 'src/app/services/assign-user.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { FileUploadService } from 'src/app/services/file-upload.service';
+import { ProfileService } from 'src/app/services/user-services/profile.service';
 
 interface Item
 {
@@ -78,9 +79,12 @@ getCardStatus(item_ItemStatus: number, item_Active: number)
     return 'notdone';
   } else if (item_ItemStatus === 2 && item_Active !== 0) {
     return 'expired';
-  } else if (item_ItemStatus === 2 && item_Active === 0 || item_ItemStatus==1 && item_Active==0) {
+  } else if (item_ItemStatus === 2 && item_Active === 0) {
     return 'done';
-  }else{
+  }else if (item_ItemStatus === 1 && item_Active === 0) {
+    return 'done';
+  }
+  else{
     return '';
   }
 }
@@ -93,9 +97,12 @@ textColor(item_ItemStatus: number, item_Active: number)
     return 'notdone_text';
   } else if (item_ItemStatus === 2 && item_Active !== 0) {
     return 'expired_text';
-  } else if (item_ItemStatus === 2 && item_Active === 0 || item_ItemStatus==1 && item_Active==0) {
+  } else if (item_ItemStatus === 2 && item_Active === 0) {
     return 'done_text';
-  }else{
+  } else if ( item_ItemStatus === 1 && item_Active === 0) {
+    return 'done_text';
+  }
+  else{
     return '';
   }
 }
@@ -108,9 +115,12 @@ getTimerIcon(item_ItemStatus: number, item_Active: number)
     return 'fa-solid fa-hourglass-half';
   } else if (item_ItemStatus === 2 && item_Active !== 0) {
     return 'fa-solid fa-hourglass';
-  } else if (item_ItemStatus === 2 && item_Active === 0 || item_ItemStatus==1 && item_Active==0) {
+  } else if (item_ItemStatus === 2 && item_Active === 0) {
     return 'fa-solid fa-hourglass-end';
-  }else{
+  } else if (item_ItemStatus === 1 && item_Active === 0) {
+    return 'fa-solid fa-hourglass-end';
+  }
+  else{
     return '';
   }
 }
@@ -123,9 +133,12 @@ tagColor(item_ItemStatus: number, item_Active: number)
     return 'tag is-rounded has-background-link-dark is-medium has-text-white-bis';
   } else if (item_ItemStatus === 2 && item_Active !== 0) {
     return 'tag is-rounded is-whites is-medium has-background-danger-dark has-text-white-bis';
-  } else if (item_ItemStatus === 2 && item_Active === 0 || item_ItemStatus==1 && item_Active==0) {
+  } else if (item_ItemStatus === 2 && item_Active === 0) {
     return 'tag is-rounded is-whites is-medium has-background-success-dark has-text-white-bis';
-  }else{
+  }else if (item_ItemStatus===1 && item_Active===0) {
+    return 'tag is-rounded is-whites is-medium has-background-success-dark has-text-white-bis';
+  }
+  else{
     return '';
   }
 }
@@ -141,7 +154,7 @@ shouldShowCard(item_ItemStatus: number, item_Active: number): boolean {
     return false;
   } else if (this.hideExpiredCards === true && item_ItemStatus === 2 && item_Active !== 0) {
     return false;
-  }else if (this.hideDoneCards === true && item_ItemStatus === 2 && item_Active === 0 || item_ItemStatus==1 && item_Active==0) {
+  }else if (this.hideDoneCards === true && item_ItemStatus === 2 && item_Active === 0) {
     return false;
   }else if (this.hideNotDoneCards === true && item_ItemStatus === 1 && item_Active === 1 ) {
     return false;
@@ -156,7 +169,7 @@ addUserForm!: FormGroup;
 
 //Constructor & ngOnInit
 
-constructor(private list: ListService,private fileS: FileUploadService, public parentComponent: DashboardComponent, private fb: FormBuilder, private UserAsign: AssignUserService, private NotiService: NotificationService){}
+constructor(private changeDetectorRef: ChangeDetectorRef, private list: ListService,private fileS: FileUploadService, private fb: FormBuilder, private UserAsign: AssignUserService, private NotiService: NotificationService){}
 
 ngOnInit()
 {
@@ -219,14 +232,14 @@ createNotification(notificationData: object): void {
 }
 
 //Funkcije za todo
-
+@Output() refreshData: EventEmitter<void> = new EventEmitter<void>();
 doneCurrent(current:any)
   {
       this.list.DoneItem(current)
       .subscribe({
         next:(
           res=>{
-            this.parentComponent.showAll();
+            this.refreshData.emit();
           }
         )
       });
@@ -238,7 +251,7 @@ doneCurrent(current:any)
       .subscribe({
         next:(
           res=>{
-            this.parentComponent.showAll();
+            this.refreshData.emit();
           }
         )
       })

@@ -1,34 +1,9 @@
 /*Izgled*/
-.box 
-{
-  border-radius: 15px;
-}
-
 .time-box
 {
   padding: 0.5rem 0.5rem 0.5rem 0.5rem;
   box-shadow: 0px 0px 0px 1px hsl(0, 0%, 86%);
   opacity: 1;
-}
-
-.liner {
-  display: flex;
-  align-items: flex-start;
-  text-align: left;
-
-  &:after {
-    content: '';
-    min-width: 20px;
-    margin: auto;
-    width: 95%;
-    height: 1px;
-    background-image: linear-gradient(90deg, transparent 5px, hsl(0, 0%, 86%) 5px, hsl(0, 0%, 86%) 20px, transparent 15px);
-    background-size: 20px 1px;
-  }
-
-  &:after {
-    margin-left: 10px;
-  }
 }
 
 /*center*/
@@ -40,21 +15,9 @@
 }
 
 /*hr*/
-hr.solid
-{
-border-top: 2px solid hsl(0, 0%, 86%);
-border-radius: 5px;
-}
-
 hr.slim
 {
 border-top: 1px solid hsl(0, 0%, 86%);
-border-radius: 5px;
-}
-
-hr.bold
-{
-border-top: 4px solid hsl(0, 0%, 71%);
 border-radius: 5px;
 }
 
@@ -83,67 +46,10 @@ border-radius: 5px;
     color: hsl(217, 71%, 45%);
 }
 
-.notdone
-{
-  border-left-style: solid;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-left-width: 5px;
-  border-color: hsl(217, 71%, 45%);
-  transition: all 0.1s ease-in-out;
-}
-
-.notdone:hover
-{
-  border-left-width: 10px;
-}
-
-.done_text
-{
-    color: hsl(141, 53%, 31%);
-}
-
-.done
-{
-  border-left-style: solid;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-left-width: 5px;
-  border-color: hsl(141, 53%, 31%);
-  transition: all 0.1s ease-in-out;
-}
-
-.done:hover
-{
-  border-left-width: 10px;
-}
-
-.expired_text
-{
-  color: hsl(348, 86%, 43%);
-}
-
-.expired
-{
-  border-left-style: solid;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-left-width: 5px;
-  border-color: hsl(348, 86%, 43%);
-  transition: all 0.1s ease-in-out;
-}
-
-.expired:hover
-{
-  border-left-width: 10px;
-}
-
-.deleted_text
-{
-  color: #4a4a4a;
-  text-decoration: line-through;
-}
-
+/* Common Styles for .notdone, .done, .expired, .deleted */
+.notdone,
+.done,
+.expired,
 .deleted
 {
   border-left-style: solid;
@@ -153,82 +59,53 @@ border-radius: 5px;
   transition: all 0.1s ease-in-out;
 }
 
-.deleted:hover
-{
+.notdone:hover,
+.done:hover,
+.expired:hover,
+.deleted:hover {
   border-left-width: 10px;
+}
+
+/* Text Styles for .notdone, .done, .expired */
+.notdone, .notdone_text
+{
+  border-color: hsl(217, 71%, 45%);
+  color: hsl(217, 71%, 45%);
+}
+
+.done, .done_text
+{
+  border-color: hsl(141, 53%, 31%);
+  color: hsl(141, 53%, 31%);
+}
+
+.expired, .expired_text
+{
+  border-color: hsl(348, 86%, 43%);
+  color: hsl(348, 86%, 43%);
+}
+
+.deleted_text
+{
+  color: #4a4a4a;
+  text-decoration: line-through;
 }
 
 /*Menu list*/
 .menu-sub-list {
     list-style-type: none;
-    transform: scale(0) translateY(-40px);
-    transition: all 0.5s ease-in-out;
     padding: 8px;
     background-color: hsl(0, 0%, 98%);
     border-radius: 10px;
     position: absolute;
     right: 0%;
     top: 60%;
-    z-index: -1;
-    height: 39px;
-    width: 39px;
     overflow: hidden;
     flex-direction: column;
-  }
-
-  .menu-sub-list.isActive
-  {
-    z-index: 0;
-    height: 100px;
-    width: 100px;
-    box-shadow: 2px 2px 5px 0px hsl(0, 0%, 86%);
-    transform: scale(1) translateY(0px);
   }
   
   .button-item {
     position: relative;
-  }
-  
-  .menu-item {
-    opacity: 1;
-    position: relative;
-  }
-  
-  .show-menu-button {
-    border: 0;
-    border-style: none;
-    padding: 8px 8px;
-    height: 40px;
-    width: 100%;
-    border-radius: 10px;
-    display: flex;
-    z-index: 0;
-    align-items: center;
-    justify-items: center;
-    position: relative;
-    background-color: hsl(217, 71%, 91%);
-    color: hsl(217, 71%, 53%);
-  }
-  
-  .menu-button {
-    border: 0;
-    border-style: none;
-    padding: 8px 8px;
-    height: 40px;
-    width: 100%;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-items: center;
-    position: relative;
-    background-color: hsl(217, 71%, 91%);
-    color: hsl(217, 71%, 53%);
-    transition: 0.5s ease-in-out, border-left 0.1s ease-in-out,  border-bottom 0.1s ease-in-out;
-    &:hover {
-      transform: scale(1.1);
-      border-left: 2px solid hsl(217, 71%, 45%);
-      border-bottom: 2px solid hsl(217, 71%, 45%);
-    }
   }
   
   /*Circular Button*/
@@ -255,8 +132,6 @@ border-radius: 5px;
   .menu-user-list
   {
     list-style-type: none;
-    transform: scale(0) translateY(-40px);
-    transition: scale 0.1s ease-in-out, translateY 0.5s ease-in-out;
     padding: 8px;
     background-color: hsl(0, 0%, 98%);
     border-radius: 10px;
@@ -267,52 +142,39 @@ border-radius: 5px;
     width: 0px;
     flex-direction: column;
     overflow: hidden;
+    display: none;
   }
 
   .menu-user-list.isActive
   {
     height: auto;
     width: auto;
-    box-shadow: 2px 2px 5px 0px hsl(0, 0%, 86%);
-    transform: scale(1) translateY(0px);
+    display: block;
   }
 
   /*Reminder*/
-.ReminderChkbox
-{
-  border-width: 3px;
-  border-style: solid;
-  border-radius: 99px;
-  height: 40px;
-  width: 40px;
-  color: hsl(217, 71%, 45%);
-  border-color: hsl(217, 71%, 45%);
-  transition: all 1s ease, background-color 0.4s ease-in-out, border-width 0.1s ease-in-out;
-  background-color: hsl(0, 0%, 98%);
-}
+  .ReminderChkbox {
+    border: 3px solid hsl(217, 71%, 45%);
+    border-radius: 99px;
+    height: 40px;
+    width: 40px;
+    color: hsl(217, 71%, 45%);
+  }
 
 .ReminderIcon
 {
   transform: scale(0);
   transition: opacity 1s ease, transform 0.5s ease-in-out;
 }
-
-.ReminderChkbox:active
-{
-  background-color: hsl(217, 71%, 45%);
-}
-
-
-.ReminderChkbox:active .ReminderIcon
+.ReminderChkbox:active .ReminderIcon, .ReminderChkbox:active
 {
   color: hsl(0, 0%, 98%);
+  background-color: hsl(217, 71%, 45%);
 }
-
 .ReminderChkbox:hover
 {
   border-width: 0;
 }
-
 .ReminderChkbox:hover .ReminderIcon
 {
   transform: scale(2);
@@ -335,16 +197,26 @@ border-radius: 5px;
 }
 
 /*Gumb kot checkbox*/
-.checkbox-type
+.checkbox-type, .checkbox-type-done
 {
   border-width: 3px;
   border-style: solid;
   border-radius: 10px;
   height: 40px;
   width: 40px;
-  border-color: hsl(217, 71%, 45%);
   transition: all 0.5s ease, border-color 0.3s ease-in-out;
   background-color: hsl(0, 0%, 98%);
+}
+
+.checkbox-type
+{
+  border-color: hsl(217, 71%, 45%);
+}
+
+.checkbox-type-done
+{
+  background-color: hsl(141, 53%, 31%);
+  border-radius: 30px;
 }
 
 .checkbox-type:active
@@ -363,17 +235,6 @@ border-radius: 5px;
   border-radius: 10px;
   border-bottom-style: solid;
   border-color: hsl(217, 71%, 45%);
-}
-
-.checkbox-type-done
-{
-  background-color: hsl(141, 53%, 31%);
-  border-radius: 30px;
-  border-width: 3px;
-  height: 40px;
-  width: 40px;
-  border-color: hsl(141, 53%, 31%);
-  transition: all 0.5s ease, border-color 0.3s ease-in-out;
 }
 
 .checkbox-type-icon
@@ -415,44 +276,18 @@ border-radius: 5px;
     color: hsl(0, 0%, 9%);
     height: auto;
     transition: 0.5s;
+    &&:hover {
+      background-color: hsl(217, 71%, 91%);
+      color: hsl(217, 71%, 53%);
+      transform: scale(1.1);
+    }
 }
-
-.file_c .button:hover
-{
-    background-color: hsl(217, 71%, 91%);
-    color: hsl(217, 71%, 53%);
-    transform: scale(1.05);
-}
-
 .list
 {
   display: flex;
   align-items: start;
   justify-content: start;
 }
-
-@media (max-width: 1645px) and (min-width: 1500px) {
-  .liner::after
-  {
-    width: 87%;
-  }
-}
-
-
-@media (max-width: 1500px) and (min-width: 700px) {
-  .liner::after
-  {
-    width: 85%;
-  }
-}
-
-@media (max-width: 700px) {
-  .liner::after
-  {
-    width: 80%;
-  }
-}
-
 .end
 {
   display: flex;

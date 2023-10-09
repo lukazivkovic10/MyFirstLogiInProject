@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "lkfM1xCYBJcKQVpJaI+28hRcvLX+WHt3/dyizpJZabB8PDDyhQLjQEGfDJryxjrEFdZvdmaV4++H00JVawboSg==",
+  "dgSpecHash": "N9uc6n7dWwkSkKrM7ZdWyJeJbPo5fuZB4Yi6Rql+XVT2qzCPvM/Y3wL4M7qrTDafiGAkAVBq8zjmwpgX4zbb2g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Luka\\MyFirstLoginProject\\AngularAuthAPI\\AngularAuthAPI\\AngularAuthAPI.csproj",
+  "projectFilePath": "C:\\Users\\Luka\\MyFirstLogiInProject\\AngularAuthAPI\\AngularAuthAPI\\AngularAuthAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Luka\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\Luka\\.nuget\\packages\\crypticwizard.randomwordgenerator\\0.9.5\\crypticwizard.randomwordgenerator.0.9.5.nupkg.sha512",

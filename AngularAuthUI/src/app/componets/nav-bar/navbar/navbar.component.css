@@ -62,6 +62,32 @@
     bottom: 56px;
   }
 
+  .search
+  {
+    border-radius: 0 10px 10px 0;
+    border-bottom: 2px solid hsl(217, 71%, 53%);
+    transform: all 0.1s ease-in-out;
+  }
+
+  .search:hover
+  {
+    border-right: 4px solid hsl(217, 71%, 53%);
+  }
+
+  .input
+  {
+    border: none;
+    border-radius: 10px 0 0 10px;
+    background-color: hsl(0, 0%, 98%);
+    transition: 0.5s;
+    border-bottom: 2px solid hsl(217, 71%, 53%);
+  }
+
+  .input:hover, .input:focus
+  {
+    border-left: 4px solid hsl(217, 71%, 53%);
+  }
+
 @media (max-width: 1024px) {
     .navbar {
         display: none;
