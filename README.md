@@ -62,7 +62,15 @@
        - Bugfix reminders
        - Bugfix - authguard
     
-  9. Do+opolnilne naloge (4.10.2023)
+  9. Dopolnilne naloge (4.10.2023)
       - Filter za samo lastne naloge,
       - za filtriranje nalog po uporabniku,
       - electron deployment
+    
+  10. Deploy + graphs (your responsibility)
+      - Heroku, .... naj je nikje javno
+      - Grafi koliko prometa je na spetni strani - dopolniš lahko še sam z kaki drugim use case
+     
+  11. Bugi
+
+  12. Predstavitev
