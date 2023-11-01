@@ -10,7 +10,7 @@
     "test": "ng test",
     "electron": "electron .",
     "electron-build": "ng build && electron .",
-    "package-win32" : "electron-packager ./ Opravila --platform=win32 --overwrite"
+    "package-win32": "electron-packager ./ Opravila --platform=win32 --overwrite"
   },
   "private": true,
   "dependencies": {

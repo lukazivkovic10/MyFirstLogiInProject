@@ -1,0 +1,43 @@
+.center
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero
+{
+    user-select: none;
+}
+
+.button
+{
+    transition: all 0.5s;
+}
+
+.button:hover
+{
+    transform: scale(1.05);
+}
+
+.profile
+{
+    height: 80px;
+    overflow: hidden;
+}
+
+.title
+{
+    line-height: inherit;
+}
+
+.profile.isActive
+{
+    height: auto;
+    overflow: visible;
+}
+
+.hero
+{
+    border-radius: 10px;
+}

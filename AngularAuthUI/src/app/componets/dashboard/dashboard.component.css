@@ -78,10 +78,10 @@
 
 #page.button
   {
-      border: solid 2px hsl(0, 0%, 71%);
-      border-radius: 10px;
-      background-color: hsl(0, 0%, 96%);
-      transition: 0.5s;
+    border: none;
+    border-bottom: solid 2px hsl(0, 0%, 71%);
+    border-radius: 10px;
+    transition: 0.5s;
   }
 
   #page.button[disabled]

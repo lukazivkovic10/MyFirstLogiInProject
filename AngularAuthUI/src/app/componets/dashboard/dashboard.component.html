@@ -15,13 +15,23 @@
                 <div class="column is-fullwidth-mobile">
                     <div class="columns is-mobile" *ngIf="searchData.search === '' || searchData.search === null">
                         <div class="column center">
-                            <button class="button" id="page" (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
+                            <button class="button" id="page" (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">
+                                <span class="icon">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span>Prejšna</span>
+                            </button>
                         </div>
                         <div class="column center">
-                            <b class="pt-2">Page {{currentPage}} of {{totalPages}}</b>
+                            <p class="pt-2">{{currentPage}} stran od {{totalPages}}</p>
                         </div>
                         <div class="column center">
-                            <button class="button" id="page" (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages">Next</button>
+                            <button class="button" id="page" (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages">
+                                <span>Naslednja</span>
+                                <span class="icon">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -42,60 +52,73 @@
             </div>
         </div>
         <div class="content">
-            <div class="pt-3" *ngFor="let item of items.data">
+        <ng-container *ngIf="items.data; else stringData">
+            <ng-container *ngIf="isItemsArray(items.data); else stringData">
+                <div class="pt-3" *ngFor="let item of items.data">
 
-                <!--Shows the tag titles-->
-                <div class="box title-box" *ngIf="item.tag!=savedTag">
-                    <div class="tooltip" data-tooltip="Ime oznake">
-                        <h2 class="title is-2 has-text-white-bis">
-                            {{item.tag}}
-                            {{saveTag(item.tag)}} 
-                        </h2>
+                    <!--Shows the tag titles-->
+                    <div class="box title-box" *ngIf="item.tag!=savedTag">
+                        <div class="tooltip" data-tooltip="Ime oznake">
+                            <h2 class="title is-2 has-text-white-bis">
+                                {{item.tag}}
+                                {{saveTag(item.tag)}} 
+                            </h2>
+                        </div>
                     </div>
+    
+                    <!--Show create todo modal-->
+                    <app-model-content *ngIf="showModalCreate" (close)="modelCloseCreate()"></app-model-content>
+    
+                    <!--Show create tag modal-->
+                    <app-model-tags *ngIf="showModalTags" (close)="modelCloseTags()"></app-model-tags>
+    
+                    <!--todo card component-->
+                    <app-todo-card 
+                    [item]="item" 
+                    [item_Tag]="item.tag" 
+                    [item_ItemName]="item.itemName" 
+                    [item_ItemDesc]="item.itemDesc" 
+                    [item_ItemStatus]="item.itemStatus" 
+                    [item_Active]="item.active" 
+                    [item_completeDate]="item.completeDate" 
+                    [item_dateOfCompletion]="item.dateOfCompletion"
+                    [hideDeletedCards]="hideDeletedCards"
+                    [hideDoneCards]="hideDoneCards"
+                    [hideExpiredCards]="hideExpiredCards"
+                    [hideNotDoneCards]="hideNotDoneCards"
+                    (refreshData)="loadItems()"
+                    >
+                    </app-todo-card>
                 </div>
-
-                <!--Show create todo modal-->
-                <app-model-content *ngIf="showModalCreate" (close)="modelCloseCreate()"></app-model-content>
-
-                <!--Show delete todo modal-->
-                <app-model-content-delete *ngIf="showModalDelete" (close)="modelCloseDelete()"></app-model-content-delete>
-
-                <!--Show edit todo modal-->
-                <app-model-content-edit *ngIf="showModalEdit" (close)="modelCloseEdit()"></app-model-content-edit>
-
-                <!--Show create tag modal-->
-                <app-model-tags *ngIf="showModalTags" (close)="modelCloseTags()"></app-model-tags>
-
-                <!--todo card component-->
-                <app-todo-card 
-                [item]="item" 
-                [item_Tag]="item.tag" 
-                [item_ItemName]="item.itemName" 
-                [item_ItemDesc]="item.itemDesc" 
-                [item_ItemStatus]="item.itemStatus" 
-                [item_Active]="item.active" 
-                [item_completeDate]="item.completeDate" 
-                [item_dateOfCompletion]="item.dateOfCompletion"
-                [hideDeletedCards]="hideDeletedCards"
-                [hideDoneCards]="hideDoneCards"
-                [hideExpiredCards]="hideExpiredCards"
-                [hideNotDoneCards]="hideNotDoneCards"
-                (refreshData)="loadItems()"
-                >
-                </app-todo-card>
-            </div>
 
             <div class="columns pt-3 is-mobile" *ngIf="searchData.search === '' || searchData.search === null">
                 <div class="column center">
-                    <button class="button" id="page" (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
+                    <button class="button" id="page" (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">
+                        <span class="icon">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </span>
+                        <span>Prejšna</span>
+                    </button>
                 </div>
                 <div class="column center">
-                    <b class="pt-2">Page {{currentPage}} of {{totalPages}}</b>
+                    <p class="pt-2">{{currentPage}} stran od {{totalPages}}</p>
                 </div>
                 <div class="column center">
-                    <button class="button" id="page" (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages">Next</button>
+                    <button class="button" id="page" (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages">
+                        <span>Naslednja</span>
+                        <span class="icon">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </span>
+                    </button>
                 </div>
             </div>
+        </ng-container>
+        <ng-template #stringData>
+            <div class="has-text-centered">
+              <img src="/assets/404 not-found.svg" class="svg">
+            </div>
+          </ng-template>
+        </ng-container>
         </div>
     </div>
 </body>

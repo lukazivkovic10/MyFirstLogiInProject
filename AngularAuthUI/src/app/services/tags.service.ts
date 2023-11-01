@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { TokenServiceService } from './token-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,20 +9,20 @@ import { Router } from '@angular/router';
 export class TagsService {
 
   private baseUrl:string = "https://localhost:7023/api/Tag/"
-  constructor(private http : HttpClient, private router: Router) { }
+  constructor(private http : HttpClient, private router: Router, private tokenService: TokenServiceService) { }
 
   GetTags()
   {
-    return this.http.get(`${this.baseUrl}VseTags`);
+    return this.http.get(`${this.baseUrl}VseTags`, { headers: this.tokenService.getRequestHeaders() });
   }
 
   CreateTags(createObj: any)
   {
-    return this.http.post(`${this.baseUrl}UstvarjanjeTag`, createObj);
+    return this.http.post(`${this.baseUrl}UstvarjanjeTag`, createObj, { headers: this.tokenService.getRequestHeaders() });
   }
   
   DeleteTag(DeleteTagObj: any)
   {
-    return this.http.put(`${this.baseUrl}IzbrisTag`,DeleteTagObj);
+    return this.http.put(`${this.baseUrl}IzbrisTag`,DeleteTagObj, { headers: this.tokenService.getRequestHeaders() });
   }
 }

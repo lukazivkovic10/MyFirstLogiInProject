@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { NgToastService } from 'ng-angular-popup';
 import { PasswordService } from 'src/app/services/password.service';
+import { JwtDecodeService } from 'src/app/services/jwt-decode.service';
+import ValidateForm from 'src/app/helper/validateform';
+import { TokenServiceService } from 'src/app/services/token-service.service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +18,7 @@ export class LoginComponent {
   isText: boolean = false;
   eyeIcon: string = "fa-eye";
   loginForm!: FormGroup;
-  constructor(private fb: FormBuilder, private auth: AuthService, private route: Router, private toast: NgToastService, private passwordService: PasswordService) {}
+  constructor(private tokenService: TokenServiceService,private fb: FormBuilder, private auth: AuthService, private route: Router, private toast: NgToastService, private passwordService: PasswordService, private jwtDecode: JwtDecodeService) {}
 
   ngOnInit(): void
   {
@@ -35,23 +38,49 @@ export class LoginComponent {
   encryptedPassword: string = '';
 
   onLogin() {
-    this.encryptedPassword = this.passwordService.encrypt(this.loginForm.value.password);
+    if (this.loginForm.valid) {
+      const passwordValue = this.loginForm.value.password;
   
-    this.loginForm.patchValue({
-      password: this.encryptedPassword
-    });
+      // Perform custom password validation here (if needed)
   
-    // Proceed with the login
-    this.auth.login(this.loginForm.value).subscribe({
-      next: (res) => {
-        this.loginForm.reset();
-        this.auth.storeToken(res.token);
-        this.toast.success({ detail: "DOBRODOŠLI V PROGRAM", summary: res.message, duration: 5000 });
-        this.route.navigate(['dashboard']);
-      },
-      error: (err) => {
-        this.toast.error({ detail: "NAPAKA", summary: err?.error.message, duration: 5000 });
-      }
-    });
+      // Encrypt the password
+      const encryptedPassword = this.passwordService.encrypt(passwordValue);
+  
+      // Update the form value with the encrypted password
+      this.loginForm.patchValue({
+        password: encryptedPassword
+      });
+  
+      // Proceed with the login
+      this.auth.login(this.loginForm.value)
+      .subscribe(
+        (res: any) => {
+          // Handle the response here
+          if (res && res.token) {
+            this.tokenService.setToken(res.token); // Set the JWT token in the ListService
+            this.auth.startTokenCheck(); // Start the token check timer for auto logout when token expires
+    
+            this.toast.success({ detail: "DOBRODOŠLI V PROGRAM", summary: res.message, duration: 5000 });
+    
+            const tokenPayload = this.jwtDecode.decodeToken(res.token);
+            const userEmail = tokenPayload.email;
+    
+            this.route.navigate(['/dashboard', userEmail, 'profile']);
+          } else {
+            this.toast.error({ detail: "NAPAKA", summary: "Token not found in response", duration: 5000 });
+          }
+        },
+        (err: any) => {
+          this.toast.error({ detail: "NAPAKA", summary: err?.error.message, duration: 5000 });
+        }
+      );
+      
+      // Revert the form value to the original password
+      this.loginForm.patchValue({
+        password: passwordValue
+      });
+    } else {
+      ValidateForm.validateAllFormFields(this.loginForm);
+    }
   }
 }

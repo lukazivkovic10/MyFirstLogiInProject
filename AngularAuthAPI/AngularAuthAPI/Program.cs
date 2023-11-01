@@ -86,6 +86,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("CorsPolicy");
+
+app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.UseDefaultFiles();
 app.UseStaticFiles();
 var fileProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory());
 app.UseStaticFiles(new StaticFileOptions
@@ -93,14 +101,8 @@ app.UseStaticFiles(new StaticFileOptions
     FileProvider = fileProvider
 });
 
-app.UseCors("CorsPolicy");
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.UseRouting();
-
 app.MapControllers();
+app.MapFallbackToController("Index", "Fallback");
 
 app.UseEndpoints(endpoints =>
 {

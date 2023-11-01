@@ -11,5 +11,6 @@
         public DateTime CreatedDate { get; set; }
         public DateTime CompleteDate { get; set; }
         public string ItemRepeating { get; set; }
+        public string CreatedBy { get; set; }
     }
 }

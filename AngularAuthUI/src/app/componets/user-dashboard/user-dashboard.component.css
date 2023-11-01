@@ -9,3 +9,55 @@
 {
     user-select: none;
 }
+
+.button
+{
+    transition: all 0.5s;
+}
+
+.button:hover
+{
+    transform: scale(1.05);
+}
+
+.hero
+{
+    border-radius: 10px;
+}
+
+.svg
+{
+    aspect-ratio: 16/4;
+    transform: scale(2);
+}
+
+li
+{
+    transform: scale(0.95);
+    transition: all 0.2s ease-in-out;
+}
+
+li.is-active
+{
+    transform: scale(1.05);
+}
+
+
+@media (max-width: 1024px) {
+    .svg
+    {
+        aspect-ratio: 16/4;
+        scale: 0.65;
+        padding: 10px;
+    }
+}
+
+
+@media (max-width: 443px) {
+    .svg
+    {
+        aspect-ratio: 16/4;
+        scale: 3.25;
+        padding: 10px;
+    }
+}

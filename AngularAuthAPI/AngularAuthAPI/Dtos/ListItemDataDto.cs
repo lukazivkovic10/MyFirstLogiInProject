@@ -13,5 +13,6 @@
         public DateTime DateOfCompletion { get; set; }
         public int TimeTakenSeconds { get; set; }
         public string? TimeTaken { get; set; }
+        public string CompletedBy { get; set; }
     }
 }

@@ -14,7 +14,6 @@ export class SearchTagService {
   setSearchData(data: any)
   {
     this.searchData.next(data);
-    console.log(data);
   }
 
   getSearchData()

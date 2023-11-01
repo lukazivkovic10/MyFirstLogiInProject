@@ -1,0 +1,83 @@
+<div class="modal" [ngClass]="{ 'is-active': isActiveModal }">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <div class="columns">
+            <div class="column">
+                <h3 class="title is-3">{{item_ItemName}}</h3>
+            </div>
+            <div class="column is-1">
+                    Avtor: <a (click)="navigateToUserDashboard(item.createdBy)">{{item.createdBy}}</a>
+            </div>
+        </div>
+      </header>
+      <section class="modal-card-body" [ngClass]="Status_border">
+        <div class="todobody">
+            <div class="content" *ngIf="item_ItemDesc !== ''">
+                <p>{{item_ItemDesc}}</p>
+              </div>
+              <div class="content" *ngIf="item_ItemDesc == ''">
+                  <div>
+                      <span class="icon">
+                          <i class="fa-solid fa-ghost"></i>
+                      </span>
+                      <span>Ni opisa!</span>
+                  </div>
+              </div>
+              <hr>
+              <div class="tooltip" data-tooltip="Priloge" *ngIf="shouldShowPriloge()">
+                  <h5 class="subtitle is-5 has-text-grey-lighter">Priloge:</h5>
+              </div>
+              <div class="list" *ngFor="let file of files.data">
+                  <span *ngIf="file.tag == item.tag && file.itemName == item.itemName">
+                      <div class="tooltip" data-tooltip="Prenesi prilogo">
+                          <div class="file_c">
+                              <button class="button" (click)="downloadFile(file.id,file.fileName)">
+                                  <span class="icon-text">
+                                      <span class="icon is-small">
+                                          <i [ngClass]="getFileIconClass(file.fileName)" class="fas fa-1x"></i> 
+                                      </span>
+                                      <span> {{file.fileName}} | {{file.fileSize | byteSize}}</span>
+                                      <span class="icon">
+                                          <i class="fa-regular fa-circle-down"></i>
+                                      </span>
+                                  </span>
+                              </button>
+                          </div>   
+                      </div>
+                  </span>
+              </div>
+        </div>
+        <div class="analytics" *ngIf="verification() === true">
+        </div>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button is-dark" (click)="closeModal()">Zapri</button>
+        <div class="box time-box mb-0">
+          <div class="tooltip center" data-tooltip="Zastavljen datum oddaje: ">
+              <span>
+                  <ng-container *ngIf="item_ItemStatus === 2 && item_Active === 0; else defaultDate">
+                      <div class="icon">
+                          <i class="fa-solid fa-check"></i>
+                      </div>
+                      <b>{{ item_dateOfCompletion | date:'HH:mm dd.MM.yyyy' }}</b> |
+                      <div class="icon">
+                          <i class="fa-solid fa-hourglass-end"></i>
+                      </div>
+                      <b>{{ item_completeDate | date:'HH:mm dd.MM.yyyy' }}</b>
+                  </ng-container>
+                  <ng-template #defaultDate>
+                      <b>{{ item_completeDate | date:'HH:mm dd.MM.yyyy' }}</b>
+                  </ng-template>
+              </span>
+          </div>
+        </div>
+        <div class="info" *ngIf="item_ItemStatus==1 && item_Active==0">
+            Opravilo je označil kot opravljeno: <a (click)="navigateToUserDashboard(item.completedBy)">{{item.completedBy}}</a>
+        </div>
+        <div>
+            Ogledov: {{views}}
+        </div>
+      </footer>
+    </div>
+  </div>

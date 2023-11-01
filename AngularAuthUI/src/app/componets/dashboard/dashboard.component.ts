@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgToastService } from 'ng-angular-popup';
 import { ListService } from 'src/app/services/list.service';
 import { SearchTagService } from 'src/app/services/search-tag.service';
@@ -19,9 +19,13 @@ interface Item
   createdDate: Date;
   completeDate: Date;
   dateOfCompletion: Date;
-  TimeTakenSeconds: number;
+  timeTakenSeconds: number;
   TimeTaken: string;
   ItemRepeating: string;
+  createdBy: string;
+  lastEditBy: string;
+  completedBy: string;
+  viewCount: number;
 }
 
 @Component({
@@ -31,6 +35,7 @@ interface Item
 })
 
 export class DashboardComponent implements OnInit{
+  @ViewChild('stringData', { static: true }) stringData!: TemplateRef<any>;
 
   public items: { success: boolean; error: number; message: string; data: Item[] } = {
     success: false,
@@ -135,11 +140,9 @@ export class DashboardComponent implements OnInit{
 
   getTotalItems(): void {
     this.gServ.NumberOfAllTasks().subscribe((res: any) => {
-      console.log(res); // Log response for debugging
       this.tasks = res;
       this.totalItems = this.tasks.data.Vse;
       this.totalPages = Math.ceil(this.totalItems / this.pageSize);
-      console.log(this.totalItems); // Log totalItems for debugging
     });
   }
 
@@ -168,6 +171,11 @@ export class DashboardComponent implements OnInit{
     this.loadItems(); // Call loadItems() with the new page number
   }
 
+  //Cheks if data is array
+  isItemsArray(data: Item[] | string): data is Item[] {
+    return Array.isArray(data);
+  }
+
   showAll()
   {
     this.auth.GetAllItems(this.currentPage, this.pageSize).subscribe(
@@ -190,7 +198,6 @@ export class DashboardComponent implements OnInit{
       this.loadItems();
     }
   }
-
 hideDoneCards = false;
 hideNotDoneCards = false;
 hideDeletedCards = false;
@@ -221,8 +228,6 @@ toggleHideExpired() {
   //Odpiranje modals
 
   showModalCreate: boolean = false;
-  showModalEdit: boolean = false;
-  showModalDelete: boolean = false;
   showModalTags: boolean = false;
 
   modelOpenCreate() 
@@ -234,28 +239,6 @@ toggleHideExpired() {
   {
     this.showAll();
     this.showModalCreate = false;
-  }
-
-  modelOpenDelete() 
-  {
-    this.showModalDelete = true;
-  }
-
-  modelCloseDelete() 
-  {
-    this.showAll();
-    this.showModalDelete = false;
-  }
-
-  modelOpenEdit() 
-  {
-    this.showModalEdit = true;
-  }
-
-  modelCloseEdit() 
-  {
-    this.showAll();
-    this.showModalEdit = false;
   }
 
   modelOpenTags() 

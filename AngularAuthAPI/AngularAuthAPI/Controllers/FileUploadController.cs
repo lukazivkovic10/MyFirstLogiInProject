@@ -6,12 +6,13 @@ using AngularAuthAPI.Models;
 using System.Net.Mime;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AngularAuthAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-
     public class FileUploadController : ControllerBase
     {
         private readonly IConfiguration _config;

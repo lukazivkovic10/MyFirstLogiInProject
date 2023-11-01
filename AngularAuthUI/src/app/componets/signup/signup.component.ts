@@ -6,6 +6,7 @@ import ValidateForm from 'src/app/helper/validateform';
 import { AuthService } from 'src/app/services/auth.service';
 import { NgToastService } from 'ng-angular-popup';
 import { PasswordService } from 'src/app/services/password.service';
+import { Message } from 'ng-angular-popup/lib/toast.model';
 
 @Component({
   selector: 'app-signup',
@@ -26,7 +27,7 @@ export class SignupComponent {
       Firstname: ['',Validators.required],
       Lastname: ['',Validators.required],
       email: ['',Validators.compose([Validators.required,Validators.email])],
-      password: ['',Validators.compose([Validators.required,Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/),Validators.minLength(8)])],
+      password: ['',Validators.compose([Validators.required,Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\.=~ˇ,*])(?=.{8,})/),Validators.minLength(8)])],
     })
   }
 
@@ -37,32 +38,65 @@ export class SignupComponent {
     this.isText ? this.type = "text" : this.type = "password"; //to pa če je true spremeni type v text drugače pa v password
   };
 
-  onSignup()
+  onSignup() 
   {
-    const encryptedPassword = this.passwordService.encrypt(this.signUpForm.value.password);
-    
-    this.signUpForm.patchValue({
-      password: encryptedPassword
-    });
-    if(this.signUpForm.valid)
-    {
-    //Pošlje v Db
-    this.auth.signUp(this.signUpForm.value)
-    .subscribe({
-      next:(res=>{
-        alert(res.message);
-        this.signUpForm.reset();
-        this.toast.success({detail:"USPEH", summary:res.message, duration: 5000});
-        this.router.navigate(['login']);
-      }),
-      error:(err=>{
-        this.toast.error({detail:"NAPAKA", summary:err?.error.message, duration: 7000});
-      })
-    })
-    console.log(this.signUpForm.value)
-    }else{
+    if (this.signUpForm.valid) {
+      const passwordValue = this.signUpForm.value.password;
+  
+      // Perform custom password validation here (this is a simplified example)
+      if (this.isPasswordValid(passwordValue)) {
+        // Encrypt the password
+        const encryptedPassword = this.passwordService.encrypt(passwordValue);
+  
+        // Update the form value with the encrypted password
+        this.signUpForm.patchValue({
+          password: encryptedPassword
+        });
+  
+        // Proceed with signup
+        this.auth.signUp(this.signUpForm.value)
+          .subscribe({
+            next: (res => {
+              alert(res.message);
+              this.signUpForm.reset();
+              this.toast.success({ detail: "USPEH", summary: res.message, duration: 5000 });
+              this.router.navigate(['login']);
+            }),
+            error: (err => {
+              this.toast.error({ detail: "NAPAKA", summary: err?.error.message, duration: 7000 });
+            })
+          });
+      } else {
+        this.toast.error({detail: "NAPAKA", summary: "Geslo mora vsebovati vsaj 8 znakov, eno veliko črko, eno malo črko, eno številko in en poseben znak!", duration: 2500 });
+      }
+
+      this.signUpForm.patchValue({
+        password: passwordValue // Revert the form value to the original password
+      });
+
+    } else {
       ValidateForm.validateAllFormFields(this.signUpForm);
     }
-
+  }
+  
+  // Define your custom password validation function
+  isPasswordValid(password: string): boolean 
+  {
+    // Regular expressions for validation
+    const uppercaseRegex = /[A-Z]/;
+    const lowercaseRegex = /[a-z]/;
+    const digitRegex = /[0-9]/;
+    const specialCharRegex = /[!@#\$%\^&\.=~ˇ,*]/;
+    const minLength = 8;
+  
+    // Check each condition
+    const hasUppercase = uppercaseRegex.test(password);
+    const hasLowercase = lowercaseRegex.test(password);
+    const hasDigit = digitRegex.test(password);
+    const hasSpecialChar = specialCharRegex.test(password);
+    const isMinLength = password.length >= minLength;
+  
+    // Return true if all conditions are met
+    return hasUppercase && hasLowercase && hasDigit && hasSpecialChar && isMinLength;
   }
 }

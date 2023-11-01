@@ -1,0 +1,96 @@
+/*modal*/
+.modal-card
+{
+    width: 90vw;
+    height: 85vh;
+    padding-bottom: 56px;
+}
+
+/*Izgled*/
+.time-box
+{
+  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+  box-shadow: 0px 0px 0px 1px hsl(0, 0%, 86%);
+  opacity: 1;
+}
+
+/*center*/
+.center 
+{
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+/*hr*/
+hr.slim
+{
+border-top: 1px solid hsl(0, 0%, 86%);
+border-radius: 5px;
+}
+
+/*file download*/
+.file_c
+{
+  padding: 5px;
+  width: 100%;
+}
+
+.file_c .button
+{
+    border-radius: 10px;
+    background-color: hsl(0, 0%, 96%);
+    color: hsl(0, 0%, 9%);
+    height: auto;
+    transition: 0.5s;
+    &&:hover {
+      background-color: hsl(217, 71%, 91%);
+      color: hsl(217, 71%, 53%);
+      transform: scale(1.05);
+    }
+}
+.list
+{
+  display: flex;
+  align-items: start;
+  justify-content: start;
+}
+
+/* Common Styles for .notdone, .done, .expired, .deleted */
+.notdone,
+.done,
+.expired,
+.deleted
+{
+  border-left-style: solid;
+  border-left-width: 10px;
+  transition: all 0.1s ease-in-out;
+}
+
+/* Text Styles for .notdone, .done, .expired */
+.notdone, .notdone_text
+{
+  border-color: hsl(217, 71%, 45%);
+}
+
+.done, .done_text
+{
+  border-color: hsl(141, 53%, 31%);
+}
+
+.expired, .expired_text
+{
+  border-color: hsl(348, 86%, 43%);
+}
+
+.deleted_text
+{
+  color: #4a4a4a;
+}
+
+.modal-card-foot
+{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

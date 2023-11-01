@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgToastService } from 'ng-angular-popup';
 import { ListService } from 'src/app/services/list.service';
@@ -17,6 +17,8 @@ interface Tag
 })
 export class ModelContentDeleteComponent {
   deleteForm!: FormGroup;
+  @Input() item_tag: string = '';
+  @Input() item_itemName: string = '';
   public errors:any = [];
   public tags: { success: boolean; error: number; message: string; data: Tag[] } = {
     success: false,
@@ -31,7 +33,7 @@ export class ModelContentDeleteComponent {
 
   ngOnInit() {
     this.deleteForm = this.fb.group({
-      tag: ['',Validators.required],
+      tag: [''],
       ItemName: ['']
     });
     this.tagService.GetTags().subscribe(
@@ -49,14 +51,16 @@ export class ModelContentDeleteComponent {
 
   onDelete()
   {
+    this.deleteForm.patchValue({
+      tag: this.item_tag,
+      ItemName: this.item_itemName
+    });
     if(this.deleteForm.valid)
     {
       this.list.DeleteItem(this.deleteForm.value)
       .subscribe({
         next:(
           res=>{
-            this.errors = res;
-            this.deleteForm.reset();
             this.modelCloseDelete;
             this.toast.success({ detail: "Uspešno izbrisano opravilo.", duration: 2500 });
           }

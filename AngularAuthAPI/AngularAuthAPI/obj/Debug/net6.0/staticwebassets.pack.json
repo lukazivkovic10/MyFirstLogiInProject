@@ -1,0 +1,57 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Luka\\MyFirstLogiInProject\\AngularAuthAPI\\AngularAuthAPI\\wwwroot\\3rdpartylicenses.txt",
+      "PackagePath": "staticwebassets\\3rdpartylicenses.txt"
+    },
+    {
+      "Id": "C:\\Users\\Luka\\MyFirstLogiInProject\\AngularAuthAPI\\AngularAuthAPI\\wwwroot\\assets\\404 not-found.svg",
+      "PackagePath": "staticwebassets\\assets\\404 not-found.svg"
+    },
+    {
+      "Id": "C:\\Users\\Luka\\MyFirstLogiInProject\\AngularAuthAPI\\AngularAuthAPI\\wwwroot\\assets\\check-to-slot-solid.svg",
+      "PackagePath": "staticwebassets\\assets\\check-to-slot-solid.svg"
+    },
+    {
+      "Id": "C:\\Users\\Luka\\MyFirstLogiInProject\\AngularAuthAPI\\AngularAuthAPI\\wwwroot\\favicon.ico",
+      "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "C:\\Users\\Luka\\MyFirstLogiInProject\\AngularAuthAPI\\AngularAuthAPI\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "C:\\Users\\Luka\\MyFirstLogiInProject\\AngularAuthAPI\\AngularAuthAPI\\wwwroot\\main.b216785ea204905e.js",
+      "PackagePath": "staticwebassets\\main.b216785ea204905e.js"
+    },
+    {
+      "Id": "C:\\Users\\Luka\\MyFirstLogiInProject\\AngularAuthAPI\\AngularAuthAPI\\wwwroot\\polyfills.15ee355b850ec936.js",
+      "PackagePath": "staticwebassets\\polyfills.15ee355b850ec936.js"
+    },
+    {
+      "Id": "C:\\Users\\Luka\\MyFirstLogiInProject\\AngularAuthAPI\\AngularAuthAPI\\wwwroot\\runtime.5e20264606ce5d0f.js",
+      "PackagePath": "staticwebassets\\runtime.5e20264606ce5d0f.js"
+    },
+    {
+      "Id": "C:\\Users\\Luka\\MyFirstLogiInProject\\AngularAuthAPI\\AngularAuthAPI\\wwwroot\\styles.82df5455dd861fc2.css",
+      "PackagePath": "staticwebassets\\styles.82df5455dd861fc2.css"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.AngularAuthAPI.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.build.AngularAuthAPI.props",
+      "PackagePath": "build\\AngularAuthAPI.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.buildMultiTargeting.AngularAuthAPI.props",
+      "PackagePath": "buildMultiTargeting\\AngularAuthAPI.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.buildTransitive.AngularAuthAPI.props",
+      "PackagePath": "buildTransitive\\AngularAuthAPI.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

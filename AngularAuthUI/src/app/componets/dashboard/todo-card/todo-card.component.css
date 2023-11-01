@@ -137,7 +137,7 @@ border-radius: 5px;
     border-radius: 10px;
     position: absolute;
     right: 0%;
-    top: 60%;
+    top: 110%;
     height: 0px;
     width: 0px;
     flex-direction: column;
@@ -150,6 +150,7 @@ border-radius: 5px;
     height: auto;
     width: auto;
     display: block;
+    z-index: 10;
   }
 
   /*Reminder*/
@@ -262,35 +263,34 @@ border-radius: 5px;
   color: hsl(217, 71%, 91%);
 }
 
-/*file download*/
-.file_c
-{
-  padding: 5px;
-  width: 100%;
-}
-
-.file_c .button
-{
-    border-radius: 10px;
-    background-color: hsl(0, 0%, 96%);
-    color: hsl(0, 0%, 9%);
-    height: auto;
-    transition: 0.5s;
-    &&:hover {
-      background-color: hsl(217, 71%, 91%);
-      color: hsl(217, 71%, 53%);
-      transform: scale(1.1);
-    }
-}
-.list
-{
-  display: flex;
-  align-items: start;
-  justify-content: start;
-}
 .end
 {
   display: flex;
   justify-content: flex-end;
   align-content: center;
+}
+
+.options-menu
+{
+  position: absolute;
+  left: calc(100% - 150px);
+  top: 40px;
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  align-content: center;
+  transform: translateX(350px);
+  transition: all 0.5s ease-in-out;
+}
+
+.options-menu .button
+{
+  width: 125px;
+}
+
+.options-menu.isActive
+{
+  transform: translateX(0);
 }

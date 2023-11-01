@@ -35,7 +35,7 @@ namespace AngularAuthAPI.Services
                     "SELECT r.*, i.completeDate, i.DateOfCompletion, i.CreatedDate " +
                     "FROM RepeatingItem r " +
                     "INNER JOIN Items i ON r.Tag = i.Tag AND r.ItemName = i.ItemName " +
-                    "WHERE r.TypeOfReapeating IS NOT NULL;").ToList();
+                    "WHERE r.TypeOfReapeating IS NOT NULL OR r.TypeOfReapeating = '';").ToList();
 
                 foreach (var item in todoItems)
                 {
@@ -107,6 +107,9 @@ namespace AngularAuthAPI.Services
                 case "custom":
                     // Implement custom logic to calculate the next activation date
                     break;
+                case "":
+                    _logger.LogError($"No type of reactivation");
+                    break;
                 default:
                     _logger.LogError($"Unknown reactivation type: {todoItem.TypeOfReapeating}");
                     // Handle invalid or unknown reactivation type
@@ -164,6 +167,9 @@ namespace AngularAuthAPI.Services
                     break;
                 case "custom":
                     // Set the CreatedDate to a custom date (e.g., 30 days from the CompleteDate)
+                    break;
+                case "":
+                    _logger.LogError($"No type of reactivation");
                     break;
                 default:
                     _logger.LogError($"Unknown reactivation type: {TypeOfReapeating}");

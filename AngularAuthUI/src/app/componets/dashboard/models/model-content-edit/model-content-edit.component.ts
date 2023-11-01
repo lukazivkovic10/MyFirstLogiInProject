@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
+import { JwtDecodeService } from 'src/app/services/jwt-decode.service';
 import { ListService } from 'src/app/services/list.service';
 import { TagsService } from 'src/app/services/tags.service';
 
@@ -17,6 +18,11 @@ interface Tag
   styleUrls: ['./model-content-edit.component.css']
 })
 export class ModelContentEditComponent {
+  @Input() item_tag: string = '';
+  @Input() item_itemName: string = '';
+  @Input() item_desc: string = '';
+  @Input() item_date!: Date;
+
   updateForm!: FormGroup;
   public errors:any = [];
   public tags: { success: boolean; error: number; message: string; data: Tag[] } = {
@@ -27,7 +33,14 @@ export class ModelContentEditComponent {
   };
 
   @Output() close = new EventEmitter<void>();
-  constructor(private list: ListService,private fb: FormBuilder, private router: Router, private tagService: TagsService, private toast: NgToastService) 
+  @Output() refreshData: EventEmitter<void> = new EventEmitter<void>();
+  constructor(
+    private jwtDecode: JwtDecodeService,
+    private list: ListService,
+    private fb: FormBuilder,
+    private router: Router,
+    private tagService: TagsService,
+    private toast: NgToastService)
   { };
 
   ngOnInit() {
@@ -36,79 +49,34 @@ export class ModelContentEditComponent {
       ItemName: ['',Validators.required],
       ItemDesc: [''],
       CompleteDate: [''],
-      Active: ['']
+      Active: [''],
+      LastEditBy: [this.userGet()]
     });
-    this.tagService.GetTags().subscribe(
-      (res:any)=>{
-        this.tags = res;
-      }
-    )
   }
 
   modelCloseEdit(){
     this.close.emit();
     this.updateForm.reset();
+    this.refreshData.emit();
+  }
+
+  userGet() : string
+  {
+    return this.jwtDecode.userEmail();
   }
 
   onUpdate()
   {
-    const tag = this.updateForm.get('Tag')?.value;
-    const itemName = this.updateForm.get('ItemName')?.value;
-    const itemDesc = this.updateForm.get('ItemDesc')?.value;
-    const completeDate = this.updateForm.get('CompleteDate')?.value;
-    const active = this.updateForm.get('Active')?.value;
-    console.log(this.updateForm.value)
-    if (this.updateForm.get('ItemDesc')?.valid)
+    if(this.updateForm.valid)
     {
-      const data = {
-        Tag: tag,
-        ItemName: itemName,
-        ItemDesc: itemDesc
-      };
-      this.list.UpdateItem(data).subscribe
-      ({next:(
-        res=>{
-          this.errors = res;
-          this.updateForm.get('ItemDesc')?.reset();
-          this.toast.success({ detail: "Uspešno posodobljen opis.", duration: 2500 });
+      this.list.UpdateItem(this.updateForm.value).subscribe({
+        next:res=>{
+          this.updateForm.reset();
+          this.modelCloseEdit;
+          this.toast.success({ detail: "Uspešno posodboljeno opravilo." , duration: 2500 });
         }
-      )
-      })
-    }else if(this.updateForm.get('CompleteDate')?.valid)
-    {
-    const data = {
-      Tag: tag,
-      ItemName: itemName,
-      ItemDesc: itemDesc,
-      CompleteDate: completeDate
-    };
-      this.list.UpdateItemDate(data).subscribe
-      ({next:(
-        res=>{
-          this.errors = res;
-          this.updateForm.get('CompleteDate')?.reset();
-          this.toast.success({ detail: "Uspešno zastavljen datum konca opravila.", duration: 2500 });
-        }
-      )
-      })
-    }else if(this.updateForm.get('Active')?.valid)
-    {
-      const data = {
-        Tag: tag,
-        ItemName: itemName,
-        ItemDesc: itemDesc,
-        Active: active
-      };
-      this.list.UpdateItemStatus(data).subscribe
-      ({next:(
-        res=>{
-          this.errors = res;
-          this.updateForm.get('Active')?.reset();
-          this.toast.success({ detail: "Uspešno spremenjen status opravila.", duration: 2500 });
-        }
-      )
-      })
-    };
+      });
+    }
     this.modelCloseEdit();
   }
 }

@@ -2,55 +2,24 @@
     <div class="modal-card">
         <header class="modal-card-head">
             <div class="modal-card-title">
-                <div class="icon is-large">
-                    <i class="far fa-calendar-minus"></i>
-                </div>
-                Izbriši To-Do
+                <h4 class="title is-4 has-text-danger"><b>Opozorilo</b></h4>
+                <h5 class="subtitle is-5">
+                    <span class="icon">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                    </span>
+                    {{item_tag}}, {{item_itemName}}
+                </h5>
             </div>
             <button (click)="modelCloseDelete()" class="delete" aria-label="close"></button>
         </header>
         <section class="modal-card-body">
             <div class="container is-fluid">
-                <div class="box" style="color: hsl(348, 100%, 61%);" *ngFor="let error of errors">
-                    <strong>{{error.errorCode}}</strong>
-                    <h5>{{error.codeName}}</h5>
-                    <small>{{error.codeDesc}}</small>
-                </div>
-                <div class="form" [formGroup]="deleteForm">
-                <div class="box">
-                    <div class="columns">
-                            <div class="column">
-                                <div class="field">
-                                    <div class="control has-icons-left">
-                                        <div class="select">
-                                            <select formControlName="tag" placeholder="Izberi zaznamko">
-                                                <option value="" disabled selected>Izberi oznako</option>
-                                                <option *ngFor="let tag of tags.data">{{tag.tagName}}</option>
-                                            </select>
-                                            <span class="icon is-left">
-                                                <i class="fas fa-tag"></i>
-                                              </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="column">
-                                <div class="field">
-                                    <p class="control is-expanded has-icons-left">
-                                        <input class="input"formControlName="ItemName" type="text" placeholder="Ime opravila">
-                                        <span class="icon is-small is-left">
-                                            <i class="fas fa-signature"></i>
-                                        </span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <h6 class="title is-6">Ste prepričani da želite izbrisati <b class="has-text-danger">{{item_itemName}}, {{item_tag}}</b>!</h6>
             </div>
         </section>
         <footer class="modal-card-foot">
-            <button [disabled]="deleteForm.invalid" (click)="onDelete()" class="button is-warning">Izbrisi</button>
+            <button (click)="onDelete()" class="button is-danger">Da</button>
+            <button (click)="modelCloseDelete()" class="button is-dark">Ne</button>
         </footer>
     </div>
 </div>

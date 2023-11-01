@@ -35,7 +35,7 @@
                <td >{{i+1}}</td>
                <td>{{user.firstName}}</td>
                <td>{{user.lastName}}</td>
-               <td>{{user.email}}</td>
+               <td class="has-text-link" (click)=" navigateToUserDashboard(user.email)"><a><b>{{user.email}}</b></a></td>
            </tr>
      
        </tbody>

@@ -116,24 +116,6 @@
                         <span>Ustvari opravilo</span>
                     </button>
                 </div>
-                <div (click)="toggleExpanded()">
-                    <!--Uredi-->
-                    <button (click)="DashComp.modelOpenEdit()" [disabled]="!isExpanded" class="button">
-                        <div class="icon is-large">
-                            <i class="fas fa-square-pen"></i>
-                        </div>
-                        <span>Uredi opravilo</span>
-                    </button>
-                </div>
-                <div (click)="toggleExpanded()">
-                    <!--Izbrisi-->
-                    <button class="button" [disabled]="!isExpanded" (click)="DashComp.modelOpenDelete()">
-                        <div class="icon is-large is-right">
-                            <i class="far fa-calendar-minus"></i>
-                        </div>
-                        <span>Izbriši opravilo</span>
-                    </button>
-                </div>
             </li>
         </ul>
 </div>

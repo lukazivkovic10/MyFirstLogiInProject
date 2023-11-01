@@ -2,6 +2,7 @@
 using AngularAuthAPI.Models;
 using AngularAuthAPI.Services;
 using Dapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 
@@ -20,6 +21,7 @@ namespace AngularAuthAPI.Controllers
             _logger = logger;
         }
 
+        [Authorize]
         [HttpPost("UstvariReminder")]
         public async Task<ActionResult<Response<object>>> CreateReminder([FromBody] ReminderDto reminderDto)
         {

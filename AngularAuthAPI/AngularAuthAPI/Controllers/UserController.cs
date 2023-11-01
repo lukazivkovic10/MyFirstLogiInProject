@@ -2,6 +2,7 @@
 using AngularAuthAPI.Dtos;
 using AngularAuthAPI.Helper;
 using AngularAuthAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -22,6 +23,7 @@ namespace AngularAuthAPI.Controllers
             _authContext = appDbContext;
         }
 
+        [Authorize]
         [HttpGet("userList")]
         public ActionResult<IEnumerable<UserDto>> GetUsers()
         {
@@ -108,7 +110,8 @@ namespace AngularAuthAPI.Controllers
                 FirstName = registrationDto.FirstName,
                 LastName = registrationDto.LastName,
                 Email = registrationDto.Email,
-                Password = PasswordHasher.HashPassword(decryptedPassword)
+                Password = PasswordHasher.HashPassword(decryptedPassword),
+                Token = ""
             };
 
             await _authContext.Users.AddAsync(userObj);

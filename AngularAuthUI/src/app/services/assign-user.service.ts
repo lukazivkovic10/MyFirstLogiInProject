@@ -1,27 +1,33 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { TokenServiceService } from './token-service.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AssignUserService {
   private baseUrl:string = "https://localhost:7023/api/AsignUser/"
-  constructor(private http : HttpClient, private router: Router) { }
+  constructor(private http : HttpClient, private router: Router, private tokenService: TokenServiceService) { }
 
+  private addTokenToRequest(url: string, params: HttpParams = new HttpParams()) {
+    const headers = this.tokenService.getRequestHeaders();
+    return this.http.get(url, { params, headers });
+  }
+  
   AsignUser(userObj: any) {
 
-    return this.http.post<any>(`${this.baseUrl}DodeliUporabniku`,userObj);
+    return this.http.post<any>(`${this.baseUrl}DodeliUporabniku`,userObj, { headers: this.tokenService.getRequestHeaders() });
   }
 
   showUsers()
   {
-    return this.http.get<object>(`${this.baseUrl}MozniUporabniki`);
+    return this.addTokenToRequest(`${this.baseUrl}MozniUporabniki`);
   }
 
   showAssignedUsers()
   {
 
-    return this.http.get<any>(`${this.baseUrl}DodeljeniUporabniki`);
+    return this.http.get<any>(`${this.baseUrl}DodeljeniUporabniki`, { headers: this.tokenService.getRequestHeaders() });
   }
 }

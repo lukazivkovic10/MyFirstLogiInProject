@@ -35,6 +35,11 @@ import { TodoCardComponent } from './componets/dashboard/todo-card/todo-card.com
 import { DataSqareCardComponent } from './componets/home/data-sqare-card/data-sqare-card.component';
 import { SidenavComponent } from './componets/dashboard/sidenav/sidenav.component';
 import { UserDashboardComponent } from './componets/user-dashboard/user-dashboard.component';
+import { UserSettingsComponent } from './componets/user-dashboard/user-settings/user-settings.component';
+import { CardModalComponent } from './componets/dashboard/todo-card/card-modal/card-modal.component';
+import { AnalyticsModalComponent } from './componets/dashboard/todo-card/analytics-modal/analytics-modal.component';
+import { ViewGraphComponent } from './componets/dashboard/todo-card/analytics-modal/view-graph/view-graph.component';
+import { ViewerListComponent } from './componets/dashboard/todo-card/analytics-modal/viewer-list/viewer-list.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +65,12 @@ import { UserDashboardComponent } from './componets/user-dashboard/user-dashboar
     TodoCardComponent,
     DataSqareCardComponent,
     SidenavComponent,
-    UserDashboardComponent
+    UserDashboardComponent,
+    UserSettingsComponent,
+    CardModalComponent,
+    AnalyticsModalComponent,
+    ViewGraphComponent,
+    ViewerListComponent
   ],
   imports: [
     FileUploadModule,

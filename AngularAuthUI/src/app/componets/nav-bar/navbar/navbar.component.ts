@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import { AuthService } from 'src/app/services/auth.service';
 import { JwtDecodeService } from 'src/app/services/jwt-decode.service';
@@ -17,6 +17,7 @@ export class NavbarComponent {
      private JwtDecode: JwtDecodeService, private toast: NgToastService)
   {
     this.userMail= this.JwtDecode.userEmail();
+    this.userMail;
   }
 
   showProfile():boolean{
@@ -31,11 +32,30 @@ export class NavbarComponent {
   }
 
   navigateToUserDashboard(): void {
-    this.router.navigate(['/dashboard', this.searchUserText.value]);
+    const searchTerm = this.searchUserText.value;
+
+  if (searchTerm) {
+    const navigationExtras: NavigationExtras = {
+      replaceUrl: true // This will replace the current URL in the browser's history
+    };
+
+    const encodedSearch = encodeURIComponent(searchTerm);
+
+    this.router.navigate(['/dashboard', encodedSearch, 'profile'], navigationExtras).then(() => {
+      this.searchUserText.reset();
+      location.reload();
+    });
+  }
+  }
+
+  navigateToUserSettings(): void {
+    const encodedEmail = encodeURIComponent(this.userMail);
+    this.router.navigate(['/dashboard', encodedEmail, 'profile-settings']);
   }
 
   navigateToCurrentLoggedInUserDashboard(): void {
-    this.router.navigate(['/dashboard', this.userMail]);
+    const encodedEmail = encodeURIComponent(this.userMail);
+    this.router.navigate(['/dashboard', encodedEmail, 'profile']);
   }
 
   emailErrorMessage()

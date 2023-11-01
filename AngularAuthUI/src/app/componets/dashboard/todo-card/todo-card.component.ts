@@ -1,11 +1,12 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { ListService } from 'src/app/services/list.service';
-import { DashboardComponent } from '../dashboard.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AssignUserService } from 'src/app/services/assign-user.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { FileUploadService } from 'src/app/services/file-upload.service';
-import { ProfileService } from 'src/app/services/user-services/profile.service';
+import { NgToastService } from 'ng-angular-popup';
+import { NavigationExtras, Router } from '@angular/router';
+import { JwtDecodeService } from 'src/app/services/jwt-decode.service';
+import { ViewsService } from 'src/app/services/CardServices/views.service';
 
 interface Item
 {
@@ -18,9 +19,13 @@ interface Item
   createdDate: Date;
   completeDate: Date;
   dateOfCompletion: Date;
-  TimeTakenSeconds: number;
+  timeTakenSeconds: number;
   TimeTaken: string;
   ItemRepeating: string;
+  createdBy: string;
+  lastEditBy: string;
+  completedBy: string;
+  viewCount: number;
 }
 
 interface User
@@ -62,6 +67,7 @@ export class TodoCardComponent {
 @Input() item_completeDate: Date = new Date();
 @Input() item_dateOfCompletion: Date = new Date();
 @Input() item!: Item;
+private loggedInUserEmail: string = this.jwtService.userEmail();;
 
 isCardHidden(cardStatus: string): boolean {
   // Define the class names you want to hide
@@ -158,18 +164,32 @@ shouldShowCard(item_ItemStatus: number, item_Active: number): boolean {
     return false;
   }else if (this.hideNotDoneCards === true && item_ItemStatus === 1 && item_Active === 1 ) {
     return false;
+  }else if(this.hideNotDoneCards === true && item_ItemStatus === 1 && item_Active === 0){
+    return false;
   }
   
   // If none of the conditions are met, show the card
   return true;
 }
 
+views: number = 0;
+
 //Assign User
 addUserForm!: FormGroup;
 
 //Constructor & ngOnInit
 
-constructor(private changeDetectorRef: ChangeDetectorRef, private list: ListService,private fileS: FileUploadService, private fb: FormBuilder, private UserAsign: AssignUserService, private NotiService: NotificationService){}
+constructor(
+  private viewsService: ViewsService,
+  private jwtService: JwtDecodeService,
+  private router: Router,
+  private toast: NgToastService, 
+  private list: ListService,
+  private fb: FormBuilder, 
+  private UserAsign: AssignUserService, 
+  private NotiService: NotificationService,
+  private viewService: ViewsService
+  ){}
 
 ngOnInit()
 {
@@ -185,11 +205,40 @@ ngOnInit()
   this.UserAsign.showAssignedUsers().subscribe((res: any) => {
     this.assignedUsers = res;
   });
-  this.fileS.GetAllFiles().subscribe(
-    (res: any) => {
-      this.files = res;
+}
+
+verification()
+{
+  if(this.item.createdBy === this.jwtService.userEmail())
+  {
+    return true;
+  }else
+  {
+    return false;
+  }
+}
+
+isActiveModal: boolean = false;
+
+showCardModal(id: number) {
+  this.isActiveModal = !this.isActiveModal;
+  this.registerView(id, this.loggedInUserEmail);
+  this.loadViews(this.item.id);
+}
+
+loadViews(todoId: number) {
+  this.viewsService.getViews(todoId).subscribe(
+    (data: any) => {
+      this.views = data.data;
+    },
+    (error: any) => {
+      console.error('Error loading views:', error);
     }
   );
+}
+
+closeCardModal() {
+  this.isActiveModal = !this.isActiveModal;
 }
 
 //Assign User
@@ -208,13 +257,6 @@ public assignedUsers: { success: boolean; error: number; message: string; data: 
   data: []
 };
 
-public files: { success: boolean; error: number; message: string; data: File[] } = {
-  success: false,
-  error: 0,
-  message: '',
-  data: []
-};
-
 asignUserToItem(itemTag: string, itemName: string, userEmail: string) {
   const userObj = {
     Tag: itemTag,
@@ -222,7 +264,12 @@ asignUserToItem(itemTag: string, itemName: string, userEmail: string) {
     ItemName: itemName
   };
 
-  this.UserAsign.AsignUser(userObj).subscribe();
+  this.UserAsign.AsignUser(userObj).subscribe(
+    (res: any) => {
+      this.refreshData.emit();
+      this.toast.success({ detail: "Uspešno dodeljeno opravilo " + userObj.ItemName  + " osebi " + userObj.Email, duration: 2500 });
+    }
+  );
 }
 
 //Notifications
@@ -235,6 +282,7 @@ createNotification(notificationData: object): void {
 @Output() refreshData: EventEmitter<void> = new EventEmitter<void>();
 doneCurrent(current:any)
   {
+    current.CompletedBy = this.jwtService.userEmail();
       this.list.DoneItem(current)
       .subscribe({
         next:(
@@ -247,6 +295,7 @@ doneCurrent(current:any)
 
   notDoneCurrent(Ncurrent:any)
   {
+    Ncurrent.CompletedBy = this.jwtService.userEmail();
       this.list.NotDoneItem(Ncurrent)
       .subscribe({
         next:(
@@ -257,79 +306,96 @@ doneCurrent(current:any)
       })
   }
 
-  //File download functions
-  shouldShowPriloge(): boolean {
-    return this.files.data.length > 0 && this.files.data.some(file => file.tag === this.item.tag && file.itemName === this.item.itemName);
-  }
-
-  downloadFile(id: number, fileName: string) {
-    this.fileS.DownloadFile(id).subscribe(
-      (blobData: Blob) => {
-        const blob = new Blob([blobData], { type: 'application/octet-stream' });
-        const url = window.URL.createObjectURL(blob);
-
-        const a = document.createElement('a');
-        a.href = url;
-
-        a.download = fileName;
-
-        document.body.appendChild(a);
-        a.click();
-
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-      }
-    );
-  }
-
-  getFileIconClass(fileName: string| undefined): string {
-    if (!fileName) {
-      return 'fas fa-file';
-    }
-
-    const fileExtension = fileName.split('.').pop()?.toLowerCase() || '';
-
-    const iconMap: { [key: string]: string } = {
-      'jpg': 'fas fa-file-image',
-      'jpeg': 'fas fa-file-image',
-      'png': 'fas fa-file-image',
-      'pdf': 'fas fa-file-pdf',
-      'zip': 'fas fa-file-archive',
-      '7zip': 'fas fa-file-archive',
-      'pptx': 'fas fa-file-powerpoint',
-      'pptm': 'fas fa-file-powerpoint',
-      'ppt': 'fas fa-file-powerpoint',
-      'xlsx': 'fas fa-file-excel',
-      'xlsm': 'fas fa-file-excel',
-      'xlsb': 'fas fa-file-excel',
-      'xltx': 'fas fa-file-excel',
-      'doc': 'fas fa-file-word',
-      'txt': 'fas fa-file-lines',
-      'mpeg': 'fas fa-file-video',
-      'mp3': 'fas fa-file-audio',
+  //View
+  registerView(id: number, userMail: string) {
+    const viewObj = {
+      TodoItemId: id,
+      UserEmail: userMail
     };
-
-  if (iconMap.hasOwnProperty(fileExtension)) {
-    return iconMap[fileExtension];
-  } else {
-    return 'fas fa-file';
-  }
+    this.viewService.registerView(viewObj).subscribe();
   }
 
+  //toggle Submenu
   isActive = false;
 
   toggleSubmenu() {
     this.isActive = !this.isActive;
   }
 
+  //toggle assigned users menu
   isActiveUser = false;
 
   toggleUserMenu() {
     this.isActiveUser = !this.isActiveUser;
   }
 
-  isActiveSettings = false;
-  toggleSettingsMenu() {
-    this.isActiveSettings = !this.isActiveSettings;
+  //Card actions menu
+  showActions: boolean = false;
+  @ViewChild('cardbox') cardbox!: ElementRef;
+
+  OpenActions() {
+    this.showActions = !this.showActions;
+    if (this.cardbox) {
+      if (this.showActions) {
+        this.cardbox.nativeElement.style.width = 'calc(100% - 175px)';
+      } else {
+        this.cardbox.nativeElement.style.width = '100%';
+      }
+    }
+  }
+
+  navigateToAnalytics()
+  {
+    this.router.navigate(['/analytics', this.item.id]);
+  }
+
+  //navigate to users profile page
+  navigateToUserDashboard(email: string): void {
+    const navigationExtras: NavigationExtras = {
+      replaceUrl: true // This will replace the current URL in the browser's history
+    };
+  
+    this.router.navigate(['/dashboard', email], navigationExtras).then(() => {
+      location.reload();
+    });
+  }
+
+  //Show edit modal
+  showModalEdit: boolean = false;
+
+  modelOpenEdit() 
+  {
+    this.showModalEdit = true;
+  }
+
+  modelCloseEdit() 
+  {
+    this.refreshData.emit();
+    this.showModalEdit = false;
+  }
+
+  //Show delete modal
+  showModalDelete: boolean = false;
+  modelOpenDelete() 
+  {
+    this.showModalDelete = true;
+  }
+
+  modelCloseDelete() 
+  {
+    this.refreshData.emit();
+    this.showModalDelete = false;
+  }
+
+  //Show analytics modal
+  isAnalyticsModal: boolean = false;
+
+  showAnalyticsModal(id: number) {
+    this.isAnalyticsModal = !this.isAnalyticsModal;
+    this.loadViews(this.item.id);
+  }
+  
+  closeAnalyticsModal() {
+    this.isAnalyticsModal = !this.isAnalyticsModal;
   }
 }

@@ -4,19 +4,56 @@ using Microsoft.Data.SqlClient;
 using Dapper;
 using AngularAuthAPI.Dtos;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AngularAuthAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ListController : ControllerBase
     {
         private readonly IConfiguration _config;
         private readonly ILogger<ListController> _logger;
-        public ListController( IConfiguration configuration, ILogger<ListController> logger)
+        public ListController(IConfiguration configuration, ILogger<ListController> logger)
         {
             _config = configuration;
             _logger = logger;
+        }
+
+        [HttpGet("opravilo/{id}")]
+        public async Task<ActionResult<Response<object>>> GetTodoById(int id)
+        {
+            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            var exists = connection.ExecuteScalar<bool>("select * from Items where id=@id", new {id});
+            if(exists == true) 
+            {
+                //Uspesno
+                var data = await connection.QueryAsync<Items>("select * from Items where id=@id", new { id });
+                var successResponse = new Response<object>
+                {
+                    Success = true,
+                    Error = 200,
+                    Message = "Pridobljeni podatki.",
+                    Data = data
+                };
+
+                return successResponse;
+
+            }
+            else
+            {
+                //Error 404
+                var erorrResponse = new Response<object>
+                {
+                    Success = false,
+                    Error = 404,
+                    Message = "Opravilo tega Id ne obstaja.",
+                    Data = "404"
+                };
+
+                return erorrResponse;
+            };
         }
 
         [HttpGet("IskanjeListaVseh")]
@@ -187,95 +224,13 @@ namespace AngularAuthAPI.Controllers
             }
             else
             {
-                await connection.ExecuteAsync("update Items set ItemName = @ItemName, ItemDesc = @ItemDesc where Tag = @Tag and ItemName = @ItemName", ItemDto);
-                IEnumerable<Items> data = await SelectAllItems(connection);
+                await connection.ExecuteAsync("update Items set ItemName = @ItemName, ItemDesc = @ItemDesc, CompleteDate = @CompleteDate, LastEditBy = @LastEditBy where Tag = @Tag and ItemName = @ItemName", ItemDto);
+                var data = await connection.ExecuteAsync("Select * from items where Tag = @Tag and ItemName = @ItemName", ItemDto);
                 var successResponse = new Response<object>
                 {
                     Success = true,
                     Error = 200,
-                    Message = "200 Success - Pridobljeni podatki.",
-                    Data = data
-                };
-
-                return successResponse;
-            }
-        }
-
-        [HttpPut("UpdateStatus")]
-        public async Task<ActionResult<Response<object>>> UpdateStatus([FromBody] ListItemDto ItemDto)
-        {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-
-            var exists = connection.ExecuteScalar<bool>("SELECT COUNT(1) FROM Items WHERE ItemName = @ItemName AND Tag = @Tag", new { ItemDto.ItemName, ItemDto.Tag });
-
-            if (!exists)
-            {
-                var errorResponse = new Response<object>
-                {
-                    Success = false,
-                    Error = 404,
-                    Message = "Bad Request - Item not found",
-                    Data = "404"
-                };
-
-                return errorResponse;
-            }
-            else
-            {
-                var currentItem = connection.QuerySingleOrDefault<Items>("SELECT ItemDesc FROM Items WHERE ItemName = @ItemName AND Tag = @Tag", new { ItemDto.ItemName, ItemDto.Tag });
-                ItemDto.ItemDesc = currentItem.ItemDesc;
-
-                // Update the CompleteDate
-                await connection.ExecuteAsync("UPDATE Items SET Active = @Active, ItemStatus = 1 WHERE Tag = @Tag AND ItemName = @ItemName", new { ItemDto.Active, ItemDto.Tag, ItemDto.ItemName });
-
-                var data = await SelectAllItems(connection);
-
-                var successResponse = new Response<object>
-                {
-                    Success = true,
-                    Error = 200,
-                    Message = "Success - Data retrieved.",
-                    Data = data
-                };
-
-                return successResponse;
-            }
-        }
-
-        [HttpPut("UpdateDate")]
-        public async Task<ActionResult<Response<object>>> UpdateDate([FromBody] ListItemDto ItemDto)
-        {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-
-            var exists = connection.ExecuteScalar<bool>("SELECT COUNT(1) FROM Items WHERE ItemName = @ItemName AND Tag = @Tag", new { ItemDto.ItemName, ItemDto.Tag });
-
-            if (!exists)
-            {
-                var errorResponse = new Response<object>
-                {
-                    Success = false,
-                    Error = 404,
-                    Message = "Bad Request - Item not found",
-                    Data = "404"
-                };
-
-                return errorResponse;
-            }
-            else
-            {
-                var currentItem = connection.QuerySingleOrDefault<Items>("SELECT ItemDesc FROM Items WHERE ItemName = @ItemName AND Tag = @Tag", new { ItemDto.ItemName, ItemDto.Tag });
-                ItemDto.ItemDesc = currentItem.ItemDesc;
-
-                // Update the CompleteDate
-                await connection.ExecuteAsync("UPDATE Items SET CompleteDate = @CompleteDate WHERE Tag = @Tag AND ItemName = @ItemName", new { ItemDto.CompleteDate, ItemDto.Tag, ItemDto.ItemName });
-
-                var data = await SelectAllItems(connection);
-
-                var successResponse = new Response<object>
-                {
-                    Success = true,
-                    Error = 200,
-                    Message = "Success - Data retrieved.",
+                    Message = "200 Success - Uspešno posodobljeno.",
                     Data = data
                 };
 
@@ -312,7 +267,7 @@ namespace AngularAuthAPI.Controllers
                 var TimeTakenSeconds = (int)(currentItem.DateOfCompletion - currentItem.CreatedDate).TotalSeconds;
 
                 // Update the Active status, DateOfCompletion, and TimeTakenSeconds
-                await connection.ExecuteAsync("update Items SET TimeTakenSeconds = @TimeTakenSeconds, Active = '0', DateOfCompletion = @CurrentDate where ItemName = @ItemName and Tag = @Tag",new { ItemDataDto.ItemName, ItemDataDto.Tag, CurrentDate = DateTime.Now, TimeTakenSeconds });
+                await connection.ExecuteAsync("update Items SET TimeTakenSeconds = @TimeTakenSeconds, Active = '0', DateOfCompletion = @CurrentDate, CompletedBy = @CompletedBy where ItemName = @ItemName and Tag = @Tag",new { ItemDataDto.ItemName, ItemDataDto.Tag, CurrentDate = DateTime.Now, TimeTakenSeconds, ItemDataDto.CompletedBy });
 
                 _logger.LogInformation($"TimeTakenSeconds: " + TimeTakenSeconds);
                 var Response = new Response<object>
@@ -329,7 +284,7 @@ namespace AngularAuthAPI.Controllers
 
         [HttpPut("NiOpravljeno")]
 
-        public async Task<ActionResult<Response<object>>> NotDoneItem([FromBody] ListItemDto ItemDto)
+        public async Task<ActionResult<Response<object>>> NotDoneItem([FromBody] ListItemDataDto ItemDto)
         {
             using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             var exists = connection.ExecuteScalar<bool>("select count(1) from Items where ItemName = @ItemName and Tag = @Tag", new { ItemDto.ItemName, ItemDto.Tag });
@@ -388,8 +343,8 @@ namespace AngularAuthAPI.Controllers
                 string folderPath = $"/uploads/todo_{ItemDto.Tag.Replace(" ", "_")}_{ItemDto.ItemName.Replace(" ", "_")}/";
 
                 // Insert the new to-do item into the database with the generated folder_path
-                await connection.ExecuteAsync("INSERT INTO Items (Tag, ItemName, ItemDesc, Active, ItemStatus, CreatedDate, CompleteDate, folderPath, ItemRepeating) " +
-                                              "VALUES (@Tag, @ItemName, @ItemDesc, @Active, @ItemStatus, @CreatedDate, @CompleteDate, @folderPath, @ItemRepeating)",
+                await connection.ExecuteAsync("INSERT INTO Items (Tag, ItemName, ItemDesc, Active, ItemStatus, CreatedDate, CompleteDate, folderPath, ItemRepeating, CreatedBy) " +
+                                              "VALUES (@Tag, @ItemName, @ItemDesc, @Active, @ItemStatus, @CreatedDate, @CompleteDate, @folderPath, @ItemRepeating, @CreatedBy)",
                                               new
                                               {
                                                   ItemDto.Tag,
@@ -400,17 +355,21 @@ namespace AngularAuthAPI.Controllers
                                                   ItemDto.CreatedDate,
                                                   ItemDto.CompleteDate,
                                                   folderPath,
-                                                  ItemDto.ItemRepeating
+                                                  ItemDto.ItemRepeating,
+                                                  ItemDto.CreatedBy
                                               });
-                await connection.ExecuteAsync("INSERT INTO RepeatingItem (TypeOfReapeating, Tag, ItemName) " +
-                                              "VALUES (@ItemRepeating, @Tag, @ItemNamE)",
+                _logger.LogInformation($"Inserts items" + ItemDto.CompleteDate);
+                if(!string.IsNullOrEmpty(ItemDto.ItemRepeating))
+                {
+                    _logger.LogInformation($"ItemDto.ItemRepeating != null || ItemDto.ItemRepeating !=");
+                    await connection.ExecuteAsync("INSERT INTO RepeatingItem (TypeOfReapeating, Tag, ItemName) VALUES (@ItemRepeating, @Tag, @ItemNamE)",
                                               new
                                               {
                                                   ItemDto.Tag,
                                                   ItemDto.ItemName,
                                                   ItemDto.ItemRepeating
                                               });
-
+                }
                 IEnumerable<Items> data = await SelectAllItems(connection);
 
                 var successResponse = new Response<object>

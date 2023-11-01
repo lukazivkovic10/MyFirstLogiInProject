@@ -28,7 +28,6 @@ export class SearchComponent implements OnInit {
     this.list.SearchItem(this.searchForm.value)
     .subscribe(
       (res: any)=>{
-        console.log(res);
         if(res.data!=404)
         {
           this.items = res;

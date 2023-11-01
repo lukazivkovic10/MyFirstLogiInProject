@@ -4,9 +4,11 @@ using AngularAuthAPI.Dtos;
 using AngularAuthAPI.Models;
 using Microsoft.Data.SqlClient;
 using ntfy;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AngularAuthAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AsignUserController : ControllerBase

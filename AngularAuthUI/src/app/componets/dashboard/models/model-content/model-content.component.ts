@@ -2,8 +2,8 @@ import { Component, Output, EventEmitter, ViewChild, ElementRef } from '@angular
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
-import { FileUploader } from 'ng2-file-upload';
 import { FileUploadService } from 'src/app/services/file-upload.service';
+import { JwtDecodeService } from 'src/app/services/jwt-decode.service';
 import { ListService } from 'src/app/services/list.service';
 import { TagsService } from 'src/app/services/tags.service';
 
@@ -19,8 +19,10 @@ interface Tag
   styleUrls: ['./model-content.component.css']
 })
 export class ModelContentComponent {
+  private userMail: string = '';
   @ViewChild('fileInput') fileInput!: ElementRef;
   createForm!: FormGroup;
+  public currentDate: Date = new Date();
   public errors:any = [];
   public tags: { success: boolean; error: number; message: string; data: Tag[] } = {
     success: false,
@@ -30,9 +32,17 @@ export class ModelContentComponent {
   };
   @Output() close = new EventEmitter<void>();
   http: any;
-  constructor(private UploadS: FileUploadService,private list: ListService,private fb: FormBuilder, private router: Router, private toast: NgToastService, private tagService: TagsService){ };
 
-  public ds: Date = new Date();
+  constructor
+  (private jwtDecode: JwtDecodeService, 
+    private UploadS: FileUploadService, 
+    private list: ListService, 
+    private fb: FormBuilder, 
+    private router: Router, 
+    private toast: NgToastService, 
+    private tagService: TagsService)
+    { };
+
   ngOnInit() {
     this.createForm = this.fb.group({
       Tag: ['',Validators.required],
@@ -40,11 +50,12 @@ export class ModelContentComponent {
       ItemDesc: [''],
       ItemStatus: ['1'],
       Active: ['',Validators.required],
-      CreatedDate: [this.ds],
+      CreatedDate: [this.currentDate],
       CompleteDate: ['',Validators.required],
       FolderPath: [''],
       ItemRepeating: [''],
       ReapeatWeekly: [[] as number[]],
+      CreatedBy: [this.getUser()]
     });
     this.tagService.GetTags().subscribe(
       (res:any)=>{
@@ -52,6 +63,11 @@ export class ModelContentComponent {
       }
     )
   }
+
+  getUser() : string
+  {
+    return this.jwtDecode.userEmail()
+  } 
 
   selectedFiles: File[] = [];
 
@@ -64,8 +80,6 @@ export class ModelContentComponent {
     const files: FileList = event.target.files;
 
     if (files.length > 0) {
-        // Log the selected files
-        console.log(files);
 
         // Add files to the uploadedFiles array
         for (let i = 0; i < files.length; i++) {
@@ -179,8 +193,6 @@ export class ModelContentComponent {
     formData.append('todoTagName', todoTagName);
     formData.append('tag', tagValue);
     formData.append('itemName', itemNameValue);
-
-    console.log(formData);
 
     // Make an HTTP POST request to upload the files to the server
     this.UploadS.Upload(formData).subscribe(

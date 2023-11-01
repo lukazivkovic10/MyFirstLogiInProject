@@ -1,0 +1,85 @@
+<span *ngFor="let item of items.data">
+    <section class="section">
+        <div class="hero is-warning">
+            <div class="hero-body">
+                <h1 class="title is-4">Prikaz opravila:</h1>
+                <app-todo-card
+                [item]="item" 
+                [item_Tag]="item.tag" 
+                [item_ItemName]="item.itemName" 
+                [item_ItemDesc]="item.itemDesc" 
+                [item_ItemStatus]="item.itemStatus" 
+                [item_Active]="item.active" 
+                [item_completeDate]="item.completeDate" 
+                [item_dateOfCompletion]="item.dateOfCompletion"
+                ></app-todo-card>
+                <div class="tooltip" data-tooltip="Avtor opravila">
+                    <h1 class="title is-4">Avtor: <a class="has-text-link" (click)="navigateToUserDashboard(item.createdBy)">{{item.createdBy}}</a></h1>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="box">
+            <app-view-graph [id]="item.id"></app-view-graph>
+        </div>
+        <span id="Stats">
+            <div class="columns">
+                <div class="column">
+                    <div class="box">
+                        <h6 class="subtitle is-6">Ustvarjeno dne:</h6>
+                        <h6 class="title is-6"><b>{{ item.createdDate | date:'dd.M.y HH:mm' }}</b></h6>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="box">
+                        <h6 class="subtitle is-6">Zastavljen datum do kdaj je treba opravilo dokončat:</h6>
+                        <h6 class="title is-6"><b>{{ item.completeDate | date:'dd.M.y HH:mm' }}</b></h6>
+                    </div>
+                </div>
+            </div>
+            <div class="columns">
+                <div class="column">
+                    <div class="box">
+                        <h6 class="subtitle is-6">Opravilo je ozančil kot opravljeno:</h6>
+                        <h6 class="title is-6" *ngIf="(item.itemStatus === 1 || item.itemStatus === 2) && item.active === 0"><a (click)="navigateToUserDashboard(item.completedBy)"><b>{{item.completedBy}}</b></a></h6>
+                        <h6 class="title is-6" *ngIf="!(item.itemStatus === 1 && item.active === 0) && !(item.itemStatus === 2 && item.active === 0)"><b>/</b></h6>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="box">
+                        <h6 class="subtitle is-6">Označeno kot opravljeno dne:</h6>
+                        <h6 class="title is-6" *ngIf="(item.itemStatus === 1 || item.itemStatus === 2) && item.active === 0"><b>{{ item.dateOfCompletion | date:'dd.M.y HH:mm' }}</b></h6>
+                        <h6 class="title is-6" *ngIf="!(item.itemStatus === 1 && item.active === 0) && !(item.itemStatus === 2 && item.active === 0)"><b>/</b></h6>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="box">
+                        <h6 class="subtitle is-6">Opravilo je bilo končano v:</h6>
+                        <h6 class="title is-6" *ngIf="(item.itemStatus === 1 || item.itemStatus === 2) && item.active === 0"><b>{{ convertSecondsToDHMS(item.timeTakenSeconds) }}</b></h6>
+                        <h6 class="title is-6" *ngIf="!(item.itemStatus === 1 && item.active === 0) && !(item.itemStatus === 2 && item.active === 0)"><b>/</b></h6>
+                    </div>
+                </div>
+            </div>
+            <div class="columns">
+                <div class="column">
+                    <div class="box">
+                        <h6 class="subtitle is-6">Nazadnje spremenil:</h6>
+                        <h6 class="title is-6" *ngIf="item.lastEditBy != null"><b>{{item.lastEditBy}}</b></h6>
+                        <h6 class="title is-6" *ngIf="item.lastEditBy == null"><b>/</b></h6>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="box">
+                        <h6 class="subtitle is-6">Število skupnih ogledov:</h6>
+                        <h6 class="title is-6"><b>{{ item.viewCount }}</b></h6>
+                    </div>
+                </div>
+            </div>
+        </span>
+    </section>
+    <section class="section">
+        <h1 class="title is-4">Tabela ogledov:</h1>
+        <app-viewer-list [id]="item.id" [users]="users.data"></app-viewer-list> 
+    </section>
+</span>

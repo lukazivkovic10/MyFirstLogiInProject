@@ -1,4 +1,3 @@
-import { formatDate } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import {
   ApexAxisChartSeries,
@@ -47,6 +46,7 @@ interface Item
   templateUrl: './timeline-chart.component.html',
   styleUrls: ['./timeline-chart.component.css']
 })
+
 export class TimelineChartComponent {
   public chartOptions!: Partial<ChartOptions> | any;
 

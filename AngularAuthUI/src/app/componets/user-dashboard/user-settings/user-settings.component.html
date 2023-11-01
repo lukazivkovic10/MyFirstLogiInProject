@@ -1,0 +1,61 @@
+<section class="section">
+    <div class="hero is-info">
+        <div class="hero-body">
+            <div class="columns is-mobile">
+                <div class="column is-1-desktop is-1-mobile center">
+                    <div class="icon is-large">
+                        <i class="fa-solid fa-id-badge fa-5x"></i>
+                    </div>
+                </div>
+                <div class="column is-2-mobile">
+                    <h3 class="subtitle is-5">{{userEmail}}</h3>
+                    <h2 class="title is-4"><b>Uporabniške nastavitve</b></h2>
+                </div>
+                <div class="column is-1-desktop  is-2-mobile">
+                    <div class="tooltip" data-tooltip="Nazaj na moj profil">
+                        <button class="button is-info is-inverted is-rounded" (click)="navigateToCurrentLoggedInUserDashboard()">
+                            <span class="icon-text">
+                                <span class="icon">
+                                    <i class="fa-solid fa-angle-left"></i>
+                                </span>
+                            </span>
+                        </button>   
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="section is-medium">
+    <div class="container is-fluid">
+        <div class="box profile" [ngClass]="{ 'isActive': isActiveEditProfile }">
+            <div class="columns">
+                <div class="column is-1">
+                    <button class="button" (click)="toggleEditProfile()">
+                        <span class="icon">
+                            <i class="fa-solid fa-caret-right" *ngIf="!isActiveEditProfile"></i>
+                            <i class="fa-solid fa-caret-down" *ngIf="isActiveEditProfile"></i>
+                        </span>
+                    </button>
+                </div>
+                <div class="column">
+                    <h2 class="title is-4"><b>Uredi profil</b></h2>
+                </div>
+            </div>
+            <div *ngFor="let user of loggedInUser.data" [formGroup]="updateUserForm">
+                <div class="box" *ngIf="user.firstName">
+                    <h3 class="subtitle is-5">Ime</h3>
+                    <div class="field has-addons">
+                        <input class="input" type="text" placeholder="epoštni naslov" [(ngModel)]="user.firstName" formControlName="firstName">
+                    </div>
+                </div>
+                <div class="box" *ngIf="user.lastName">
+                    <h3 class="subtitle is-5">Priimek</h3>
+                    <div class="field has-addons">
+                        <input class="input" type="text" placeholder="epoštni naslov" [(ngModel)]="user.lastName" formControlName="lastName">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

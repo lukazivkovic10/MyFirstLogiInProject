@@ -69,7 +69,6 @@ export class ModelTagsComponent implements OnInit {
 
   onDelete(current:any)
   {
-    console.log(current);
     this.auth.DeleteTag(current)
       .subscribe({
         next:(

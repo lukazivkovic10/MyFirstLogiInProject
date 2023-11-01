@@ -3,41 +3,31 @@
         <header class="modal-card-head">
             <div class="modal-card-title">
                 <div class="icon is-large">
-                    <i class="fas fa-square-pen"></i>
+                    <i class="fa-solid fa-pen-to-square"></i>
                 </div>
-                Uredi opravilo
+                Posodobi opravilo
             </div>
             <button (click)="modelCloseEdit()" class="delete" aria-label="close"></button>
         </header>
         <section class="modal-card-body">
             <div class="container is-fluid">
-                <div class="box" style="color: hsl(348, 100%, 61%);" *ngFor="let error of errors">
-                    <strong>{{error.errorCode}}</strong>
-                    <h5>{{error.codeName}}</h5>
-                    <small>{{error.codeDesc}}</small>
-                </div>
                 <div class="form" [formGroup]="updateForm">
                     <div class="box">
                         <div class="columns">
                             <div class="column">
                                 <div class="field">
-                                    <div class="control has-icons-left">
-                                        <div class="select">
-                                            <select formControlName="Tag" placeholder="Izberi zaznamko">
-                                                <option value="" disabled selected>Izberi oznako</option>
-                                                <option *ngFor="let tag of tags.data">{{tag.tagName}}</option>
-                                            </select>
-                                            <span class="icon is-left">
-                                                <i class="fas fa-tag"></i>
-                                              </span>
-                                        </div>
-                                    </div>
+                                    <p class="control has-icons-left">
+                                        <input class="input" [disabled]="item_tag !== ''" formControlName="Tag" placeholder="oznaka" [(ngModel)]="item_tag" readonly>
+                                        <span class="icon is-left">
+                                            <i class="fas fa-tag"></i>
+                                        </span>
+                                    </p>
                                 </div>
                             </div>
                             <div class="column">
                                 <div class="field">
                                     <p class="control is-expanded has-icons-left">
-                                        <input class="input"formControlName="ItemName" type="text" placeholder="Ime opravila">
+                                        <input class="input" formControlName="ItemName" type="text" [(ngModel)]="item_itemName" placeholder="Ime opravila" readonly>
                                         <span class="icon is-small is-left">
                                             <i class="fas fa-signature"></i>
                                         </span>
@@ -47,7 +37,7 @@
                         </div>
                         <div class="field">
                             <p class="control is-expended">
-                                <textarea class="textarea has-fixed-size" formControlName="ItemDesc" type="text" placeholder="Opis opravila"></textarea>
+                                <textarea class="textarea has-fixed-size" formControlName="ItemDesc" type="text" placeholder="Opis opravila" [ngModel]="item_desc"></textarea>
                             </p>
                         </div>  
                     </div>
@@ -67,7 +57,7 @@
                             <div class="column">
                                 <p>Dokončati do</p>
                                 <div class="field">
-                                    <input class="input" type="datetime-local" formControlName="CompleteDate">
+                                    <input class="input" type="datetime-local" formControlName="CompleteDate" [ngModel]="item_date">
                                 </div>
                         </div>
                         </div>
@@ -76,7 +66,14 @@
             </div>
         </section>
         <footer class="modal-card-foot">
-            <button (click)="onUpdate()" [disabled]="!updateForm.valid" class="button is-warning">Uredi</button>
+            <button (click)="onUpdate()" [disabled]="!updateForm.valid" class="button is-warning">
+                <span class="icon">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </span>
+                <span>
+                    Posodobi
+                </span>
+            </button>
         </footer>
     </div>
 </div>

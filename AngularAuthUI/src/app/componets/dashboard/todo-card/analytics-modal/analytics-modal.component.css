@@ -1,0 +1,16 @@
+@media (max-width: 1024px) {
+    .section
+    {
+        padding-top: 16px;
+    }
+}
+#Stats .box
+{
+    height: 85px;
+    transition: all 0.3s ease-in-out;
+}
+
+#Stats .box:hover
+{
+    transform: scale(1.1);
+}

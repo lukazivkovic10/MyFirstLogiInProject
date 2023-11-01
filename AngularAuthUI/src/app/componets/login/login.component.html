@@ -30,7 +30,7 @@
 <!--GESLO-->
       <div class="field has-addons">
         <p class="control is-expanded has-icons-left">
-          <input formControlName="password" class="input is-medium" [type]="type" placeholder="Geslo">
+          <input formControlName="password" class="input is-medium" [type]="type" placeholder="Geslo" autocomplete="on">
           <span class="icon is-small is-left">
             <i class="fas fa-key"></i>
           </span>
@@ -40,7 +40,7 @@
         </p>
       </div>
       <div class="pb-2">
-        <small *ngIf="loginForm.controls['password'].dirty && loginForm.hasError('required','password')" class="notification is-danger">*Zahtevano!</small>
+        <small *ngIf="loginForm.controls['password'].dirty && loginForm.hasError('required','password')" class="notification is-danger" >*Zahtevano!</small>
       </div>
       <div class="field">
 <!--PRIJAVA GUMB & REGISTRACIJA-->

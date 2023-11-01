@@ -1,33 +1,77 @@
-<section class="hero is-info">
-    <div class="hero-body">
-        <div class="columns is-mobile">
-            <div class="column is-1-desktop is-3-mobile center">
-                <div class="icon is-large">
-                    <i class="fa-solid fa-user fa-5x"></i>
+<section class="section">
+    <div class="hero is-info">
+        <div class="hero-body">
+            <div class="columns is-mobile">
+                <div class="column is-1-desktop is-3-mobile center">
+                    <div class="icon is-large" *ngIf="userCheck()">
+                        <i class="fa-solid fa-id-badge fa-5x"></i>
+                    </div>
+                    <div class="icon is-large" *ngIf="!userCheck()">
+                        <i class="fa-solid fa-image-portrait fa-5x"></i>
+                    </div>
                 </div>
-            </div>
-            <div class="column is-fullwidth-mobile">
-                <h3 class="subtitle is-5">Uporabnik</h3>
-                <h2 class="title is-4"><b>{{userEmail}}</b></h2>
+                <div class="column is-fullwidth-mobile">
+                    <!--Logged out users-->
+                    <span *ngIf="!userCheck()">
+                        <h3 class="subtitle is-5">Uporabnik</h3>
+                        <h2 class="title is-4"><b>{{userEmail}}</b></h2> 
+                    </span>
+                    <!--Logged in users-->
+                    <span *ngIf="userCheck()">
+                        <h3 class="subtitle is-5">Uporabnik</h3>
+                        <h2 class="title is-4"><b>{{userEmail}}</b></h2>
+                    </span>
+                </div>
+                <div class="column is-1 is-fullwidth-mobile" *ngIf="userCheck()">
+                    <div class="tooltip" data-tooltip="Uporabniške nastavitve">
+                        <button class="button is-info is-inverted is-rounded" (click)="navigateToUserSettings()">
+                            <div class="icon">
+                                <i class="fa-solid fa-gear"></i>
+                            </div>
+                        </button>   
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
-
-<div class="page-container p-2">
-    <div *ngFor="let item of items.data" class="pt-2">
-        <!--todo card component-->
-    <app-todo-card 
-    [item]="item" 
-    [item_Tag]="item.tag" 
-    [item_ItemName]="item.itemName" 
-    [item_ItemDesc]="item.itemDesc" 
-    [item_ItemStatus]="item.itemStatus" 
-    [item_Active]="item.active" 
-    [item_completeDate]="item.completeDate" 
-    [item_dateOfCompletion]="item.dateOfCompletion"
-    (refreshData)="getUserItems()"
-    >
-    </app-todo-card>
-    </div>
-</div>
+<div class="tabs is-centered">
+    <ul>
+      <li [ngClass]="{ 'is-active': showCreated }">
+        <a (click)="onShowCreated()">
+          <span class="icon is-small"><i class="fas fa-calendar-plus" aria-hidden="true"></i></span>
+          <span>Ustavrjena opravila</span>
+        </a>
+      </li>
+      <li [ngClass]="{ 'is-active': showAssigned }">
+        <a (click)="onShowAssigned()">
+          <span class="icon is-small"><i class="fas fa-user-plus" aria-hidden="true"></i></span>
+          <span>Dodeljena opravila</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+<section class="section">
+    <ng-container *ngIf="items.data; else stringData">
+        <ng-container *ngIf="isItemsArray(items.data); else stringData">
+          <div *ngFor="let item of items.data" class="pt-2">
+            <app-todo-card
+              [item]="item"
+              [item_Tag]="item.tag"
+              [item_ItemName]="item.itemName"
+              [item_ItemDesc]="item.itemDesc"
+              [item_ItemStatus]="item.itemStatus"
+              [item_Active]="item.active"
+              [item_completeDate]="item.completeDate"
+              [item_dateOfCompletion]="item.dateOfCompletion"
+              (refreshData)="onShowCreated()"
+            ></app-todo-card>
+          </div>
+        </ng-container>
+        <ng-template #stringData>
+          <div class="has-text-centered">
+            <img src="/assets/404 not-found.svg" class="svg">
+          </div>
+        </ng-template>
+    </ng-container>
+</section>
