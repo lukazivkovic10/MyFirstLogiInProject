@@ -18,9 +18,9 @@ namespace AngularAuthAPI.Controllers
     public class ViewsController
     {
         private readonly AppDbContext _config;
-        private readonly ILogger<FileUploadController> _logger;
+        private readonly ILogger<ViewsController> _logger;
 
-        public AsignUserController(AppDbContext configuration, ILogger<FileUploadController> logger)
+        public ViewsController(AppDbContext configuration, ILogger<ViewsController> logger)
         {
             _config = configuration;
             _logger = logger;

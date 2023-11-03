@@ -111,7 +111,7 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("GetAllFiles")]
         public async Task<ActionResult<Response<object>>> GetAllFiles()
         {
-            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
             IEnumerable<FileUpload> files = await SelectAllFiles(connection);
 
              if (files == null)
