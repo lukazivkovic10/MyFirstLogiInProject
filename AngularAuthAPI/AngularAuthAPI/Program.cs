@@ -43,19 +43,39 @@ builder.Services.AddAuthentication(x =>
 builder.Services.AddScoped<ReactivationService>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();
-    var connectionString = configuration.GetConnectionString("DefaultConnection");
+    var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+        connUrl = connUrl.Replace("postgres://", string.Empty);
+        var pgUserPass = connUrl.Split("@")[0];
+        var pgHostPortDb = connUrl.Split("@")[1];
+        var pgHostPort = pgHostPortDb.Split("/")[0];
+        var pgDb = pgHostPortDb.Split("/")[1];
+        var pgUser = pgUserPass.Split(":")[0];
+        var pgPass = pgUserPass.Split(":")[1];
+        var pgHost = pgHostPort.Split(":")[0];
+        var pgPort = pgHostPort.Split(":")[1];
+        var connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};SSL Mode=Require;TrustServerCertificate=True";
     var hubContext = provider.GetRequiredService<IHubContext<NotificationHub>>();
     var logger = provider.GetRequiredService<ILogger<ReactivationService>>();
-    return new ReactivationService(connectionString, hubContext, logger);
+    return new ReactivationService(connStr, hubContext, logger);
 });
 
 builder.Services.AddScoped<ReminderService>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();
-    var connectionString = configuration.GetConnectionString("DefaultConnection");
+    var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+    connUrl = connUrl.Replace("postgres://", string.Empty);
+    var pgUserPass = connUrl.Split("@")[0];
+    var pgHostPortDb = connUrl.Split("@")[1];
+    var pgHostPort = pgHostPortDb.Split("/")[0];
+    var pgDb = pgHostPortDb.Split("/")[1];
+    var pgUser = pgUserPass.Split(":")[0];
+    var pgPass = pgUserPass.Split(":")[1];
+    var pgHost = pgHostPort.Split(":")[0];
+    var pgPort = pgHostPort.Split(":")[1];
+    var connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};SSL Mode=Require;TrustServerCertificate=True";
     var hubContext = provider.GetRequiredService<IHubContext<NotificationHub>>();
     var logger = provider.GetRequiredService<ILogger<NotificationHub>>();
-    return new ReminderService(hubContext, connectionString, logger);
+    return new ReminderService(hubContext, connStr, logger);
 });
 
 builder.Services.AddHostedService<ReminderWorker>();
