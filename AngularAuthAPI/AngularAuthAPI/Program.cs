@@ -99,7 +99,7 @@ app.UseCors(builder => builder
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials()
-    .WithOrigins("https://localhost:4200"));
+    .WithOrigins("https://opravila-7f9581a718fe.herokuapp.com"));
 
 app.UseRouting();
 
