@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GraphService {
-  private baseUrl:string = "https://localhost:7023/api/Graph/"
+  private baseUrl:string = environment.apiUrl;
   constructor(private http : HttpClient, private router: Router) { }
 
   NumberOfAllTasks()

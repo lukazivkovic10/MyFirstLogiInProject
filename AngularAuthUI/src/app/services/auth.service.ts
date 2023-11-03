@@ -5,6 +5,7 @@ import { ListService } from './list.service';
 import { Observable } from 'rxjs';
 import { TokenServiceService } from './token-service.service';
 import { TokenValidationService } from './token-validation.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ import { TokenValidationService } from './token-validation.service';
 
 export class AuthService {
 
-  private baseUrl:string = "https://localhost:7023/api/User/"
+  private baseUrl:string = environment.apiUrl;
   private tokenCheckInterval: any; // Timer reference
   constructor(private http : HttpClient, private router: Router, private tokenService: TokenServiceService, private tokenValidationService: TokenValidationService) { }
 

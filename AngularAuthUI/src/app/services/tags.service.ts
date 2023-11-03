@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenServiceService } from './token-service.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TagsService {
 
-  private baseUrl:string = "https://localhost:7023/api/Tag/"
+  private baseUrl:string = environment.apiUrl;
   constructor(private http : HttpClient, private router: Router, private tokenService: TokenServiceService) { }
 
   GetTags()

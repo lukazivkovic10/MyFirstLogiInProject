@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenServiceService } from './token-service.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
   notificationClick: EventEmitter<void> = new EventEmitter<void>();
-  private baseUrl:string = "https://localhost:7023/api/Reminder/"
+  private baseUrl:string = environment.apiUrl;
 
   constructor(private http : HttpClient, private router: Router, private tokenService: TokenServiceService) { }
 
