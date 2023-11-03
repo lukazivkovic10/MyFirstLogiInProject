@@ -95,13 +95,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseRouting();
+
 app.UseCors(builder => builder
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials()
     .WithOrigins("https://opravila-7f9581a718fe.herokuapp.com"));
-
-app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -115,13 +115,14 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 app.MapControllers();
-app.MapFallbackToController("Index", "Fallback");
 
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapHub<NotificationHub>("/notificationHub"); // Map the SignalR hub
     endpoints.MapControllers();
 });
+
+app.MapFallbackToController("Index", "Fallback");
 
 app.Run();
 
