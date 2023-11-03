@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ProfileService {
-  private baseUrl:string = environment.apiUrl+'userProfile/';
+  private baseUrl:string = environment.apiUrl;
   constructor(private http : HttpClient, private router: Router, private tokenService: TokenServiceService) { }
   private addTokenToRequest(url: string, params: HttpParams = new HttpParams()) {
     const headers = this.tokenService.getRequestHeaders();
