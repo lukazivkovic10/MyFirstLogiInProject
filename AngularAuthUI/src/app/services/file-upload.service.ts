@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class FileUploadService {
-  private baseUrl:string = environment.apiUrl;
+  private baseUrl:string = environment.apiUrl+'FileUpload/';
   constructor(private http : HttpClient, private router: Router, private tokenService: TokenServiceService) { }
 
   GetAllFiles()

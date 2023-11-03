@@ -13,7 +13,7 @@ import { environment } from 'src/environments/environment';
 
 export class AuthService {
 
-  private baseUrl:string = environment.apiUrl;
+  private baseUrl:string = environment.apiUrl+'User/';
   private tokenCheckInterval: any; // Timer reference
   constructor(private http : HttpClient, private router: Router, private tokenService: TokenServiceService, private tokenValidationService: TokenValidationService) { }
 

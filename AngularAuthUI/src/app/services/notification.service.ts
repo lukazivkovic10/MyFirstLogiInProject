@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
 })
 export class NotificationService {
   notificationClick: EventEmitter<void> = new EventEmitter<void>();
-  private baseUrl:string = environment.apiUrl;
+  private baseUrl:string = environment.apiUrl+'Notification/';
 
   constructor(private http : HttpClient, private router: Router, private tokenService: TokenServiceService) { }
 

@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class GraphService {
-  private baseUrl:string = environment.apiUrl;
+  private baseUrl:string = environment.apiUrl+'Graph/';
   constructor(private http : HttpClient, private router: Router) { }
 
   NumberOfAllTasks()

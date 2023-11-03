@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class AnalyticsService {
-  private baseUrl:string = environment.apiUrl;
+  private baseUrl:string = environment.apiUrl+'Analytics/';
   constructor(private http : HttpClient, private tokenService: TokenServiceService) { }
 
   private addTokenToRequest(url: string, params: HttpParams = new HttpParams()) {

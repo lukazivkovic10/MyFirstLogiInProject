@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
 })
 export class TagsService {
 
-  private baseUrl:string = environment.apiUrl;
+  private baseUrl:string = environment.apiUrl+'Tags/';
   constructor(private http : HttpClient, private router: Router, private tokenService: TokenServiceService) { }
 
   GetTags()
