@@ -8,16 +8,6 @@ namespace AngularAuthAPI.Extensions
     {
         public static IServiceCollection AppApplicationServices(this IServiceCollection services, IConfiguration config)
         {
-            services.AddCors(option =>
-            {
-                option.AddPolicy("CorsPolicy", builder =>
-                {
-                    builder.WithOrigins("http://localhost:4200") // Add your Angular app's origin here
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials();
-                });
-            });
 
             services.AddDbContext<AppDbContext>(options =>
             {
