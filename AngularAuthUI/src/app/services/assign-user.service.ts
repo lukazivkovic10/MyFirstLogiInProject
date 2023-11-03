@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment.development';
   providedIn: 'root'
 })
 export class AssignUserService {
-  private baseUrl:string = environment.apiUrl+'AssignUser/';
+  private baseUrl:string = environment.apiUrl+'AsignUser/';
   constructor(private http : HttpClient, private router: Router, private tokenService: TokenServiceService) { }
 
   private addTokenToRequest(url: string, params: HttpParams = new HttpParams()) {
