@@ -6,6 +6,7 @@ using AngularAuthAPI.Dtos;
 using Microsoft.Extensions.Logging;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
+using Npgsql;
 
 namespace AngularAuthAPI.Controllers
 {
@@ -25,44 +26,72 @@ namespace AngularAuthAPI.Controllers
         [HttpPost("register-view")]
         public async Task<ActionResult<Response<object>>> RegisterView(ViewDto viewRegistration)
         {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var userId = await connection.ExecuteScalarAsync<int>("SELECT Id FROM uporabniki WHERE Email = @UserEmail", new { UserEmail = viewRegistration.UserEmail });
+                using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
 
-            // Insert a view record into the ViewTracking table
-            string viewQuery = "INSERT INTO ViewTracking (TodoItemID, UserID, ViewedAt) VALUES (@TodoItemID, @UserID, @ViewedAt)";
-            await connection.ExecuteAsync(viewQuery, new
-            {
-                TodoItemID = viewRegistration.TodoItemID,
-                UserID = userId,
-                ViewedAt = DateTime.Now
-            });
+                // Validate and sanitize user inputs to prevent SQL injection
+                if (viewRegistration == null || string.IsNullOrWhiteSpace(viewRegistration.UserEmail))
+                {
+                    var errorResponse =  new Response<object>
+                    {
+                        Success = false,
+                        Error = 400,
+                        Message = "Invalid input data",
+                    };
 
-            // Update the ViewCount in the Items table
-            string updateQuery = "UPDATE Items SET ViewCount = ISNULL(ViewCount, 0) + 1, ViewTrackingId = SCOPE_IDENTITY() WHERE Id = @TodoItemID";
-            await connection.ExecuteAsync(updateQuery, new { TodoItemID = viewRegistration.TodoItemID });
+                    return errorResponse;
+                }
 
-            var successResponse = new Response<object>
-            {
-                Success = true,
-                Error = 200,
-            };
+                // Retrieve the user ID
+                var userId = await connection.ExecuteScalarAsync<int>(
+                    "SELECT \"Id\" FROM \"uporabniki\" WHERE \"Email\" = @UserEmail",
+                    new { UserEmail = viewRegistration.UserEmail });
 
-            return successResponse;
+                // Insert a view record into the ViewTracking table
+                string viewQuery = @"
+                INSERT INTO ""ViewTracking"" (""TodoItemID"", ""UserID"", ""ViewedAt"")
+                VALUES (@TodoItemID, @UserID, @ViewedAt)";
+                await connection.ExecuteAsync(viewQuery, new
+                {
+                    TodoItemID = viewRegistration.TodoItemID,
+                    UserID = userId,
+                    ViewedAt = DateTime.Now
+                });
+
+                // Update the ViewCount in the Items table
+                string updateQuery = @"
+                UPDATE ""Items"" AS i
+                SET ""ViewCount"" = COALESCE(i.""ViewCount"", 0) + 1,
+                    ""ViewTrackingId"" = nextval('view_tracking_id_sequence')
+                FROM ""ViewTracking"" AS t
+                WHERE i.""Id"" = @TodoItemId";
+                await connection.ExecuteAsync(updateQuery, new { TodoItemId = viewRegistration.TodoItemID });
+
+                var successResponse = new Response<object>
+                {
+                    Success = true,
+                    Error = 200,
+                };
+
+                return successResponse;
         }
 
         [HttpGet("get-views/{id}")]
         public async Task<ActionResult<Response<object>>> GetViewCount(int id)
         {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var exists = connection.ExecuteScalar<bool>("select count(1) from Items where Id = @id", new { id });
-            if (exists == true)
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            var exists = await connection.ExecuteScalarAsync<bool>(
+                "SELECT COUNT(1) FROM \"Items\" WHERE \"Id\" = @id", new { id });
+
+            if (exists)
             {
-                var data = await connection.QueryAsync<int>("select ViewCount from Items where Id = @id", new { id });
+                var data = await connection.QueryAsync<int>(
+                    "SELECT \"ViewCount\" FROM \"Items\" WHERE \"Id\" = @id", new { id });
+
                 var successResponse = new Response<object>
                 {
                     Success = true,
                     Error = 200,
-                    Message = "Pridobljeni podatki.",
+                    Message = "Data retrieved.",
                     Data = data
                 };
 
@@ -74,7 +103,7 @@ namespace AngularAuthAPI.Controllers
                 {
                     Success = false,
                     Error = 404,
-                    Message = "Podatki ne obstajajo",
+                    Message = "Data does not exist",
                     Data = "404"
                 };
 
@@ -82,4 +111,5 @@ namespace AngularAuthAPI.Controllers
             }
         }
     }
+            
 }

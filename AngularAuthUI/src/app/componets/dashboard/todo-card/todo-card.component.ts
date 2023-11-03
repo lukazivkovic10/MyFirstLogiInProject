@@ -202,18 +202,22 @@ ngOnInit()
     {
       this.users = res;
     });
-  this.UserAsign.showAssignedUsers().subscribe((res: any) => {
-    this.assignedUsers = res;
-  });
+  this.UserAsign.showAssignedUsers().subscribe(
+    (res: any) => {
+      if (res.success) {
+        this.assignedUsers = res.data;
+      } else {
+        // Handle the error case where 'res.success' is false
+        console.error(`API Error: ${res.message}`);
+      }
+    }
+  );
 }
 
-verification()
-{
-  if(this.item.createdBy === this.jwtService.userEmail())
-  {
+verification() {
+  if (this.item.createdBy === this.jwtService.userEmail()) {
     return true;
-  }else
-  {
+  } else {
     return false;
   }
 }
@@ -309,7 +313,7 @@ doneCurrent(current:any)
   //View
   registerView(id: number, userMail: string) {
     const viewObj = {
-      TodoItemId: id,
+      TodoItemID: id,
       UserEmail: userMail
     };
     this.viewService.registerView(viewObj).subscribe();

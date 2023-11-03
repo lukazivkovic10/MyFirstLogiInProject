@@ -7,7 +7,7 @@
                 <h3 class="title is-3">{{item_ItemName}}</h3>
             </div>
             <div class="column is-1">
-                    Avtor: <a (click)="navigateToUserDashboard(item.createdBy)">{{item.createdBy}}</a>
+                Avtor: <a *ngIf="item" (click)="navigateToUserDashboard(item.createdBy)">{{item.createdBy}}</a>
             </div>
         </div>
       </header>

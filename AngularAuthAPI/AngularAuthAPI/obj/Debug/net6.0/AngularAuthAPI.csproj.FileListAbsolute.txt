@@ -130,7 +130,6 @@ C:\Users\Luka\MyFirstLogiInProject\AngularAuthAPI\AngularAuthAPI\bin\Debug\net6.
 C:\Users\Luka\MyFirstLogiInProject\AngularAuthAPI\AngularAuthAPI\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\Luka\MyFirstLogiInProject\AngularAuthAPI\AngularAuthAPI\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\Luka\MyFirstLogiInProject\AngularAuthAPI\AngularAuthAPI\bin\Debug\net6.0\System.Configuration.ConfigurationManager.dll
-C:\Users\Luka\MyFirstLogiInProject\AngularAuthAPI\AngularAuthAPI\bin\Debug\net6.0\System.Diagnostics.DiagnosticSource.dll
 C:\Users\Luka\MyFirstLogiInProject\AngularAuthAPI\AngularAuthAPI\bin\Debug\net6.0\System.Drawing.Common.dll
 C:\Users\Luka\MyFirstLogiInProject\AngularAuthAPI\AngularAuthAPI\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\Luka\MyFirstLogiInProject\AngularAuthAPI\AngularAuthAPI\bin\Debug\net6.0\System.Net.WebSockets.WebSocketProtocol.dll
@@ -175,3 +174,12 @@ C:\Users\Luka\MyFirstLogiInProject\AngularAuthAPI\AngularAuthAPI\obj\Debug\net6.
 C:\Users\Luka\MyFirstLogiInProject\AngularAuthAPI\AngularAuthAPI\obj\Debug\net6.0\AngularAuthAPI.genruntimeconfig.cache
 C:\Users\Luka\MyFirstLogiInProject\AngularAuthAPI\AngularAuthAPI\obj\Debug\net6.0\ref\AngularAuthAPI.dll
 C:\Users\Luka\MyFirstLogiInProject\AngularAuthAPI\AngularAuthAPI\bin\Debug\net6.0\AngularAuthAPI.staticwebassets.runtime.json
+C:\Users\Luka\MyFirstLogiInProject\AngularAuthAPI\AngularAuthAPI\bin\Debug\net6.0\Microsoft.Extensions.Caching.Abstractions.dll
+C:\Users\Luka\MyFirstLogiInProject\AngularAuthAPI\AngularAuthAPI\bin\Debug\net6.0\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\Luka\MyFirstLogiInProject\AngularAuthAPI\AngularAuthAPI\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Luka\MyFirstLogiInProject\AngularAuthAPI\AngularAuthAPI\bin\Debug\net6.0\Microsoft.Extensions.Logging.dll
+C:\Users\Luka\MyFirstLogiInProject\AngularAuthAPI\AngularAuthAPI\bin\Debug\net6.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\Luka\MyFirstLogiInProject\AngularAuthAPI\AngularAuthAPI\bin\Debug\net6.0\Microsoft.Extensions.Options.dll
+C:\Users\Luka\MyFirstLogiInProject\AngularAuthAPI\AngularAuthAPI\bin\Debug\net6.0\Microsoft.Extensions.Primitives.dll
+C:\Users\Luka\MyFirstLogiInProject\AngularAuthAPI\AngularAuthAPI\bin\Debug\net6.0\Npgsql.dll
+C:\Users\Luka\MyFirstLogiInProject\AngularAuthAPI\AngularAuthAPI\bin\Debug\net6.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Dapper;
 using System.Data;
+using Npgsql;
 
 namespace AngularAuthAPI.Controllers
 {
@@ -22,12 +23,25 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("ŠtVsehOpravil")]
         public async Task<ActionResult<Response<object>>> ŠtVsehOpravil()
         {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
 
-            var query = @"SELECT CASE WHEN ItemStatus = 2 AND Active <> 0 THEN 'Preteklo' WHEN (ItemStatus = 1 OR ItemStatus = 2) AND Active = 0 THEN 'Dokoncano' WHEN ItemStatus = 1 AND Active = 1 THEN 'Nedokoncano' ELSE 'Izbriano' END AS Status, 
-                          COUNT (*) AS Count From Items GROUP BY CASE WHEN ItemStatus = 2 AND Active <> 0 THEN 'Preteklo' WHEN (ItemStatus = 1 OR ItemStatus = 2) AND Active = 0 THEN 'Dokoncano' WHEN ItemStatus = 1 AND Active = 1 THEN 'Nedokoncano' ELSE 'Izbriano' END 
-                          UNION ALL 
-                          SELECT 'Vse' AS Status, COUNT(*) AS Count FROM Items;";
+            var query = @"SELECT CASE
+                  WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
+                  WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokoncano'
+                  WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Nedokoncano'
+                  ELSE 'Izbriano'
+               END AS ""Status"", 
+               COUNT(*) AS ""Count""
+               FROM ""Items""
+               GROUP BY CASE
+                  WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
+                  WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokoncano'
+                  WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Nedokoncano'
+                  ELSE 'Izbriano'
+               END
+               UNION ALL
+               SELECT 'Vse' AS ""Status"", COUNT(*) AS ""Count""
+               FROM ""Items"";";
 
             var Data = (await connection.QueryAsync(query))
                 .Where(row => row.Status != null && row.Count != null)
@@ -50,7 +64,7 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("GraphOpravila")]
         public async Task<ActionResult<Response<object>>> GraphOpravila()
         {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
 
             var currentDate = DateTime.Now;
             var threeMonthsAgo = currentDate.AddMonths(-3);
@@ -62,16 +76,20 @@ namespace AngularAuthAPI.Controllers
             // Query for the first month
             var queryMonth1 = @"SELECT 
         CASE 
-            WHEN ItemStatus = 2 AND Active <> 0 THEN 'Preteklo'
-            WHEN (ItemStatus = 1 OR ItemStatus = 2) AND Active = 0 THEN 'Dokončano'
-            WHEN ItemStatus = 1 AND Active = 1 THEN 'Še ne dokončano'
+            WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
+            WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
+            WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
         END AS Status,
-        COUNT(*) AS Count FROM Items WHERE CreatedDate >= @StartDate1 AND CreatedDate <= @EndDate1 GROUP BY
+        COUNT(*) AS Count 
+        FROM ""Items"" 
+        WHERE ""CreatedDate"" >= @StartDate1 AND ""CreatedDate"" <= @EndDate1 
+        GROUP BY
         CASE 
-            WHEN ItemStatus = 2 AND Active <> 0 THEN 'Preteklo'
-            WHEN (ItemStatus = 1 OR ItemStatus = 2) AND Active = 0 THEN 'Dokončano'
-            WHEN ItemStatus = 1 AND Active = 1 THEN 'Še ne dokončano'
+            WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
+            WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
+            WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
         END";
+
 
             var dataMonth1 = (await connection.QueryAsync(queryMonth1, new { StartDate1 = threeMonthsAgo, EndDate1 = twoMonthsAgo }))
                 .Where(row => row.Status != null && row.Count != null)
@@ -97,15 +115,18 @@ namespace AngularAuthAPI.Controllers
             // Query for the second month
             var queryMonth2 = @"SELECT 
         CASE 
-            WHEN ItemStatus = 2 AND Active <> 0 THEN 'Preteklo'
-            WHEN (ItemStatus = 1 OR ItemStatus = 2) AND Active = 0 THEN 'Dokončano'
-            WHEN ItemStatus = 1 AND Active = 1 THEN 'Še ne dokončano'
+            WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
+            WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
+            WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
         END AS Status,
-        COUNT(*) AS Count FROM Items WHERE CreatedDate >= @StartDate2 AND CreatedDate <= @EndDate2 GROUP BY
+        COUNT(*) AS Count 
+        FROM ""Items"" 
+        WHERE ""CreatedDate"" >= @StartDate2 AND ""CreatedDate"" <= @EndDate2 
+        GROUP BY
         CASE 
-            WHEN ItemStatus = 2 AND Active <> 0 THEN 'Preteklo'
-            WHEN (ItemStatus = 1 OR ItemStatus = 2) AND Active = 0 THEN 'Dokončano'
-            WHEN ItemStatus = 1 AND Active = 1 THEN 'Še ne dokončano'
+            WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
+            WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
+            WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
         END";
 
             var dataMonth2 = (await connection.QueryAsync(queryMonth2, new { StartDate2 = twoMonthsAgo, EndDate2 = oneMonthAgo }))
@@ -132,15 +153,18 @@ namespace AngularAuthAPI.Controllers
             // Query for the third month
             var queryMonth3 = @"SELECT 
         CASE 
-            WHEN ItemStatus = 2 AND Active <> 0 THEN 'Preteklo'
-            WHEN (ItemStatus = 1 OR ItemStatus = 2) AND Active = 0 THEN 'Dokončano'
-            WHEN ItemStatus = 1 AND Active = 1 THEN 'Še ne dokončano'
+            WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
+            WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
+            WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
         END AS Status,
-        COUNT(*) AS Count FROM Items WHERE CreatedDate >= @StartDate3 AND CreatedDate <= @EndDate3 GROUP BY
+        COUNT(*) AS Count 
+        FROM ""Items"" 
+        WHERE ""CreatedDate"" >= @StartDate3 AND ""CreatedDate"" <= @EndDate3 
+        GROUP BY
         CASE 
-            WHEN ItemStatus = 2 AND Active <> 0 THEN 'Preteklo'
-            WHEN (ItemStatus = 1 OR ItemStatus = 2) AND Active = 0 THEN 'Dokončano'
-            WHEN ItemStatus = 1 AND Active = 1 THEN 'Še ne dokončano'
+            WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
+            WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
+            WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
         END";
 
             var dataMonth3 = (await connection.QueryAsync(queryMonth3, new { StartDate3 = oneMonthAgo, EndDate3 = currentDate }))
@@ -174,13 +198,13 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("Procenti")]
         public async Task<ActionResult<Response<double>>> CompletedTasksPercentage()
         {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
 
             var currentDate = DateTime.Now;
             var lastMonthStartDate = currentDate.AddMonths(-1);
 
-            var completedCount = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) AS Count FROM Items WHERE (ItemStatus = 2 OR ItemStatus = 1) AND Active = 0 AND CreatedDate >= @StartDate AND CreatedDate <= @EndDate", new { StartDate = lastMonthStartDate, EndDate = currentDate });
-            var totalCount = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) AS Count FROM Items WHERE CreatedDate >= @StartDate AND CreatedDate <= @EndDate", new { StartDate = lastMonthStartDate, EndDate = currentDate });
+            var completedCount = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) AS Count FROM \"Items\" WHERE (\"ItemStatus\" = 2 OR \"ItemStatus\" = 1) AND \"Active\" = 0 AND \"CreatedDate\" >= @StartDate AND \"CreatedDate\" <= @EndDate", new { StartDate = lastMonthStartDate, EndDate = currentDate });
+            var totalCount = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) AS Count FROM \"Items\" WHERE \"CreatedDate\" >= @StartDate AND \"CreatedDate\" <= @EndDate", new { StartDate = lastMonthStartDate, EndDate = currentDate });
 
             double percentage = totalCount > 0 ? (completedCount / (double)totalCount) * 100 : 0;
 
@@ -199,9 +223,9 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("Top10List")]
         public async Task<ActionResult<Response<object>>> Top10ListOpravljenih()
         {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
 
-            const string query = @" SELECT TOP 10 * FROM Items WHERE TimeTakenSeconds != '0' AND Active = '0' ORDER BY TimeTakenSeconds";
+            const string query = @" SELECT * FROM ""Items"" WHERE ""TimeTakenSeconds"" != '0' AND ""Active"" = '0' ORDER BY ""TimeTakenSeconds"" LIMIT 10;";
 
             var data = await connection.QueryAsync<Items>(query);
 

@@ -122,19 +122,21 @@
                                 <i class="fa-solid fa-users"></i>
                             </button>
                             <ul class="menu-user-list" [ngClass]="{ 'isActive': isActive }">
-                                <span *ngFor="let auser of assignedUsers.data">
-                                    <li *ngIf="auser.tag === item.tag && auser.itemName === item.itemName">
-                                        <div class="columns">
-                                            <div class="column is-1">
-                                                <span class="icon">
-                                                    <i class="fa-solid fa-clipboard-user"></i>
-                                                </span>
+                                <span *ngIf="assignedUsers.data && assignedUsers.data.length > 0">
+                                    <span  *ngFor="let auser of assignedUsers.data">
+                                        <li *ngIf="auser.tag === item.tag && auser.itemName === item.itemName">
+                                            <div class="columns">
+                                                <div class="column is-1">
+                                                    <span class="icon">
+                                                        <i class="fa-solid fa-clipboard-user"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="column">
+                                                    <a (click)="navigateToUserDashboard(auser.userMail)"><b>{{auser.userMail}}</b></a>
+                                                </div>
                                             </div>
-                                            <div class="column">
-                                                <a (click)="navigateToUserDashboard(auser.userMail)"><b>{{auser.userMail}}</b></a>
-                                            </div>
-                                        </div>
-                                    </li>
+                                        </li>
+                                    </span>
                                 </span>
                             </ul>
                         </span>

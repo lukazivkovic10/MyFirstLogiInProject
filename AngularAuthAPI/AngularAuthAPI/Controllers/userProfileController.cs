@@ -4,6 +4,7 @@ using AngularAuthAPI.Models;
 using Microsoft.Data.SqlClient;
 using AngularAuthAPI.Dtos;
 using Microsoft.AspNetCore.Authorization;
+using Npgsql;
 
 namespace AngularAuthAPI.Controllers
 {
@@ -26,9 +27,9 @@ namespace AngularAuthAPI.Controllers
         public async Task<ActionResult<Response<object>>> GetUserAssignedItems(string email)
         {
             _logger.LogInformation("----userAssignedItems----");
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
 
-            var assignedItems = await connection.QueryAsync<AssignedUsers>("select * from AssignedUsers where UserMail = @email", new { email });
+            var assignedItems = await connection.QueryAsync<AssignedUsers>("select * from \"AssignedUsers\" where \"UserMail\" = @email", new { email });
             _logger.LogInformation("Assigned items: " + assignedItems);
 
             if (assignedItems == null || !assignedItems.Any())
@@ -48,11 +49,11 @@ namespace AngularAuthAPI.Controllers
             else
             {
                 //Uspesno
-                var itemNames = assignedItems.Select(item => item.ItemName);
-                var tags = assignedItems.Select(item => item.Tag);
+                var itemNames = assignedItems.Select(item => item.ItemName).ToArray();
+                var tags = assignedItems.Select(item => item.Tag).ToArray();
 
                 var matchingItems = await connection.QueryAsync<Items>(
-                "SELECT * FROM Items WHERE ItemName IN @itemNames AND Tag IN @tags",
+                "SELECT * FROM \"Items\" WHERE \"ItemName\" = ANY(@itemNames) AND \"Tag\" = ANY(@tags)",
                 new { itemNames, tags }
                 );
 
@@ -91,9 +92,9 @@ namespace AngularAuthAPI.Controllers
         public async Task<ActionResult<Response<object>>> GetUserCreatedItems(string email)
         {
             _logger.LogInformation("----userCreatedItems----");
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
 
-            var createdItems = await connection.QueryAsync<Items>("select * from Items where CreatedBy = @email", new { email });
+            var createdItems = await connection.QueryAsync<Items>("select * from \"Items\" where \"CreatedBy\" = @email", new { email });
             _logger.LogInformation("Created items: " + createdItems);
 
             if (createdItems == null || !createdItems.Any())
@@ -131,9 +132,9 @@ namespace AngularAuthAPI.Controllers
         public async Task<ActionResult<Response<object>>> GetUserDetails(string email)
         {
             _logger.LogInformation("----userDetails----");
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
 
-            var userId = await connection.QueryFirstOrDefaultAsync<int>("select id from Uporabniki where email = @email", new { email });
+            var userId = await connection.QueryFirstOrDefaultAsync<int>("select \"Id\" from \"uporabniki\" where \"Email\" = @email", new { email });
 
             if(userId == 0)
             {
@@ -150,7 +151,7 @@ namespace AngularAuthAPI.Controllers
                 return errorResponse;
             }else
             {
-                var userDetails = await connection.QueryFirstOrDefaultAsync<UserDto>("select * from Uporabniki where id = @Id", new { Id = userId });
+                var userDetails = await connection.QueryFirstOrDefaultAsync<UserDto>("select * from \"uporabniki\" where \"Id\" = @Id", new { Id = userId });
 
                 var successResponse = new Response<object>
                 {

@@ -23,6 +23,6 @@ namespace AngularAuthAPI.Models
         public string CreatedBy { get; set; }
         public string LastEditBy { get; set; }
         public string CompletedBy { get; set; }
-        public int ViewCount { get; set; }
+        public int? ViewCount { get; set; }
     }
 }

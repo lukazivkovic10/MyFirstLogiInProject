@@ -9,6 +9,7 @@ using System.Data.Common;
 using System.Data.SqlTypes;
 using System.Text.RegularExpressions;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Npgsql;
 
 namespace AngularAuthAPI.Services
 {
@@ -27,21 +28,22 @@ namespace AngularAuthAPI.Services
 
         public async Task ScheduleReactivationChecks()
         {
-            using (IDbConnection dbConnection = new SqlConnection(_connectionString))
+            using (IDbConnection dbConnection = new NpgsqlConnection(_connectionString))
             {
                 dbConnection.Open();
 
                 var todoItems = dbConnection.Query<dynamic>(
-                    "SELECT r.*, i.completeDate, i.DateOfCompletion, i.CreatedDate " +
-                    "FROM RepeatingItem r " +
-                    "INNER JOIN Items i ON r.Tag = i.Tag AND r.ItemName = i.ItemName " +
-                    "WHERE r.TypeOfReapeating IS NOT NULL OR r.TypeOfReapeating = '';").ToList();
+    @"SELECT r.*, i.""CompleteDate"", i.""DateOfCompletion"", i.""CreatedDate""
+      FROM ""RepeatingItem"" r
+      INNER JOIN ""Items"" i ON r.""Tag"" = i.""Tag"" AND r.""ItemName"" = i.""ItemName""
+      WHERE r.""TypeOfReapeating"" IS NOT NULL OR r.""TypeOfReapeating"" = '';").ToList();
+
 
                 foreach (var item in todoItems)
                 {
                     CalculateNextActivationDate(item);
 
-                    var itemsNextDate = dbConnection.Query<RepeatingItem>("SELECT NextActivationDate FROM RepeatingItem WHERE ItemName = @ItemName and Tag = @Tag", new { ItemName = item.ItemName, Tag = item.Tag });
+                    var itemsNextDate = dbConnection.Query<RepeatingItem>("SELECT \"NextActivationDate\" FROM \"RepeatingItem\" WHERE \"ItemName\" = @ItemName and \"Tag\" = @Tag", new { ItemName = item.ItemName, Tag = item.Tag });
 
                     foreach (var repeatingItem in itemsNextDate)
                     {
@@ -116,11 +118,11 @@ namespace AngularAuthAPI.Services
                     break;
             }
 
-            using (IDbConnection dbConnection = new SqlConnection(_connectionString))
+            using (IDbConnection dbConnection = new NpgsqlConnection(_connectionString))
             {
                 dbConnection.Open();
                 dbConnection.Execute(
-                    "UPDATE RepeatingItem SET NextActivationDate = @NextActivationDate WHERE Tag = @Tag AND ItemName = @ItemName",
+                    "UPDATE\"RepeatingItem\" SET \"NextActivationDate\" = @NextActivationDate WHERE \"Tag\" = @Tag AND \"ItemName\" = @ItemName",
                     new
                     {
                        ItemName = todoItem.ItemName,
@@ -194,7 +196,7 @@ namespace AngularAuthAPI.Services
 
         private void PerformReactivation(dynamic todoItem)
         {
-            using (IDbConnection dbConnection = new SqlConnection(_connectionString))
+            using (IDbConnection dbConnection = new NpgsqlConnection(_connectionString))
             {
                 dbConnection.Open();
 
@@ -206,7 +208,7 @@ namespace AngularAuthAPI.Services
 
                 // Update the database with the new item or reactivation information
                 dbConnection.Execute(
-                "UPDATE Items SET CreatedDate = @CreatedDate, CompleteDate = @CompleteDate WHERE ItemName = @ItemName AND Tag = @Tag",
+                "UPDATE \"Items\" SET \"CreatedDate\" = @CreatedDate, \"CompleteDate\" = @CompleteDate WHERE \"ItemName\" = @ItemName AND \"Tag\" = @Tag",
                     new
                     {
                         CreatedDate = todoItem.CreatedDate,

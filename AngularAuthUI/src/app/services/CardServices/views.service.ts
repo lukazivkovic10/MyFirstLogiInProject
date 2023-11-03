@@ -14,7 +14,7 @@ export class ViewsService {
   }
 
   registerView(details: any) {
-    return this.addTokenToRequest(`${this.baseUrl}register-view`,details);
+    return this.http.post<any>(`${this.baseUrl}register-view`,details, { headers: this.tokenService.getRequestHeaders() });
   }
   
   getViews(id: number) 

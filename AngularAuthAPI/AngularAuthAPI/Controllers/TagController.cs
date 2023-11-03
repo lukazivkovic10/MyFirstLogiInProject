@@ -3,6 +3,7 @@ using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Npgsql;
 
 namespace AngularAuthAPI.Controllers
 {
@@ -23,8 +24,8 @@ namespace AngularAuthAPI.Controllers
 
         public async Task<ActionResult<Response<object>>> GetAllTags()
         {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var exists = connection.ExecuteScalar<bool>("select * from Tags");
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            var exists = connection.ExecuteScalar<bool>("select * from \"Tags\"");
             ////Preveri
             if (exists == false)
             {
@@ -42,7 +43,7 @@ namespace AngularAuthAPI.Controllers
             else
             {
                 //Uspesno
-                var data = await connection.QueryAsync<Tags>("select * from Tags");
+                var data = await connection.QueryAsync<Tags>("select * from \"Tags\"");
                 var successResponse = new Response<object>
                 {
                     Success = true,
@@ -59,9 +60,9 @@ namespace AngularAuthAPI.Controllers
         [HttpPost("UstvarjanjeTag")]
         public async Task<ActionResult<Response<object>>> CreateTag(Tags tags)
         {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var exists = connection.ExecuteScalar<bool>("select count(1) from Tags where TagName = @TagName", new { tags.TagName });
-            if (exists == true)
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            var exists = connection.ExecuteScalar<bool>("select count(1) from \"Tags\" where \"TagName\" = @TagName", new { tags.TagName });
+            if (exists)
             {
                 //Error 400
                 var erorrResponse = new Response<object>
@@ -76,7 +77,7 @@ namespace AngularAuthAPI.Controllers
             }
             else
             {
-                var item = await connection.ExecuteAsync("if not exists (select * from Tags where TagName = @TagName) insert into Tags (TagName) values (@TagName)", tags);
+                var item = await connection.ExecuteAsync("INSERT INTO \"Tags\" (\"TagName\") VALUES (@TagName)", tags);
                 var successResponse = new Response<object>
                 {
                     Success = true,
@@ -93,11 +94,11 @@ namespace AngularAuthAPI.Controllers
 
         public async Task<ActionResult<Response<object>>> DeleteTag(Tags tags)
         {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var exists = connection.ExecuteScalar<bool>("select count(1) from Tags where TagName = @TagName", new { tags.TagName });
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            var exists = connection.ExecuteScalar<bool>("select count(1) from \"Tags\" where \"TagName\" = @TagName", new { tags.TagName });
             if (exists == true)
             {
-                await connection.ExecuteAsync("Delete from Tags where TagName = @TagName and TagId = @TagId", tags);
+                await connection.ExecuteAsync("Delete from \"Tags\" where \"TagName\" = @TagName and \"TagId\" = @TagId", tags);
                 var successResponse = new Response<object>
                 {
                     Success = true,

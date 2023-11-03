@@ -4,6 +4,7 @@ using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Npgsql;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace AngularAuthAPI.Controllers
@@ -24,7 +25,7 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("ViewsData/{id}")]
         public async Task<ActionResult<Response<object>>> GetViewsData(int id)
         {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
             await connection.OpenAsync();
 
             var currentDate = DateTime.Now;
@@ -37,7 +38,7 @@ namespace AngularAuthAPI.Controllers
                 var startDate = oneWeekAgo.AddDays(i);
                 var endDate = startDate.AddDays(1);
 
-                var query = @"Select count(*) as ViewCount From ViewTracking Where ViewedAt >= @StartDate AND ViewedAt < @EndDate AND TodoItemId = @TodoId;";
+                var query = @"Select count(*) as ""ViewCount"" From ""ViewTracking"" Where ""ViewedAt"" >= @StartDate AND ""ViewedAt"" < @EndDate AND ""TodoItemID"" = @TodoId;";
 
                 var param = new { StartDate = startDate, EndDate = endDate, TodoId = id };
 
@@ -61,10 +62,10 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("ViewsData/UserList/{id}")]
         public async Task<ActionResult<Response<object>>> GetUserList(int id)
         {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
             await connection.OpenAsync();
 
-            var query = @"Select count(*) from ViewTracking where TodoItemId = @TodoId;";
+            var query = @"Select count(*) from ""ViewTracking"" where ""TodoItemID"" = @TodoId;";
 
             var param = new { TodoId = id };
 
@@ -75,10 +76,10 @@ namespace AngularAuthAPI.Controllers
             if (exists > 0)
             {
                 var dataQuery = @"
-            SELECT VT.ViewedAt, VT.UserId, U.Email
-            FROM ViewTracking VT
-            INNER JOIN uporabniki U ON VT.UserId = U.Id
-            WHERE VT.TodoItemId = @TodoId";
+            SELECT VT.""ViewedAt"", VT.""UserID"", U.""Email""
+            FROM ""ViewTracking"" VT
+            INNER JOIN ""uporabniki"" U ON VT.""UserID"" = U.""Id""
+            WHERE VT.""TodoItemID"" = @TodoId";
 
                 _logger.LogInformation($"Retrieved data for TodoItemId {id}");
 

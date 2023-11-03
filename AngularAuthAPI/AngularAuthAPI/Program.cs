@@ -7,6 +7,9 @@ using Microsoft.Extensions.FileProviders;
 using AngularAuthAPI.HubConfig;
 using AngularAuthAPI.Services;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
+using AngularAuthAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,27 +21,13 @@ builder.Services.AddLogging();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddCors(option =>
-{
-    option.AddPolicy("CorsPolicy", builder =>
-    {
-        builder.WithOrigins("http://localhost:4200") // Add your Angular app's origin here
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials();
-    });
-});
-
-builder.Services.AddDbContext<AppDbContext>(option =>
-{
-    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
+builder.Services.AppApplicationServices(builder.Configuration);
 
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(x=>
+}).AddJwtBearer(x =>
 {
     x.RequireHttpsMetadata = false;
     x.SaveToken = true;

@@ -5,6 +5,7 @@ using Dapper;
 using AngularAuthAPI.Dtos;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
+using Npgsql;
 
 namespace AngularAuthAPI.Controllers
 {
@@ -24,12 +25,12 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("opravilo/{id}")]
         public async Task<ActionResult<Response<object>>> GetTodoById(int id)
         {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var exists = connection.ExecuteScalar<bool>("select * from Items where id=@id", new {id});
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            var exists = connection.ExecuteScalar<bool>("SELECT EXISTS(SELECT 1 FROM \"Items\" WHERE \"Id\" = @id)", new {id});
             if(exists == true) 
             {
                 //Uspesno
-                var data = await connection.QueryAsync<Items>("select * from Items where id=@id", new { id });
+                var data = await connection.QueryAsync<Items>("SELECT * FROM \"Items\" WHERE \"Id\" = @id;", new { id });
                 var successResponse = new Response<object>
                 {
                     Success = true,
@@ -59,17 +60,14 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("IskanjeListaVseh")]
         public async Task<ActionResult<Response<object>>> GetAllItems(int page = 1, int pageSize = 10)
         {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
 
             var items = await connection.QueryAsync<Items>(
-                @"SELECT * FROM Items
-                ORDER BY Tag
-                OFFSET @Offset ROWS
-                FETCH NEXT @PageSize ROWS ONLY",
+                @"SELECT * FROM ""Items"" ORDER BY ""Tag"" OFFSET @Offset LIMIT @PageSize",
                 new { Offset = (page - 1) * pageSize, PageSize = pageSize });
 
             // Get total number of items
-            var totalItems = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Items");
+            var totalItems = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM \"Items\"");
 
             // Check if items exist
             if (items == null || !items.Any())
@@ -94,13 +92,13 @@ namespace AngularAuthAPI.Controllers
                     if (currentDate > item.CompleteDate)
                     {
                         await connection.ExecuteAsync(
-                            "UPDATE Items SET ItemStatus = @Status WHERE Id = @Id",
+                            "UPDATE \"Items\" SET \"ItemStatus\" = @Status WHERE \"Id\" = @Id",
                             new { Status = 2, Id = item.Id });
                     }
                     else if (currentDate < item.CompleteDate)
                     {
                         await connection.ExecuteAsync(
-                            "UPDATE Items SET ItemStatus = @Status WHERE Id = @Id",
+                            "UPDATE \"Items\" SET \"ItemStatus\" = @Status WHERE \"Id\" = @Id",
                             new { Status = 1, Id = item.Id });
                     }
                 }
@@ -120,8 +118,8 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("PrikazOpravljenih")]
         public async Task<ActionResult<Response<object>>> GetAllDoneItems()
         {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var exists = connection.ExecuteScalar<bool>("select * from Items where Active = '0' and ItemStatus = '1'");
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            var exists = connection.ExecuteScalar<bool>("select * from \"Items\" where \"Active\" = '0' and \"ItemStatus\" = '1'");
             ////Preveri
             if (exists == false)
             {
@@ -139,7 +137,7 @@ namespace AngularAuthAPI.Controllers
             else
             {
                 //Uspesno
-                var data = await connection.QueryAsync<Items>("select * from Items where Active = '0' and ItemStatus = '1'");
+                var data = await connection.QueryAsync<Items>("select * from \"Items\" where \"Active\" = '0' and \"ItemStatus\" = '1'");
                 var successResponse = new Response<object>
                 {
                     Success = true,
@@ -155,12 +153,12 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("IskanjeLista/{SearchedItem}")]
         public async Task<ActionResult<Response<object>>> GetItems(string SearchedItem)
         {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var existsWithTag = connection.ExecuteScalar<bool>("select count(1) from Items where Tag = @SearchedItem", new { SearchedItem });
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            var existsWithTag = connection.ExecuteScalar<bool>("select count(1) from \"Items\" where \"Tag\" = @SearchedItem", new { SearchedItem });
 
             if (existsWithTag)
             {
-                var data = await connection.QueryAsync<Items>("select * from Items where Tag = @SearchedItem", new { SearchedItem });
+                var data = await connection.QueryAsync<Items>("select * from \"Items\" where \"Tag\" = @SearchedItem", new { SearchedItem });
                 var successResponse = new Response<object>
                 {
                     Success = true,
@@ -173,11 +171,11 @@ namespace AngularAuthAPI.Controllers
             }
             else
             {
-                var existsWithItemName = connection.ExecuteScalar<bool>("select count(1) from Items where ItemName = @SearchedItem", new { SearchedItem });
+                var existsWithItemName = connection.ExecuteScalar<bool>("select count(1) from \"Items\" where \"ItemName\" = @SearchedItem", new { SearchedItem });
 
                 if (existsWithItemName)
                 {
-                    var data = await connection.QueryAsync<Items>("select * from Items where ItemName = @SearchedItem", new { SearchedItem });
+                    var data = await connection.QueryAsync<Items>("select * from \"Items\" where \"ItemName\" = @SearchedItem", new { SearchedItem });
                     var successResponse = new Response<object>
                     {
                         Success = true,
@@ -207,8 +205,8 @@ namespace AngularAuthAPI.Controllers
         [HttpPut("Update")]
         public async Task<ActionResult<Response<object>>> UpdateItem([FromBody] ListItemDto ItemDto)
         {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var exists = connection.ExecuteScalar<bool>("select count(1) from Items where ItemName = @ItemName and Tag = @Tag", new { ItemDto.ItemName, ItemDto.Tag });
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            var exists = connection.ExecuteScalar<bool>("select count(1) from \"Items\" where \"ItemName\" = @ItemName and \"Tag\" = @Tag", new { ItemDto.ItemName, ItemDto.Tag });
             ////Preveri
             if (exists == false)
             {
@@ -224,8 +222,8 @@ namespace AngularAuthAPI.Controllers
             }
             else
             {
-                await connection.ExecuteAsync("update Items set ItemName = @ItemName, ItemDesc = @ItemDesc, CompleteDate = @CompleteDate, LastEditBy = @LastEditBy where Tag = @Tag and ItemName = @ItemName", ItemDto);
-                var data = await connection.ExecuteAsync("Select * from items where Tag = @Tag and ItemName = @ItemName", ItemDto);
+                await connection.ExecuteAsync("update \"Items\" set \"ItemName\" = @ItemName, \"ItemDesc\" = @ItemDesc, \"CompleteDate\" = @CompleteDate, \"LastEditBy\" = @LastEditBy where \"Tag\" = @Tag and \"ItemName\" = @ItemName", ItemDto);
+                var data = await connection.ExecuteAsync("Select * from \"Items\" where \"Tag\" = @Tag and \"ItemName\" = @ItemName", ItemDto);
                 var successResponse = new Response<object>
                 {
                     Success = true,
@@ -241,8 +239,8 @@ namespace AngularAuthAPI.Controllers
         [HttpPut("Opravljeno")]
         public async Task<ActionResult<Response<object>>> DoneItem([FromBody] ListItemDataDto ItemDataDto)
         {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var exists = await connection.ExecuteScalarAsync<bool>("select count(1) from Items where ItemName = @ItemName and Tag = @Tag", new { ItemDataDto.ItemName, ItemDataDto.Tag });
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            var exists = await connection.ExecuteScalarAsync<bool>("select count(1) from \"Items\" where \"ItemName\" = @ItemName and \"Tag\" = @Tag", new { ItemDataDto.ItemName, ItemDataDto.Tag });
 
 
             if (!exists)
@@ -262,12 +260,12 @@ namespace AngularAuthAPI.Controllers
             {
 
                 // Calculate and store TimeTakenSeconds
-                var currentItem = await connection.QuerySingleOrDefaultAsync<Items>("select * from Items where ItemName = @ItemName and Tag = @Tag", new { ItemDataDto.ItemName, ItemDataDto.Tag });
+                var currentItem = await connection.QuerySingleOrDefaultAsync<Items>("select * from \"Items\" where \"ItemName\" = @ItemName and \"Tag\" = @Tag", new { ItemDataDto.ItemName, ItemDataDto.Tag });
 
                 var TimeTakenSeconds = (int)(currentItem.DateOfCompletion - currentItem.CreatedDate).TotalSeconds;
 
                 // Update the Active status, DateOfCompletion, and TimeTakenSeconds
-                await connection.ExecuteAsync("update Items SET TimeTakenSeconds = @TimeTakenSeconds, Active = '0', DateOfCompletion = @CurrentDate, CompletedBy = @CompletedBy where ItemName = @ItemName and Tag = @Tag",new { ItemDataDto.ItemName, ItemDataDto.Tag, CurrentDate = DateTime.Now, TimeTakenSeconds, ItemDataDto.CompletedBy });
+                await connection.ExecuteAsync("update \"Items\" SET \"TimeTakenSeconds\" = @TimeTakenSeconds, \"Active\" = '0', \"DateOfCompletion\" = @CurrentDate, \"CompletedBy\" = @CompletedBy where \"ItemName\" = @ItemName and \"Tag\" = @Tag", new { ItemDataDto.ItemName, ItemDataDto.Tag, CurrentDate = DateTime.Now, TimeTakenSeconds, ItemDataDto.CompletedBy });
 
                 _logger.LogInformation($"TimeTakenSeconds: " + TimeTakenSeconds);
                 var Response = new Response<object>
@@ -286,8 +284,8 @@ namespace AngularAuthAPI.Controllers
 
         public async Task<ActionResult<Response<object>>> NotDoneItem([FromBody] ListItemDataDto ItemDto)
         {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var exists = connection.ExecuteScalar<bool>("select count(1) from Items where ItemName = @ItemName and Tag = @Tag", new { ItemDto.ItemName, ItemDto.Tag });
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            var exists = connection.ExecuteScalar<bool>("select count(1) from \"Items\" where \"ItemName\" = @ItemName and \"Tag\" = @Tag", new { ItemDto.ItemName, ItemDto.Tag });
             ////Preveri
             if (exists == false)
             {
@@ -304,7 +302,7 @@ namespace AngularAuthAPI.Controllers
             }
             else
             {
-                await connection.ExecuteAsync("update Items set Active = '1' where ItemName = @ItemName and Tag = @Tag", ItemDto);
+                await connection.ExecuteAsync("update \"Items\" set \"Active\" = '1' where \"ItemName\" = @ItemName and \"Tag\" = @Tag", ItemDto);
                 IEnumerable<Items> data = await SelectAllItems(connection);
                 var successResponse = new Response<object>
                 {
@@ -321,8 +319,8 @@ namespace AngularAuthAPI.Controllers
         [HttpPost("Ustvarjanje")]
         public async Task<ActionResult<Response<object>>> CreateItem([FromBody] ListItemCreate ItemDto)
         {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var exists = connection.ExecuteScalar<bool>("SELECT COUNT(1) FROM Items WHERE ItemName = @ItemName AND Tag = @Tag", new { ItemDto.ItemName, ItemDto.Tag });
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            var exists = connection.ExecuteScalar<bool>("SELECT COUNT(1) FROM \"Items\" WHERE \"ItemName\" = @ItemName AND \"Tag\" = @Tag", new { ItemDto.ItemName, ItemDto.Tag });
 
             if (exists)
             {
@@ -343,7 +341,7 @@ namespace AngularAuthAPI.Controllers
                 string folderPath = $"/uploads/todo_{ItemDto.Tag.Replace(" ", "_")}_{ItemDto.ItemName.Replace(" ", "_")}/";
 
                 // Insert the new to-do item into the database with the generated folder_path
-                await connection.ExecuteAsync("INSERT INTO Items (Tag, ItemName, ItemDesc, Active, ItemStatus, CreatedDate, CompleteDate, folderPath, ItemRepeating, CreatedBy) " +
+                await connection.ExecuteAsync("INSERT INTO \"Items\" (\"Tag\", \"ItemName\", \"ItemDesc\", \"Active\", \"ItemStatus\", \"CreatedDate\", \"CompleteDate\", \"folderPath\", \"ItemRepeating\", \"CreatedBy\") " +
                                               "VALUES (@Tag, @ItemName, @ItemDesc, @Active, @ItemStatus, @CreatedDate, @CompleteDate, @folderPath, @ItemRepeating, @CreatedBy)",
                                               new
                                               {
@@ -358,11 +356,11 @@ namespace AngularAuthAPI.Controllers
                                                   ItemDto.ItemRepeating,
                                                   ItemDto.CreatedBy
                                               });
-                _logger.LogInformation($"Inserts items" + ItemDto.CompleteDate);
+                _logger.LogInformation($"Inserts \"items\"" + ItemDto.CompleteDate);
                 if(!string.IsNullOrEmpty(ItemDto.ItemRepeating))
                 {
                     _logger.LogInformation($"ItemDto.ItemRepeating != null || ItemDto.ItemRepeating !=");
-                    await connection.ExecuteAsync("INSERT INTO RepeatingItem (TypeOfReapeating, Tag, ItemName) VALUES (@ItemRepeating, @Tag, @ItemNamE)",
+                    await connection.ExecuteAsync("INSERT INTO \"RepeatingItem\" (\"TypeOfReapeating\", \"Tag\", \"ItemName\") VALUES (@ItemRepeating, @Tag, @ItemNamE)",
                                               new
                                               {
                                                   ItemDto.Tag,
@@ -387,11 +385,11 @@ namespace AngularAuthAPI.Controllers
         [HttpDelete("SoftDelete{ItemName}")]
         public async Task<ActionResult<Response<object>>> SoftDeleteItem(string ItemName)
         {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            var exists = connection.ExecuteScalar<bool>("select count(1) from Items where ItemName = @ItemName", new { ItemName });
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            var exists = connection.ExecuteScalar<bool>("select count(1) from \"Items\" where \"ItemName\" = @ItemName", new { ItemName });
             if (exists == true)
             {
-                await connection.ExecuteAsync("update Items set ItemStatus = '0' where ItemName = @ItemName",
+                await connection.ExecuteAsync("update \"Items\" set \"ItemStatus\" = '0' where \"ItemName\" = @ItemName",
                 new { ItemName = ItemName });
                 IEnumerable<Items> data = await SelectAllItems(connection);
                 var successResponse = new Response<object>
@@ -419,14 +417,14 @@ namespace AngularAuthAPI.Controllers
             }
         }
 
-        private void PosodobiStatus(SqlConnection connection, int itemId, int itemStatus)
+        private void PosodobiStatus(NpgsqlConnection connection, int itemId, int itemStatus)
         {
-            string query = "UPDATE Items SET ItemStatus = @itemStatus WHERE Id = @itemId AND ItemStatus <> 0";
+            string query = "UPDATE \"Items\" SET \"ItemStatus\" = @itemStatus WHERE \"Id\" = @itemId AND \"ItemStatus\" <> 0";
             connection.Execute(query, new { itemStatus, itemId });
         }
-        private static async Task<IEnumerable<Items>> SelectAllItems(SqlConnection connection)
+        private static async Task<IEnumerable<Items>> SelectAllItems(NpgsqlConnection connection)
         {
-            return await connection.QueryAsync<Items>("select * from Items order by Tag");
+            return await connection.QueryAsync<Items>("select * from \"Items\" order by \"Tag\"");
         }
 
     }

@@ -3,6 +3,7 @@ using AngularAuthAPI.Models;
 using Dapper;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Data.SqlClient;
+using Npgsql;
 using ntfy;
 using ntfy.Actions;
 using ntfy.Requests;
@@ -26,14 +27,14 @@ namespace AngularAuthAPI.Services
         {
             try
             {
-                using (var connection = new SqlConnection(_connectionString))
+                using (var connection = new NpgsqlConnection(_connectionString))
                 {
                     connection.Open();
                     var currentDate = DateTime.Now;
 
                     // Query due reminders using Dapper
                     var dueReminders = connection.Query<Reminder>(
-                        "SELECT * FROM Reminder WHERE ReminderDate <= @CurrentDate AND ReminderSent = 0",
+                        "SELECT * FROM \"Reminder\" WHERE \"ReminderDate\" <= @CurrentDate AND \"ReminderSent\" = false",
                         new { CurrentDate = currentDate })
                         .ToList();
 
@@ -52,7 +53,7 @@ namespace AngularAuthAPI.Services
 
                             // Mark the reminder as sent in the database
                             connection.Execute(
-                                "UPDATE Reminder SET ReminderSent = 1 WHERE Id = @Id",
+                                "UPDATE \"Reminder\" SET \"ReminderSent\" = true WHERE \"Id\" = @Id",
                                 new { Id = reminder.Id });
                             _logger.LogInformation($"Reminder sent for '{reminder.ItemName}'");
                         }

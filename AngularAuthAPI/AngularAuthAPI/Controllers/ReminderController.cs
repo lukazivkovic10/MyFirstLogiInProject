@@ -5,6 +5,7 @@ using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Npgsql;
 
 namespace AngularAuthAPI.Controllers
 {
@@ -25,11 +26,11 @@ namespace AngularAuthAPI.Controllers
         [HttpPost("UstvariReminder")]
         public async Task<ActionResult<Response<object>>> CreateReminder([FromBody] ReminderDto reminderDto)
         {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
 
             _logger.LogInformation($"UstvariReminder");
 
-            var exists = connection.ExecuteScalar<bool>("SELECT COUNT(1) FROM Reminder WHERE ItemName = @ItemName AND Tag = @Tag", new { reminderDto.ItemName, reminderDto.Tag });
+            var exists = connection.ExecuteScalar<bool>("SELECT COUNT(1) FROM \"Reminder\" WHERE \"ItemName\" = @ItemName AND \"Tag\" = @Tag", new { reminderDto.ItemName, reminderDto.Tag });
 
             if(exists) 
             {
@@ -53,7 +54,7 @@ namespace AngularAuthAPI.Controllers
                 var ReminderDescription = "Opravilo " + reminderDto.ItemName + " bo poteklo čez 24ur.";
 
 
-                var query = "INSERT INTO Reminder (Tag, ItemName, completeDate, ReminderDate, ReminderSent) VALUES (@Tag, @ItemName, @completeDate, @ReminderDate, 0)";
+                var query = "INSERT INTO \"Reminder\" (\"Tag\", \"ItemName\", \"completeDate\", \"ReminderDate\", \"ReminderSent\") VALUES (@Tag, @ItemName, @completeDate, @ReminderDate, 0)";
 
                 await connection.ExecuteAsync(query, new
                 {

@@ -147,17 +147,14 @@ if (iconMap.hasOwnProperty(fileExtension)) {
     replaceUrl: true // This will replace the current URL in the browser's history
   };
 
-  this.router.navigate(['/dashboard', email], navigationExtras).then(() => {
+  this.router.navigate(['/dashboard', email, 'profile'], navigationExtras).then(() => {
     location.reload();
   });
 }
-verification()
-{
-  if(this.item.createdBy === this.jwtService.userEmail())
-  {
+verification() {
+  if (this.item.createdBy === this.jwtService.userEmail()) {
     return true;
-  }else
-  {
+  } else {
     return false;
   }
 }

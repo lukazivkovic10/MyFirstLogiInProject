@@ -7,10 +7,10 @@ using System.Net.Mime;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.AspNetCore.Authorization;
+using Npgsql;
 
 namespace AngularAuthAPI.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class FileUploadController : ControllerBase
@@ -71,7 +71,7 @@ namespace AngularAuthAPI.Controllers
                         }
 
                         // Insert file information into the database using Dapper
-                        using (var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+                        using (var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection")))
                         {
                             connection.Open();
 
@@ -84,7 +84,7 @@ namespace AngularAuthAPI.Controllers
                                 Tag = Tag.ToString()
                             };
 
-                            var sql = "INSERT INTO FileUpload (FileName, FilePath, FileSize, Tag, ItemName) VALUES (@FileName, @FilePath, @FileSize, @Tag, @ItemName);";
+                            var sql = "INSERT INTO \"FileUpload\" (\"FileName\", \"FilePath\", \"FileSize\", \"Tag\", \"ItemName\") VALUES (@FileName, @FilePath, @FileSize, @Tag, @ItemName);";
                             connection.Execute(sql, fileUpload);
 
                         }
@@ -109,7 +109,7 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("GetAllFiles")]
         public async Task<ActionResult<Response<object>>> GetAllFiles()
         {
-            using var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
             IEnumerable<FileUpload> files = await SelectAllFiles(connection);
 
              if (files == null)
@@ -128,7 +128,7 @@ namespace AngularAuthAPI.Controllers
             else
             {
                 //Uspesno
-                var data = await connection.QueryAsync<FileUpload>("select * from FileUpload");
+                var data = await connection.QueryAsync<FileUpload>("select * from \"FileUpload\"");
                 var successResponse = new Response<object>
                 {
                     Success = true,
@@ -141,20 +141,20 @@ namespace AngularAuthAPI.Controllers
             }
         }
 
-        private static async Task<IEnumerable<FileUpload>> SelectAllFiles(SqlConnection connection)
+        private static async Task<IEnumerable<FileUpload>> SelectAllFiles(NpgsqlConnection connection)
         {
-            return await connection.QueryAsync<FileUpload>("select * from FileUpload");
+            return await connection.QueryAsync<FileUpload>("select * from \"FileUpload\"");
         }
 
         [HttpGet("DownloadFile/{id}")]
         public IActionResult DownloadFile(int id)
         {
-            using (var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+            using (var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
                 connection.Open();
 
                 // Retrieve the file information based on the ID
-                var file = connection.QueryFirstOrDefault<FileUpload>("SELECT FileName, FilePath FROM FileUpload WHERE Id = @Id", new { Id = id });
+                var file = connection.QueryFirstOrDefault<FileUpload>("SELECT \"FileName\", \"FilePath\" FROM \"FileUpload\" WHERE \"Id\" = @Id", new { Id = id });
 
                 if (file == null)
                 {

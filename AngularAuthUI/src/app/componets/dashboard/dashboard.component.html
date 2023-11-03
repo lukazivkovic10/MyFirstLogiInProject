@@ -67,7 +67,7 @@
                     </div>
     
                     <!--Show create todo modal-->
-                    <app-model-content *ngIf="showModalCreate" (close)="modelCloseCreate()"></app-model-content>
+                    <app-model-content *ngIf="showModalCreate === true" (close)="modelCloseCreate()"></app-model-content>
     
                     <!--Show create tag modal-->
                     <app-model-tags *ngIf="showModalTags" (close)="modelCloseTags()"></app-model-tags>

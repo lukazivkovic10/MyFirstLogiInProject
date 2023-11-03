@@ -10,8 +10,10 @@ import { FileDownloadComponent } from './componets/dashboard/file-download/file-
 import { authloginGuard } from './guards/authlogin.guard';
 import { UserDashboardComponent } from './componets/user-dashboard/user-dashboard.component';
 import { UserSettingsComponent } from './componets/user-dashboard/user-settings/user-settings.component';
-import { ViewGraphComponent } from './componets/dashboard/todo-card/analytics-modal/view-graph/view-graph.component';
 import { AnalyticsModalComponent } from './componets/dashboard/todo-card/analytics-modal/analytics-modal.component';
+import { ModelContentComponent } from './componets/dashboard/models/model-content/model-content.component';
+import { ModelTagsComponent } from './componets/dashboard/models/model-tags/model-tags.component';
+import { CardModalComponent } from './componets/dashboard/todo-card/card-modal/card-modal.component';
 
 const routes: Routes = [
   {path:'login', canActivate: [authGuard], component: LoginComponent},
@@ -25,6 +27,9 @@ const routes: Routes = [
   {path: 'home', component: HomeComponent},
   {path: 'filedownload', component: FileDownloadComponent },
   {path: 'analytics/:id', component: AnalyticsModalComponent},
+  {path: 'create', component: ModelContentComponent},
+  {path: 'createTag', component: ModelTagsComponent},
+  {path: 'viewTodo', component: CardModalComponent}
 ];
 
 @NgModule({
