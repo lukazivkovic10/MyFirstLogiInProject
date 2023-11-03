@@ -1,4 +1,5 @@
 ﻿using AngularAuthAPI.Context;
+using AngularAuthAPI.Controllers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -8,7 +9,7 @@ namespace AngularAuthAPI.Extensions
 {
     public static class ApplicationServiceExtensions
     {
-        public static IServiceCollection AppApplicationServices(this IServiceCollection services, IConfiguration config) 
+        public static IServiceCollection AppApplicationServices(this IServiceCollection services, IConfiguration config, ILogger logger)
         {
             services.AddCors(option =>
             {
@@ -38,6 +39,7 @@ namespace AngularAuthAPI.Extensions
                 {
                     // Use connection string provided at runtime by Heroku.
                     var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+                    logger.LogInformation("DATABASE_URL");
 
                     // Parse connection URL to connection string for Npgsql
                     connUrl = connUrl.Replace("postgres://", string.Empty);
@@ -49,6 +51,8 @@ namespace AngularAuthAPI.Extensions
                     var pgPass = pgUserPass.Split(":")[1];
                     var pgHost = pgHostPort.Split(":")[0];
                     var pgPort = pgHostPort.Split(":")[1];
+
+                    logger.LogInformation(connUrl);
 
                     connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};SSL Mode=Require;TrustServerCertificate=True";
                 }
