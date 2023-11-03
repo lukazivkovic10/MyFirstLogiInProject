@@ -4,6 +4,8 @@ using Microsoft.Data.SqlClient;
 using Dapper;
 using System.Data;
 using Npgsql;
+using AngularAuthAPI.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace AngularAuthAPI.Controllers
 {
@@ -11,10 +13,10 @@ namespace AngularAuthAPI.Controllers
     [ApiController]
     public class GraphController : ControllerBase
     {
-        private readonly IConfiguration _config;
+        private readonly AppDbContext _config;
         private readonly ILogger<FileUploadController> _logger;
 
-        public GraphController(IConfiguration configuration, ILogger<FileUploadController> logger)
+        public GraphController(AppDbContext configuration, ILogger<FileUploadController> logger)
         {
             _config = configuration;
             _logger = logger;
@@ -23,7 +25,7 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("ŠtVsehOpravil")]
         public async Task<ActionResult<Response<object>>> ŠtVsehOpravil()
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
 
             var query = @"SELECT CASE
                   WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
@@ -64,7 +66,7 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("GraphOpravila")]
         public async Task<ActionResult<Response<object>>> GraphOpravila()
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
 
             var currentDate = DateTime.Now;
             var threeMonthsAgo = currentDate.AddMonths(-3);
@@ -198,7 +200,7 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("Procenti")]
         public async Task<ActionResult<Response<double>>> CompletedTasksPercentage()
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
 
             var currentDate = DateTime.Now;
             var lastMonthStartDate = currentDate.AddMonths(-1);
@@ -223,7 +225,7 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("Top10List")]
         public async Task<ActionResult<Response<object>>> Top10ListOpravljenih()
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
 
             const string query = @" SELECT * FROM ""Items"" WHERE ""TimeTakenSeconds"" != '0' AND ""Active"" = '0' ORDER BY ""TimeTakenSeconds"" LIMIT 10;";
 

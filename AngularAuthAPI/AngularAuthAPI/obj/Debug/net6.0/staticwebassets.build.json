@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "mOqzKGSAOSVoKhVdcfKXZ3DrmN+MX8lvZcra8kxy9vc=",
+  "Hash": "sc4+hqtzgYqjxBAVLyN36ZwXL1ksfUdDfURPjaXICX4=",
   "Source": "AngularAuthAPI",
   "BasePath": "_content/AngularAuthAPI",
   "Mode": "Default",
@@ -102,12 +102,12 @@
       "OriginalItemSpec": "wwwroot\\index.html"
     },
     {
-      "Identity": "C:\\Users\\Luka\\MyFirstLogiInProject\\AngularAuthAPI\\AngularAuthAPI\\wwwroot\\main.c1118476873fda7b.js",
+      "Identity": "C:\\Users\\Luka\\MyFirstLogiInProject\\AngularAuthAPI\\AngularAuthAPI\\wwwroot\\main.ef2feffcd89a7500.js",
       "SourceId": "AngularAuthAPI",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\Luka\\MyFirstLogiInProject\\AngularAuthAPI\\AngularAuthAPI\\wwwroot\\",
       "BasePath": "_content/AngularAuthAPI",
-      "RelativePath": "main.c1118476873fda7b.js",
+      "RelativePath": "main.ef2feffcd89a7500.js",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -116,7 +116,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\main.c1118476873fda7b.js"
+      "OriginalItemSpec": "wwwroot\\main.ef2feffcd89a7500.js"
     },
     {
       "Identity": "C:\\Users\\Luka\\MyFirstLogiInProject\\AngularAuthAPI\\AngularAuthAPI\\wwwroot\\polyfills.15ee355b850ec936.js",

@@ -5,6 +5,8 @@ using Microsoft.Data.SqlClient;
 using AngularAuthAPI.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Npgsql;
+using AngularAuthAPI.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace AngularAuthAPI.Controllers
 {
@@ -13,10 +15,10 @@ namespace AngularAuthAPI.Controllers
     [ApiController]
     public class userProfileController : ControllerBase
     {
-        private readonly IConfiguration _config;
+        private readonly AppDbContext _config;
         private readonly ILogger<userProfileController> _logger;
 
-        public userProfileController(IConfiguration configuration, ILogger<userProfileController> logger)
+        public userProfileController(AppDbContext configuration, ILogger<userProfileController> logger)
         {
             _config = configuration;
             _logger = logger;
@@ -27,7 +29,7 @@ namespace AngularAuthAPI.Controllers
         public async Task<ActionResult<Response<object>>> GetUserAssignedItems(string email)
         {
             _logger.LogInformation("----userAssignedItems----");
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
 
             var assignedItems = await connection.QueryAsync<AssignedUsers>("select * from \"AssignedUsers\" where \"UserMail\" = @email", new { email });
             _logger.LogInformation("Assigned items: " + assignedItems);
@@ -92,7 +94,7 @@ namespace AngularAuthAPI.Controllers
         public async Task<ActionResult<Response<object>>> GetUserCreatedItems(string email)
         {
             _logger.LogInformation("----userCreatedItems----");
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
 
             var createdItems = await connection.QueryAsync<Items>("select * from \"Items\" where \"CreatedBy\" = @email", new { email });
             _logger.LogInformation("Created items: " + createdItems);
@@ -132,7 +134,7 @@ namespace AngularAuthAPI.Controllers
         public async Task<ActionResult<Response<object>>> GetUserDetails(string email)
         {
             _logger.LogInformation("----userDetails----");
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
 
             var userId = await connection.QueryFirstOrDefaultAsync<int>("select \"Id\" from \"uporabniki\" where \"Email\" = @email", new { email });
 

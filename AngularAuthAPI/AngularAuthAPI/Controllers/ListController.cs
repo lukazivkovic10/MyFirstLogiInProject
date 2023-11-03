@@ -6,6 +6,8 @@ using AngularAuthAPI.Dtos;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using Npgsql;
+using AngularAuthAPI.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace AngularAuthAPI.Controllers
 {
@@ -14,9 +16,9 @@ namespace AngularAuthAPI.Controllers
     [ApiController]
     public class ListController : ControllerBase
     {
-        private readonly IConfiguration _config;
+        private readonly AppDbContext _config;
         private readonly ILogger<ListController> _logger;
-        public ListController(IConfiguration configuration, ILogger<ListController> logger)
+        public ListController(AppDbContext configuration, ILogger<ListController> logger)
         {
             _config = configuration;
             _logger = logger;
@@ -25,7 +27,7 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("opravilo/{id}")]
         public async Task<ActionResult<Response<object>>> GetTodoById(int id)
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
             var exists = connection.ExecuteScalar<bool>("SELECT EXISTS(SELECT 1 FROM \"Items\" WHERE \"Id\" = @id)", new {id});
             if(exists == true) 
             {
@@ -60,7 +62,7 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("IskanjeListaVseh")]
         public async Task<ActionResult<Response<object>>> GetAllItems(int page = 1, int pageSize = 10)
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
 
             var items = await connection.QueryAsync<Items>(
                 @"SELECT * FROM ""Items"" ORDER BY ""Tag"" OFFSET @Offset LIMIT @PageSize",
@@ -118,7 +120,7 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("PrikazOpravljenih")]
         public async Task<ActionResult<Response<object>>> GetAllDoneItems()
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
             var exists = connection.ExecuteScalar<bool>("select * from \"Items\" where \"Active\" = '0' and \"ItemStatus\" = '1'");
             ////Preveri
             if (exists == false)
@@ -153,7 +155,7 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("IskanjeLista/{SearchedItem}")]
         public async Task<ActionResult<Response<object>>> GetItems(string SearchedItem)
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
             var existsWithTag = connection.ExecuteScalar<bool>("select count(1) from \"Items\" where \"Tag\" = @SearchedItem", new { SearchedItem });
 
             if (existsWithTag)
@@ -205,7 +207,7 @@ namespace AngularAuthAPI.Controllers
         [HttpPut("Update")]
         public async Task<ActionResult<Response<object>>> UpdateItem([FromBody] ListItemDto ItemDto)
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
             var exists = connection.ExecuteScalar<bool>("select count(1) from \"Items\" where \"ItemName\" = @ItemName and \"Tag\" = @Tag", new { ItemDto.ItemName, ItemDto.Tag });
             ////Preveri
             if (exists == false)
@@ -239,7 +241,7 @@ namespace AngularAuthAPI.Controllers
         [HttpPut("Opravljeno")]
         public async Task<ActionResult<Response<object>>> DoneItem([FromBody] ListItemDataDto ItemDataDto)
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
             var exists = await connection.ExecuteScalarAsync<bool>("select count(1) from \"Items\" where \"ItemName\" = @ItemName and \"Tag\" = @Tag", new { ItemDataDto.ItemName, ItemDataDto.Tag });
 
 
@@ -284,7 +286,7 @@ namespace AngularAuthAPI.Controllers
 
         public async Task<ActionResult<Response<object>>> NotDoneItem([FromBody] ListItemDataDto ItemDto)
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
             var exists = connection.ExecuteScalar<bool>("select count(1) from \"Items\" where \"ItemName\" = @ItemName and \"Tag\" = @Tag", new { ItemDto.ItemName, ItemDto.Tag });
             ////Preveri
             if (exists == false)
@@ -319,7 +321,7 @@ namespace AngularAuthAPI.Controllers
         [HttpPost("Ustvarjanje")]
         public async Task<ActionResult<Response<object>>> CreateItem([FromBody] ListItemCreate ItemDto)
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
             var exists = connection.ExecuteScalar<bool>("SELECT COUNT(1) FROM \"Items\" WHERE \"ItemName\" = @ItemName AND \"Tag\" = @Tag", new { ItemDto.ItemName, ItemDto.Tag });
 
             if (exists)
@@ -385,7 +387,7 @@ namespace AngularAuthAPI.Controllers
         [HttpDelete("SoftDelete{ItemName}")]
         public async Task<ActionResult<Response<object>>> SoftDeleteItem(string ItemName)
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
             var exists = connection.ExecuteScalar<bool>("select count(1) from \"Items\" where \"ItemName\" = @ItemName", new { ItemName });
             if (exists == true)
             {

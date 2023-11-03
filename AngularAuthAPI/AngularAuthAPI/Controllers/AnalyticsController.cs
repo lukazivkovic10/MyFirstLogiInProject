@@ -1,9 +1,11 @@
-﻿using AngularAuthAPI.Dtos;
+﻿using AngularAuthAPI.Context;
+using AngularAuthAPI.Dtos;
 using AngularAuthAPI.Models;
 using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
@@ -14,9 +16,9 @@ namespace AngularAuthAPI.Controllers
     [ApiController]
     public class AnalyticsController
     {
-        private readonly IConfiguration _config;
+        private readonly AppDbContext _config;
         private readonly ILogger<AnalyticsController> _logger;
-        public AnalyticsController(IConfiguration configuration, ILogger<AnalyticsController> logger)
+        public AnalyticsController(AppDbContext configuration, ILogger<AnalyticsController> logger)
         {
             _config = configuration;
             _logger = logger;
@@ -25,7 +27,7 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("ViewsData/{id}")]
         public async Task<ActionResult<Response<object>>> GetViewsData(int id)
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
             await connection.OpenAsync();
 
             var currentDate = DateTime.Now;
@@ -62,7 +64,7 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("ViewsData/UserList/{id}")]
         public async Task<ActionResult<Response<object>>> GetUserList(int id)
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
             await connection.OpenAsync();
 
             var query = @"Select count(*) from ""ViewTracking"" where ""TodoItemID"" = @TodoId;";

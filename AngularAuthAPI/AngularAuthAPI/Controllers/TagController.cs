@@ -1,8 +1,10 @@
-﻿using AngularAuthAPI.Models;
+﻿using AngularAuthAPI.Context;
+using AngularAuthAPI.Models;
 using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
 namespace AngularAuthAPI.Controllers
@@ -12,8 +14,8 @@ namespace AngularAuthAPI.Controllers
     [ApiController]
     public class TagController : ControllerBase
     {
-        private readonly IConfiguration _config;
-        public TagController( IConfiguration configuration)
+        private readonly AppDbContext _config;
+        public TagController(AppDbContext configuration)
         {
             _config = configuration;
         }
@@ -24,7 +26,7 @@ namespace AngularAuthAPI.Controllers
 
         public async Task<ActionResult<Response<object>>> GetAllTags()
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
             var exists = connection.ExecuteScalar<bool>("select * from \"Tags\"");
             ////Preveri
             if (exists == false)
@@ -60,7 +62,7 @@ namespace AngularAuthAPI.Controllers
         [HttpPost("UstvarjanjeTag")]
         public async Task<ActionResult<Response<object>>> CreateTag(Tags tags)
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
             var exists = connection.ExecuteScalar<bool>("select count(1) from \"Tags\" where \"TagName\" = @TagName", new { tags.TagName });
             if (exists)
             {
@@ -94,7 +96,7 @@ namespace AngularAuthAPI.Controllers
 
         public async Task<ActionResult<Response<object>>> DeleteTag(Tags tags)
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
             var exists = connection.ExecuteScalar<bool>("select count(1) from \"Tags\" where \"TagName\" = @TagName", new { tags.TagName });
             if (exists == true)
             {

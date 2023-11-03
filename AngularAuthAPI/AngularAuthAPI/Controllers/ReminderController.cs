@@ -1,10 +1,12 @@
-﻿using AngularAuthAPI.Dtos;
+﻿using AngularAuthAPI.Context;
+using AngularAuthAPI.Dtos;
 using AngularAuthAPI.Models;
 using AngularAuthAPI.Services;
 using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
 namespace AngularAuthAPI.Controllers
@@ -13,10 +15,10 @@ namespace AngularAuthAPI.Controllers
     [ApiController]
     public class ReminderController
     {
-        private readonly IConfiguration _config;
+        private readonly AppDbContext _config;
         private readonly ILogger<FileUploadController> _logger;
 
-        public ReminderController(IConfiguration configuration, ILogger<FileUploadController> logger)
+        public ReminderController(AppDbContext configuration, ILogger<FileUploadController> logger)
         {
             _config = configuration;
             _logger = logger;
@@ -26,7 +28,7 @@ namespace AngularAuthAPI.Controllers
         [HttpPost("UstvariReminder")]
         public async Task<ActionResult<Response<object>>> CreateReminder([FromBody] ReminderDto reminderDto)
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
 
             _logger.LogInformation($"UstvariReminder");
 

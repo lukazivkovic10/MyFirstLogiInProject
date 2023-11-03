@@ -8,6 +8,8 @@ using System.Net.Http.Headers;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.AspNetCore.Authorization;
 using Npgsql;
+using AngularAuthAPI.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace AngularAuthAPI.Controllers
 {
@@ -15,10 +17,10 @@ namespace AngularAuthAPI.Controllers
     [ApiController]
     public class FileUploadController : ControllerBase
     {
-        private readonly IConfiguration _config;
+        private readonly AppDbContext _config;
         private readonly ILogger<FileUploadController> _logger;
 
-        public FileUploadController(IConfiguration configuration, ILogger<FileUploadController> logger)
+        public FileUploadController(AppDbContext configuration, ILogger<FileUploadController> logger)
         {
             _config = configuration;
             _logger = logger;
@@ -71,7 +73,7 @@ namespace AngularAuthAPI.Controllers
                         }
 
                         // Insert file information into the database using Dapper
-                        using (var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection")))
+                        using (var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString))
                         {
                             connection.Open();
 
@@ -109,7 +111,7 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("GetAllFiles")]
         public async Task<ActionResult<Response<object>>> GetAllFiles()
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString));
             IEnumerable<FileUpload> files = await SelectAllFiles(connection);
 
              if (files == null)
@@ -149,7 +151,7 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("DownloadFile/{id}")]
         public IActionResult DownloadFile(int id)
         {
-            using (var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection")))
+            using (var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString))
             {
                 connection.Open();
 

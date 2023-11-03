@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
 using Npgsql;
+using AngularAuthAPI.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace AngularAuthAPI.Controllers
 {
@@ -15,9 +17,10 @@ namespace AngularAuthAPI.Controllers
     [ApiController]
     public class ViewsController
     {
-        private readonly IConfiguration _config;
-        private readonly ILogger<ViewsController> _logger;
-        public ViewsController(IConfiguration configuration, ILogger<ViewsController> logger)
+        private readonly AppDbContext _config;
+        private readonly ILogger<FileUploadController> _logger;
+
+        public AsignUserController(AppDbContext configuration, ILogger<FileUploadController> logger)
         {
             _config = configuration;
             _logger = logger;
@@ -26,7 +29,7 @@ namespace AngularAuthAPI.Controllers
         [HttpPost("register-view")]
         public async Task<ActionResult<Response<object>>> RegisterView(ViewDto viewRegistration)
         {
-                using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+                using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
 
                 // Validate and sanitize user inputs to prevent SQL injection
                 if (viewRegistration == null || string.IsNullOrWhiteSpace(viewRegistration.UserEmail))
@@ -78,7 +81,7 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("get-views/{id}")]
         public async Task<ActionResult<Response<object>>> GetViewCount(int id)
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
             var exists = await connection.ExecuteScalarAsync<bool>(
                 "SELECT COUNT(1) FROM \"Items\" WHERE \"Id\" = @id", new { id });
 

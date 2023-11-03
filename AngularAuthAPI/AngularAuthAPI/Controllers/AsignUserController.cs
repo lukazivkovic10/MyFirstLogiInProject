@@ -6,6 +6,8 @@ using Microsoft.Data.SqlClient;
 using ntfy;
 using Microsoft.AspNetCore.Authorization;
 using Npgsql;
+using AngularAuthAPI.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace AngularAuthAPI.Controllers
 {
@@ -14,10 +16,10 @@ namespace AngularAuthAPI.Controllers
     [ApiController]
     public class AsignUserController : ControllerBase
     {
-        private readonly IConfiguration _config;
+        private readonly AppDbContext _config;
         private readonly ILogger<FileUploadController> _logger;
 
-        public AsignUserController(IConfiguration configuration, ILogger<FileUploadController> logger)
+        public AsignUserController(AppDbContext configuration, ILogger<FileUploadController> logger)
         {
             _config = configuration;
             _logger = logger;
@@ -26,7 +28,7 @@ namespace AngularAuthAPI.Controllers
         [HttpPost("DodeliUporabniku")]
         public async Task<ActionResult<Response<object>>> AsignUser(AsignUserDto AUserDto)
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
             var ItemCheck = connection.ExecuteScalar<bool>("select * from \"Items\" where \"Tag\" = @Tag AND \"ItemName\" = @ItemName", new { Tag = AUserDto.Tag, ItemName = AUserDto.ItemName });
             var UserCheck = connection.ExecuteScalar<bool>("select * from \"uporabniki\" where \"Email\" = @EmailCheck", new { EmailCheck = AUserDto.Email });
             var UserAlredyInUse = connection.ExecuteScalar<bool>("select * from \"AssignedUsers\" where \"UserMail\" = @UserMail AND \"Tag\" = @Tag AND \"ItemName\" = @ItemName", new { Tag = AUserDto.Tag, ItemName = AUserDto.ItemName, UserMail = AUserDto.Email });
@@ -78,7 +80,7 @@ namespace AngularAuthAPI.Controllers
         [HttpGet("DodeljeniUporabniki")]
         public async Task<ActionResult<Response<object>>> GetAssignedUsers()
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
             var ItemCheck = connection.ExecuteScalar<bool>("select * from \"AssignedUsers\"");
             if (!ItemCheck)
             {
@@ -114,7 +116,7 @@ namespace AngularAuthAPI.Controllers
 
         public async Task<ActionResult<Response<object>>> GetUsers()
         {
-            using var connection = new NpgsqlConnection(_config.GetConnectionString("DefaultConnection"));
+            using var connection = new NpgsqlConnection(_config.Database.GetDbConnection().ConnectionString);
             var userCount = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM \"uporabniki\"");
 
             if (userCount == 0)
