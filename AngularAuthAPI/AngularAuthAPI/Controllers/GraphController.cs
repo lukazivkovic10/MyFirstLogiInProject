@@ -1,6 +1,5 @@
 ﻿using AngularAuthAPI.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using Dapper;
 using System.Data;
 using Npgsql;
@@ -14,9 +13,9 @@ namespace AngularAuthAPI.Controllers
     public class GraphController : ControllerBase
     {
         private readonly AppDbContext _config;
-        private readonly ILogger<FileUploadController> _logger;
+        private readonly ILogger<GraphController> _logger;
 
-        public GraphController(AppDbContext configuration, ILogger<FileUploadController> logger)
+        public GraphController(AppDbContext configuration, ILogger<GraphController> logger)
         {
             _config = configuration;
             _logger = logger;

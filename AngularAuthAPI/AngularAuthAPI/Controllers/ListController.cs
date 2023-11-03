@@ -1,9 +1,7 @@
 ﻿using AngularAuthAPI.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using Dapper;
 using AngularAuthAPI.Dtos;
-using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using Npgsql;
 using AngularAuthAPI.Context;
