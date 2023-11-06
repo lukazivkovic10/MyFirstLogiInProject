@@ -82,7 +82,7 @@ namespace AngularAuthAPI.Controllers
     WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano' 
     END AS Status,
     COUNT(*) AS Count FROM ""Items""
-    WHERE ""CreatedDate"" >= TO_TIMESTAMP(@StartDate1, 'DD/MM/YYYY') AND ""CreatedDate"" <= TO_TIMESTAMP(@EndDate1, 'DD/MM/YYYY') 
+    WHERE ""CreatedDate"" >= TO_TIMESTAMP(@StartDate1, 'YYYY-MM-DD') AND ""CreatedDate"" <= TO_TIMESTAMP(@EndDate1, 'YYYY-MM-DD') 
     GROUP BY 
     CASE 
     WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
@@ -92,8 +92,8 @@ namespace AngularAuthAPI.Controllers
 
             var parameters = new
             {
-                StartDate1 = threeMonthsAgo.ToString("dd/MM/yyyy"),
-                EndDate1 = twoMonthsAgo.ToString("dd/MM/yyyy")
+                StartDate1 = threeMonthsAgo.ToString("dd.MM.yyyy"),
+                EndDate1 = twoMonthsAgo.ToString("dd.MM.yyyy")
             };
 
             var dataMonth1 = (await connection.QueryAsync(queryMonth1, parameters))
@@ -126,7 +126,7 @@ namespace AngularAuthAPI.Controllers
     END AS Status,
     COUNT(*) AS Count 
     FROM ""Items"" 
-    WHERE ""CreatedDate"" >= TO_TIMESTAMP(@StartDate2, 'DD/MM/YYYY') AND ""CreatedDate"" <= TO_TIMESTAMP(@EndDate2, 'DD/MM/YYYY') 
+    WHERE ""CreatedDate"" >= TO_TIMESTAMP(@StartDate2, 'YYYY-MM-DD') AND ""CreatedDate"" <= TO_TIMESTAMP(@EndDate2, 'YYYY-MM-DD') 
     GROUP BY
     CASE 
     WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
@@ -135,8 +135,8 @@ namespace AngularAuthAPI.Controllers
     END";
             var parameters2 = new
             {
-                StartDate2 = twoMonthsAgo.ToString("dd/MM/yyyy"),
-                EndDate2 = oneMonthAgo.ToString("dd/MM/yyyy")
+                StartDate2 = twoMonthsAgo.ToString("dd.MM.yyyy"),
+                EndDate2 = oneMonthAgo.ToString("dd.MM.yyyy")
             };
 
             var dataMonth2 = (await connection.QueryAsync(queryMonth2, parameters2))
@@ -169,7 +169,7 @@ namespace AngularAuthAPI.Controllers
     END AS Status,
     COUNT(*) AS Count 
     FROM ""Items"" 
-    WHERE ""CreatedDate"" >= TO_TIMESTAMP(@StartDate3, 'DD/MM/YYYY') AND ""CreatedDate"" <= TO_TIMESTAMP(@EndDate3, 'DD/MM/YYYY') 
+    WHERE ""CreatedDate"" >= TO_TIMESTAMP(@StartDate3, 'YYYY-MM-DD') AND ""CreatedDate"" <= TO_TIMESTAMP(@EndDate3, 'YYYY-MM-DD') 
     GROUP BY
     CASE 
     WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
@@ -178,8 +178,8 @@ namespace AngularAuthAPI.Controllers
     END";
             var parameters3 = new
             {
-                StartDate3 = oneMonthAgo.ToString("dd/MM/yyyy"),
-                EndDate3 = currentDate.ToString("dd/MM/yyyy")
+                StartDate3 = oneMonthAgo.ToString("dd.MM.yyyy"),
+                EndDate3 = currentDate.ToString("dd.MM.yyyy")
             };
 
             var dataMonth3 = (await connection.QueryAsync(queryMonth3, parameters3))
