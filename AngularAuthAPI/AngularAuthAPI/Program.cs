@@ -44,6 +44,8 @@ builder.Services.AddScoped<ReactivationService>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();
     var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+    if (!string.IsNullOrEmpty(connUrl))
+    {
         connUrl = connUrl.Replace("postgres://", string.Empty);
         var pgUserPass = connUrl.Split("@")[0];
         var pgHostPortDb = connUrl.Split("@")[1];
@@ -54,28 +56,44 @@ builder.Services.AddScoped<ReactivationService>(provider =>
         var pgHost = pgHostPort.Split(":")[0];
         var pgPort = pgHostPort.Split(":")[1];
         var connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};SSL Mode=Require;TrustServerCertificate=True";
-    var hubContext = provider.GetRequiredService<IHubContext<NotificationHub>>();
-    var logger = provider.GetRequiredService<ILogger<ReactivationService>>();
-    return new ReactivationService(connStr, hubContext, logger);
+        var hubContext = provider.GetRequiredService<IHubContext<NotificationHub>>();
+        var logger = provider.GetRequiredService<ILogger<ReactivationService>>();
+        return new ReactivationService(connStr, hubContext, logger);
+    }else
+    {
+        var connectionStr = builder.Configuration.GetConnectionString("DefaultConnection");
+        var hubContext = provider.GetRequiredService<IHubContext<NotificationHub>>();
+        var logger = provider.GetRequiredService<ILogger<ReactivationService>>();
+        return new ReactivationService(connectionStr, hubContext, logger);
+    }
 });
 
 builder.Services.AddScoped<ReminderService>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();
     var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-    connUrl = connUrl.Replace("postgres://", string.Empty);
-    var pgUserPass = connUrl.Split("@")[0];
-    var pgHostPortDb = connUrl.Split("@")[1];
-    var pgHostPort = pgHostPortDb.Split("/")[0];
-    var pgDb = pgHostPortDb.Split("/")[1];
-    var pgUser = pgUserPass.Split(":")[0];
-    var pgPass = pgUserPass.Split(":")[1];
-    var pgHost = pgHostPort.Split(":")[0];
-    var pgPort = pgHostPort.Split(":")[1];
-    var connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};SSL Mode=Require;TrustServerCertificate=True";
-    var hubContext = provider.GetRequiredService<IHubContext<NotificationHub>>();
-    var logger = provider.GetRequiredService<ILogger<NotificationHub>>();
-    return new ReminderService(hubContext, connStr, logger);
+    if(!string.IsNullOrEmpty(connUrl))
+    {
+        connUrl = connUrl.Replace("postgres://", string.Empty);
+        var pgUserPass = connUrl.Split("@")[0];
+        var pgHostPortDb = connUrl.Split("@")[1];
+        var pgHostPort = pgHostPortDb.Split("/")[0];
+        var pgDb = pgHostPortDb.Split("/")[1];
+        var pgUser = pgUserPass.Split(":")[0];
+        var pgPass = pgUserPass.Split(":")[1];
+        var pgHost = pgHostPort.Split(":")[0];
+        var pgPort = pgHostPort.Split(":")[1];
+        var connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};SSL Mode=Require;TrustServerCertificate=True";
+        var hubContext = provider.GetRequiredService<IHubContext<NotificationHub>>();
+        var logger = provider.GetRequiredService<ILogger<NotificationHub>>();
+        return new ReminderService(hubContext, connStr, logger);
+    }else
+    {
+        var connectionStr = builder.Configuration.GetConnectionString("DefaultConnection");
+        var hubContext = provider.GetRequiredService<IHubContext<NotificationHub>>();
+        var logger = provider.GetRequiredService<ILogger<NotificationHub>>();
+        return new ReminderService(hubContext, connectionStr, logger);
+    }
 });
 
 builder.Services.AddHostedService<ReminderWorker>();
@@ -101,7 +119,7 @@ app.UseCors(builder => builder
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials()
-    .WithOrigins("https://opravila-7f9581a718fe.herokuapp.com"));
+    .WithOrigins("https://opravila-7f9581a718fe.herokuapp.com","http://localhost:4200"));
 
 app.UseAuthentication();
 app.UseAuthorization();

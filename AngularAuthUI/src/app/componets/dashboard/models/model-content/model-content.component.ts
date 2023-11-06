@@ -1,3 +1,4 @@
+import { HttpHeaders } from '@angular/common/http';
 import { Component, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -56,7 +57,7 @@ export class ModelContentComponent {
       CompleteDate: ['',Validators.required],
       FolderPath: [''],
       ItemRepeating: [''],
-      ReapeatWeekly: [[] as number[]],
+      ItemDaysOfWeek: [[] as number[]],
       CreatedBy: [this.getUser()]
     });
     this.tagService.GetTags().subscribe(
@@ -141,6 +142,7 @@ export class ModelContentComponent {
 
   onCreate()
   {
+    this.onUpload();
     console.log(this.createForm.value);
     if(this.createForm.valid)
     {
@@ -177,17 +179,11 @@ export class ModelContentComponent {
   }
 
   onUpload() {
+    const todoTagName = this.todoTagName();
     const tagValue = this.createForm.get('Tag')?.value;
     const itemNameValue = this.createForm.get('ItemName')?.value;
-  
-    if (!tagValue || !itemNameValue) {
-      console.error('Tag and ItemName are required.');
-      return;
-    }
-  
     const formData = new FormData();
-    const todoTagName = this.todoTagName();
-  
+
     if (this.uploadedFiles.length === 0) {
       console.error('No files selected for upload.');
       return; // Abort the upload if no files are selected
@@ -198,11 +194,10 @@ export class ModelContentComponent {
       formData.append('files', file); // Use 'files' as the key to match the server-side code
     });
   
-    // Append the todoTagName to formData
+    // Append the todoTagName, Tag, and ItemName to formData
     formData.append('todoTagName', todoTagName);
-    formData.append('tag', tagValue);
-    formData.append('itemName', itemNameValue);
-  
+    formData.append('Tag', tagValue); // Match the parameter names expected by the server
+    formData.append('ItemName', itemNameValue); // Match the parameter names expected by the server
     // Make an HTTP POST request to upload the files to the server
     this.UploadS.Upload(formData).subscribe(
       (response) => {
@@ -299,7 +294,7 @@ toggleFieldset() {
 }
 
   toggleDay(day: number) {
-    const control = this.createForm.get('ReapeatWeekly');
+    const control = this.createForm.get('ItemDaysOfWeek');
 
     if (control) {
       const selectedDays = control.value as number[];
@@ -313,7 +308,7 @@ toggleFieldset() {
   }
 
   isDaySelected(day: number): boolean {
-    const control = this.createForm.get('ReapeatWeekly');
+    const control = this.createForm.get('ItemDaysOfWeek');
     const selectedDays = control?.value as number[];
 
     return !!selectedDays && selectedDays.includes(day);

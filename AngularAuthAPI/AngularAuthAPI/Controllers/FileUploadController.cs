@@ -107,7 +107,7 @@ namespace AngularAuthAPI.Controllers
                 return StatusCode(500, new { message = "An error occurred while uploading the file.", error = ex.Message });
             }
         }
-
+        [Authorize]
         [HttpGet("GetAllFiles")]
         public async Task<ActionResult<Response<object>>> GetAllFiles()
         {
@@ -147,7 +147,7 @@ namespace AngularAuthAPI.Controllers
         {
             return await connection.QueryAsync<FileUpload>("select * from \"FileUpload\"");
         }
-
+        [Authorize]
         [HttpGet("DownloadFile/{id}")]
         public IActionResult DownloadFile(int id)
         {

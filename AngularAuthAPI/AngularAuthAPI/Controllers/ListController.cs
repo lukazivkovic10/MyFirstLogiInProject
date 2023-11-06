@@ -359,13 +359,15 @@ namespace AngularAuthAPI.Controllers
                 _logger.LogInformation($"Inserts \"items\"" + ItemDto.CompleteDate);
                 if(!string.IsNullOrEmpty(ItemDto.ItemRepeating))
                 {
+                    string itemDaysOfWeekString = string.Join(",", ItemDto.ItemDaysOfWeek);
                     _logger.LogInformation($"ItemDto.ItemRepeating != null");
-                    await connection.ExecuteAsync("INSERT INTO \"RepeatingItem\" (\"TypeOfReapeating\",\"ItemDaysOfWeek\", \"Tag\", \"ItemName\") VALUES (@ItemRepeating, @Tag, @ItemNamE)",
+                    await connection.ExecuteAsync("INSERT INTO \"RepeatingItem\" (\"TypeOfReapeating\",\"ItemDaysOfWeek\", \"Tag\", \"ItemName\") VALUES (@ItemRepeating,@itemDaysOfWeekString, @Tag, @ItemName)",
                                               new
                                               {
+                                                  ItemDto.ItemRepeating,
                                                   ItemDto.Tag,
                                                   ItemDto.ItemName,
-                                                  ItemDto.ItemRepeating
+                                                  itemDaysOfWeekString
                                               });
                 }
                 IEnumerable<Items> data = await SelectAllItems(connection);

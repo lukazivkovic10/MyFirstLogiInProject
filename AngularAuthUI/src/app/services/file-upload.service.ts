@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenServiceService } from './token-service.service';
 import { environment } from 'src/environments/environment';
+import { catchError, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class FileUploadService {
 
   Upload(formData: FormData)
   {
-    return this.http.post<any>(`${this.baseUrl}Upload`, formData, { headers: this.tokenService.getRequestHeaders() });
+    return this.http.post<any>(`${this.baseUrl}Upload`, formData);
   }
 
   DownloadFile(id: number) {

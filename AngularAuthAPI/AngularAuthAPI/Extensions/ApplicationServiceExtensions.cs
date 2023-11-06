@@ -32,7 +32,7 @@ namespace AngularAuthAPI.Extensions
                 }
                 else
                 {
-                    throw new ApplicationException("DATABASE_URL environment variable is not set.");
+                    options.UseNpgsql(config.GetConnectionString("DefaultConnection"));
                 }
             });
 
