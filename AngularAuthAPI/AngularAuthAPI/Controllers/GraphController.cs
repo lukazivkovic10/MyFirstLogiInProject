@@ -92,8 +92,8 @@ namespace AngularAuthAPI.Controllers
 
             var parameters = new
             {
-                StartDate1 = threeMonthsAgo.ToString("dd.MM.yyyy"),
-                EndDate1 = twoMonthsAgo.ToString("dd.MM.yyyy")
+                StartDate1 = threeMonthsAgo.ToString("dd-MM-yyyy"),
+                EndDate1 = twoMonthsAgo.ToString("dd-MM-yyyy")
             };
 
             var dataMonth1 = (await connection.QueryAsync(queryMonth1, parameters))
@@ -135,8 +135,8 @@ namespace AngularAuthAPI.Controllers
     END";
             var parameters2 = new
             {
-                StartDate2 = twoMonthsAgo.ToString("dd.MM.yyyy"),
-                EndDate2 = oneMonthAgo.ToString("dd.MM.yyyy")
+                StartDate2 = twoMonthsAgo.ToString("dd-MM-yyyy"),
+                EndDate2 = oneMonthAgo.ToString("dd-MM-yyyy")
             };
 
             var dataMonth2 = (await connection.QueryAsync(queryMonth2, parameters2))
@@ -178,8 +178,8 @@ namespace AngularAuthAPI.Controllers
     END";
             var parameters3 = new
             {
-                StartDate3 = oneMonthAgo.ToString("dd.MM.yyyy"),
-                EndDate3 = currentDate.ToString("dd.MM.yyyy")
+                StartDate3 = oneMonthAgo.ToString("dd-MM-yyyy"),
+                EndDate3 = currentDate.ToString("dd-MM-yyyy")
             };
 
             var dataMonth3 = (await connection.QueryAsync(queryMonth3, parameters3))
