@@ -90,7 +90,13 @@ namespace AngularAuthAPI.Controllers
     WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
     END";
 
-            var dataMonth1 = (await connection.QueryAsync(queryMonth1, new { StartDate1 = threeMonthsAgo, EndDate1 = twoMonthsAgo }))
+            var parameters = new
+            {
+                StartDate1 = threeMonthsAgo.ToString("MM/dd/yyyy HH:mm:ss"),
+                EndDate1 = twoMonthsAgo.ToString("MM/dd/yyyy HH:mm:ss")
+            };
+
+            var dataMonth1 = (await connection.QueryAsync(queryMonth1, parameters))
                 .Where(row => row.Status != null && row.Count != null)
                 .ToDictionary(row => row.Status, row => (int)row.Count);
 
@@ -127,8 +133,13 @@ namespace AngularAuthAPI.Controllers
     WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
     WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
     END";
+            var parameters2 = new
+            {
+                StartDate2 = threeMonthsAgo.ToString("MM/dd/yyyy HH:mm:ss"),
+                EndDate2 = twoMonthsAgo.ToString("MM/dd/yyyy HH:mm:ss")
+            };
 
-            var dataMonth2 = (await connection.QueryAsync(queryMonth2, new { StartDate2 = twoMonthsAgo, EndDate2 = oneMonthAgo }))
+            var dataMonth2 = (await connection.QueryAsync(queryMonth2, parameters2))
                 .Where(row => row.Status != null && row.Count != null)
                 .ToDictionary(row => row.Status, row => (int)row.Count);
 
@@ -165,8 +176,13 @@ namespace AngularAuthAPI.Controllers
     WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
     WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
     END";
+            var parameters3 = new
+            {
+                StartDate3 = threeMonthsAgo.ToString("MM/dd/yyyy HH:mm:ss"),
+                EndDate3 = twoMonthsAgo.ToString("MM/dd/yyyy HH:mm:ss")
+            };
 
-            var dataMonth3 = (await connection.QueryAsync(queryMonth3, new { StartDate3 = oneMonthAgo, EndDate3 = currentDate }))
+            var dataMonth3 = (await connection.QueryAsync(queryMonth3, parameters3))
                 .Where(row => row.Status != null && row.Count != null)
                 .ToDictionary(row => row.Status, row => (int)row.Count);
 
