@@ -12,5 +12,6 @@
         public DateTime CompleteDate { get; set; }
         public string ItemRepeating { get; set; }
         public string CreatedBy { get; set; }
+        public string ItemDaysOfWeek { get; set; }
     }
 }

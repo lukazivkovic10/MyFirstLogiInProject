@@ -34,14 +34,16 @@ export class ModelContentComponent {
   http: any;
 
   constructor
-  (private jwtDecode: JwtDecodeService, 
+  (
+    private jwtDecode: JwtDecodeService, 
     private UploadS: FileUploadService, 
     private list: ListService, 
     private fb: FormBuilder, 
     private router: Router, 
     private toast: NgToastService, 
-    private tagService: TagsService)
-    { };
+    private tagService: TagsService
+  )
+  { };
 
   ngOnInit() {
     this.createForm = this.fb.group({
@@ -139,6 +141,7 @@ export class ModelContentComponent {
 
   onCreate()
   {
+    console.log(this.createForm.value);
     if(this.createForm.valid)
     {
       this.onUpload();
@@ -174,34 +177,43 @@ export class ModelContentComponent {
   }
 
   onUpload() {
-    const todoTagName = this.todoTagName();
-    const formData = new FormData();
-    const tagValue = this.createForm.get('Tag')?.value
+    const tagValue = this.createForm.get('Tag')?.value;
     const itemNameValue = this.createForm.get('ItemName')?.value;
-
+  
+    if (!tagValue || !itemNameValue) {
+      console.error('Tag and ItemName are required.');
+      return;
+    }
+  
+    const formData = new FormData();
+    const todoTagName = this.todoTagName();
+  
     if (this.uploadedFiles.length === 0) {
       console.error('No files selected for upload.');
       return; // Abort the upload if no files are selected
     }
-
+  
     // Append each uploaded file to the formData object
     this.uploadedFiles.forEach((file) => {
-        formData.append('files', file); // Use 'files' as the key to match the server-side code
+      formData.append('files', file); // Use 'files' as the key to match the server-side code
     });
-
+  
     // Append the todoTagName to formData
     formData.append('todoTagName', todoTagName);
     formData.append('tag', tagValue);
     formData.append('itemName', itemNameValue);
-
+  
     // Make an HTTP POST request to upload the files to the server
     this.UploadS.Upload(formData).subscribe(
-        (response) => {
-            this.message = 'Files uploaded successfully';
-            this.uploadedFiles = []; // Clear the list after a successful upload
-        }
+      (response) => {
+        this.message = 'Files uploaded successfully';
+        this.uploadedFiles = []; // Clear the list after a successful upload
+      },
+      (error) => {
+        console.error('Upload failed:', error);
+      }
     );
-}
+  }
 
 isSwitchChecked = false;
 @ViewChild('switchElement', { static: false }) switchElement!: ElementRef;

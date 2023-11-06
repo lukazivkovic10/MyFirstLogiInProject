@@ -76,21 +76,17 @@ namespace AngularAuthAPI.Controllers
 
             // Query for the first month
             var queryMonth1 = @"SELECT 
-        CASE 
+            CASE 
+            WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
+            WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
+            WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano' END AS Status,
+            COUNT(*) AS Count FROM ""Items""
+            WHERE ""CreatedDate"" >= @StartDate1 AND ""CreatedDate"" <= @EndDate1 GROUP BY 
+            CASE 
             WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
             WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
             WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
-        END AS Status,
-        COUNT(*) AS Count 
-        FROM ""Items"" 
-        WHERE ""CreatedDate"" >= @StartDate1 AND ""CreatedDate"" <= @EndDate1 
-        GROUP BY
-        CASE 
-            WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
-            WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
-            WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
-        END";
-
+            END";
 
             var dataMonth1 = (await connection.QueryAsync(queryMonth1, new { StartDate1 = threeMonthsAgo, EndDate1 = twoMonthsAgo }))
                 .Where(row => row.Status != null && row.Count != null)
@@ -106,12 +102,12 @@ namespace AngularAuthAPI.Controllers
             }
 
             data.Add(new Dictionary<string, object>
-    {
-        { "name", threeMonthsAgo.ToString("MM.yy") },
-        { "data", dataMonth1 },
-        { "startingDate", threeMonthsAgo.ToString("dd.MM.yyyy") },
-        { "currentDate", twoMonthsAgo.ToString("dd.MM.yyyy") }
-    });
+            {
+                { "name", threeMonthsAgo.ToString("MM.yy") }, 
+                { "data", dataMonth1 }, 
+                { "startingDate", threeMonthsAgo.ToString("dd.MM.yyyy") }, 
+                { "currentDate", twoMonthsAgo.ToString("dd.MM.yyyy") }
+            });
 
             // Query for the second month
             var queryMonth2 = @"SELECT 

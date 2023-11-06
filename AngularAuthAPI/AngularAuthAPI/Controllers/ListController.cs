@@ -359,8 +359,8 @@ namespace AngularAuthAPI.Controllers
                 _logger.LogInformation($"Inserts \"items\"" + ItemDto.CompleteDate);
                 if(!string.IsNullOrEmpty(ItemDto.ItemRepeating))
                 {
-                    _logger.LogInformation($"ItemDto.ItemRepeating != null || ItemDto.ItemRepeating !=");
-                    await connection.ExecuteAsync("INSERT INTO \"RepeatingItem\" (\"TypeOfReapeating\", \"Tag\", \"ItemName\") VALUES (@ItemRepeating, @Tag, @ItemNamE)",
+                    _logger.LogInformation($"ItemDto.ItemRepeating != null");
+                    await connection.ExecuteAsync("INSERT INTO \"RepeatingItem\" (\"TypeOfReapeating\",\"ItemDaysOfWeek\", \"Tag\", \"ItemName\") VALUES (@ItemRepeating, @Tag, @ItemNamE)",
                                               new
                                               {
                                                   ItemDto.Tag,
