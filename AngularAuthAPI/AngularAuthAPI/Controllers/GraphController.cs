@@ -82,7 +82,7 @@ namespace AngularAuthAPI.Controllers
     WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano' 
     END AS Status,
     COUNT(*) AS Count FROM ""Items""
-    WHERE ""CreatedDate"" >= TO_TIMESTAMP(@StartDate1, 'MM.DD.YYYY') AND ""CreatedDate"" <= TO_TIMESTAMP(@EndDate1, 'MM.DD.YYYY') 
+    WHERE ""CreatedDate"" >= TO_TIMESTAMP(@StartDate1, 'MM/DD/YYYY HH24:MI:SS') AND ""CreatedDate"" <= TO_TIMESTAMP(@EndDate1, 'MM/DD/YYYY HH24:MI:SS') 
     GROUP BY 
     CASE 
     WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
@@ -120,7 +120,7 @@ namespace AngularAuthAPI.Controllers
     END AS Status,
     COUNT(*) AS Count 
     FROM ""Items"" 
-    WHERE ""CreatedDate"" >= TO_TIMESTAMP(@StartDate2, 'MM.DD.YYYY') AND ""CreatedDate"" <= TO_TIMESTAMP(@EndDate2, 'MM.DD.YYYY') 
+    WHERE ""CreatedDate"" >= TO_TIMESTAMP(@StartDate2, 'MM/DD/YYYY HH24:MI:SS') AND ""CreatedDate"" <= TO_TIMESTAMP(@EndDate2, 'MM/DD/YYYY HH24:MI:SS') 
     GROUP BY
     CASE 
     WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
@@ -158,7 +158,7 @@ namespace AngularAuthAPI.Controllers
     END AS Status,
     COUNT(*) AS Count 
     FROM ""Items"" 
-    WHERE ""CreatedDate"" >= TO_TIMESTAMP(@StartDate3, 'MM.DD.YYYY') AND ""CreatedDate"" <= TO_TIMESTAMP(@EndDate3, 'MM.DD.YYYY') 
+    WHERE ""CreatedDate"" >= TO_TIMESTAMP(@StartDate3, 'MM/DD/YYYY HH24:MI:SS') AND ""CreatedDate"" <= TO_TIMESTAMP(@EndDate3, 'MM/DD/YYYY HH24:MI:SS') 
     GROUP BY
     CASE 
     WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
