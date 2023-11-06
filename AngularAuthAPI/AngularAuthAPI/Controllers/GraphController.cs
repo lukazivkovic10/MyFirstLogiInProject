@@ -76,17 +76,19 @@ namespace AngularAuthAPI.Controllers
 
             // Query for the first month
             var queryMonth1 = @"SELECT 
-            CASE 
-            WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
-            WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
-            WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano' END AS Status,
-            COUNT(*) AS Count FROM ""Items""
-            WHERE ""CreatedDate"" >= TO_DATE(@StartDate1, 'DD.MM.YYYY') AND ""CreatedDate"" <= TO_DATE(@EndDate1, 'DD.MM.YYYY') GROUP BY 
-            CASE 
-            WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
-            WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
-            WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
-            END";
+    CASE 
+    WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
+    WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
+    WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano' 
+    END AS Status,
+    COUNT(*) AS Count FROM ""Items""
+    WHERE ""CreatedDate"" >= TO_TIMESTAMP(@StartDate1, 'MM.DD.YYYY') AND ""CreatedDate"" <= TO_TIMESTAMP(@EndDate1, 'MM.DD.YYYY') 
+    GROUP BY 
+    CASE 
+    WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
+    WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
+    WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
+    END";
 
             var dataMonth1 = (await connection.QueryAsync(queryMonth1, new { StartDate1 = threeMonthsAgo, EndDate1 = twoMonthsAgo }))
                 .Where(row => row.Status != null && row.Count != null)
@@ -111,20 +113,20 @@ namespace AngularAuthAPI.Controllers
 
             // Query for the second month
             var queryMonth2 = @"SELECT 
-        CASE 
-            WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
-            WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
-            WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
-        END AS Status,
-        COUNT(*) AS Count 
-        FROM ""Items"" 
-        WHERE ""CreatedDate"" >= TO_DATE(@StartDate2, 'DD.MM.YYYY') AND ""CreatedDate"" <= TO_DATE(@EndDate2, 'DD.MM.YYYY') 
-        GROUP BY
-        CASE 
-            WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
-            WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
-            WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
-        END";
+    CASE 
+    WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
+    WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
+    WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
+    END AS Status,
+    COUNT(*) AS Count 
+    FROM ""Items"" 
+    WHERE ""CreatedDate"" >= TO_DATE(@StartDate2, 'MM.DD.YYYY') AND ""CreatedDate"" <= TO_DATE(@EndDate2, 'MM.DD.YYYY') 
+    GROUP BY
+    CASE 
+    WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
+    WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
+    WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
+    END";
 
             var dataMonth2 = (await connection.QueryAsync(queryMonth2, new { StartDate2 = twoMonthsAgo, EndDate2 = oneMonthAgo }))
                 .Where(row => row.Status != null && row.Count != null)
@@ -149,20 +151,20 @@ namespace AngularAuthAPI.Controllers
 
             // Query for the third month
             var queryMonth3 = @"SELECT 
-        CASE 
-            WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
-            WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
-            WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
-        END AS Status,
-        COUNT(*) AS Count 
-        FROM ""Items"" 
-        WHERE ""CreatedDate"" >= TO_DATE(@StartDate3, 'DD.MM.YYYY') AND ""CreatedDate"" <= TO_DATE(@EndDate3, 'DD.MM.YYYY') 
-        GROUP BY
-        CASE 
-            WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
-            WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
-            WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
-        END";
+    CASE 
+    WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
+    WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
+    WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
+    END AS Status,
+    COUNT(*) AS Count 
+    FROM ""Items"" 
+    WHERE ""CreatedDate"" >= TO_DATE(@StartDate3, 'MM.DD.YYYY') AND ""CreatedDate"" <= TO_DATE(@EndDate3, 'MM.DD.YYYY') 
+    GROUP BY
+    CASE 
+    WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
+    WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
+    WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
+    END";
 
             var dataMonth3 = (await connection.QueryAsync(queryMonth3, new { StartDate3 = oneMonthAgo, EndDate3 = currentDate }))
                 .Where(row => row.Status != null && row.Count != null)
