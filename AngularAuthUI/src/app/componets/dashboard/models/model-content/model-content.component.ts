@@ -142,8 +142,6 @@ export class ModelContentComponent {
 
   onCreate()
   {
-    this.onUpload();
-    console.log(this.createForm.value);
     if(this.createForm.valid)
     {
       this.onUpload();
