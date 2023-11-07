@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgToastModule } from 'ng-angular-popup';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -40,6 +40,8 @@ import { CardModalComponent } from './componets/dashboard/todo-card/card-modal/c
 import { AnalyticsModalComponent } from './componets/dashboard/todo-card/analytics-modal/analytics-modal.component';
 import { ViewGraphComponent } from './componets/dashboard/todo-card/analytics-modal/view-graph/view-graph.component';
 import { ViewerListComponent } from './componets/dashboard/todo-card/analytics-modal/viewer-list/viewer-list.component';
+
+import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 
 @NgModule({
   declarations: [
@@ -101,7 +103,13 @@ import { ViewerListComponent } from './componets/dashboard/todo-card/analytics-m
       }
     ]),
     ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

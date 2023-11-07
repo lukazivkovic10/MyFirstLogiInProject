@@ -2,7 +2,7 @@
     <div class="hero is-info">
         <div class="hero-body">
             <div class="columns is-mobile">
-                <div class="column is-1-desktop is-3-mobile center">
+                <div class="column is-1-desktop is-2-mobile center">
                     <div class="icon is-large" *ngIf="userCheck()">
                         <i class="fa-solid fa-id-badge fa-5x"></i>
                     </div>
@@ -22,7 +22,7 @@
                         <h2 class="title is-4"><b>{{userEmail}}</b></h2>
                     </span>
                 </div>
-                <div class="column is-1 is-fullwidth-mobile" *ngIf="userCheck()">
+                <div class="column is-1 is-2-mobile" *ngIf="userCheck()">
                     <div class="tooltip" data-tooltip="Uporabniške nastavitve">
                         <button class="button is-info is-inverted is-rounded" (click)="navigateToUserSettings()">
                             <div class="icon">

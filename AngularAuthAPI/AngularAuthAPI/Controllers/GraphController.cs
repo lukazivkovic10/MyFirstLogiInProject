@@ -5,6 +5,7 @@ using System.Data;
 using Npgsql;
 using AngularAuthAPI.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace AngularAuthAPI.Controllers
 {
@@ -75,39 +76,25 @@ namespace AngularAuthAPI.Controllers
             var data = new List<Dictionary<string, object>>();
 
             // Query for the first month
-            var queryMonth1 = @"SELECT 
-    CASE 
-    WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
-    WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
-    WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano' 
-    END AS Status,
-    COUNT(*) AS Count FROM ""Items""
-    WHERE ""CreatedDate"" >= TO_TIMESTAMP(@StartDate1, 'YYYY-MM-DD') AND ""CreatedDate"" <= TO_TIMESTAMP(@EndDate1, 'YYYY-MM-DD') 
-    GROUP BY 
-    CASE 
-    WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
-    WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
-    WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
-    END";
-
-            var parameters = new
-            {
-                StartDate1 = threeMonthsAgo.ToString("yyyy-MM-dd"),
-                EndDate1 = twoMonthsAgo.ToString("yyyy-MM-dd")
-            };
-
-            var dataMonth1 = (await connection.QueryAsync(queryMonth1, parameters))
-                .Where(row => row.Status != null && row.Count != null)
-                .ToDictionary(row => row.Status, row => (int)row.Count);
-
-            // Ensure zero counts for Month1
-            foreach (var status in new[] { "Dokončano", "Še ne dokončano", "Preteklo" })
-            {
-                if (!dataMonth1.ContainsKey(status))
-                {
-                    dataMonth1[status] = 0;
-                }
-            }
+            var queryMonth1 = @"SELECT
+    'Dokončano' AS Name,
+    COUNT(*) FILTER (WHERE (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0) AS Count
+FROM ""Items""
+WHERE ""CreatedDate"" >= current_date - 93 AND ""CreatedDate"" <= current_date - 62
+UNION ALL
+SELECT
+    'Preteklo' AS Name,
+    COUNT(*) FILTER (WHERE ""ItemStatus"" = 2 AND ""Active"" <> 0) AS Count
+FROM ""Items""
+WHERE ""CreatedDate"" >= current_date - 93 AND ""CreatedDate"" <= current_date - 62
+UNION ALL
+SELECT
+    'Še ne dokončano' AS Name,
+    COUNT(*) FILTER (WHERE ""ItemStatus"" = 1 AND ""Active"" = 1) AS Count
+FROM ""Items""
+WHERE ""CreatedDate"" >= current_date - 93 AND ""CreatedDate"" <= current_date - 62;";
+            _logger.LogInformation(queryMonth1);
+            var dataMonth1 = await connection.QueryAsync(queryMonth1);
 
             data.Add(new Dictionary<string, object>
             {
@@ -118,39 +105,25 @@ namespace AngularAuthAPI.Controllers
             });
 
             // Query for the second month
-            var queryMonth2 = @"SELECT 
-    CASE 
-    WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
-    WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
-    WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
-    END AS Status,
-    COUNT(*) AS Count 
-    FROM ""Items"" 
-    WHERE ""CreatedDate"" >= TO_TIMESTAMP(@StartDate2, 'YYYY-MM-DD') AND ""CreatedDate"" <= TO_TIMESTAMP(@EndDate2, 'YYYY-MM-DD') 
-    GROUP BY
-    CASE 
-    WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
-    WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
-    WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
-    END";
-            var parameters2 = new
-            {
-                StartDate2 = twoMonthsAgo.ToString("yyyy-MM-dd"),
-                EndDate2 = oneMonthAgo.ToString("yyyy-MM-dd")
-            };
+            var queryMonth2 = @"SELECT
+    'Dokončano' AS Name,
+    COUNT(*) FILTER (WHERE (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0) AS Count
+FROM ""Items""
+WHERE ""CreatedDate"" >= current_date - 62 AND ""CreatedDate"" <= current_date - 31
+UNION ALL
+SELECT
+    'Preteklo' AS Name,
+    COUNT(*) FILTER (WHERE ""ItemStatus"" = 2 AND ""Active"" <> 0) AS Count
+FROM ""Items""
+WHERE ""CreatedDate"" >= current_date - 62 AND ""CreatedDate"" <= current_date - 31
+UNION ALL
+SELECT
+    'Še ne dokončano' AS Name,
+    COUNT(*) FILTER (WHERE ""ItemStatus"" = 1 AND ""Active"" = 1) AS Count
+FROM ""Items""
+WHERE ""CreatedDate"" >= current_date - 62 AND ""CreatedDate"" <= current_date - 31;";
 
-            var dataMonth2 = (await connection.QueryAsync(queryMonth2, parameters2))
-                .Where(row => row.Status != null && row.Count != null)
-                .ToDictionary(row => row.Status, row => (int)row.Count);
-
-            // Ensure zero counts for Month2
-            foreach (var status in new[] { "Dokončano", "Še ne dokončano", "Preteklo" })
-            {
-                if (!dataMonth2.ContainsKey(status))
-                {
-                    dataMonth2[status] = 0;
-                }
-            }
+            var dataMonth2 = await connection.QueryAsync(queryMonth2);
 
             data.Add(new Dictionary<string, object>
     {
@@ -161,38 +134,30 @@ namespace AngularAuthAPI.Controllers
     });
 
             // Query for the third month
-            var queryMonth3 = @"SELECT 
-    CASE 
-    WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
-    WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
-    WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
-    END AS Status,
-    COUNT(*) AS Count 
-    FROM ""Items"" 
-    WHERE ""CreatedDate"" >= TO_TIMESTAMP(@StartDate3, 'YYYY-MM-DD') AND ""CreatedDate"" <= TO_TIMESTAMP(@EndDate3, 'YYYY-MM-DD') 
-    GROUP BY
-    CASE 
-    WHEN ""ItemStatus"" = 2 AND ""Active"" <> 0 THEN 'Preteklo'
-    WHEN (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0 THEN 'Dokončano'
-    WHEN ""ItemStatus"" = 1 AND ""Active"" = 1 THEN 'Še ne dokončano'
-    END";
-            var parameters3 = new
-            {
-                StartDate3 = oneMonthAgo.ToString("yyyy-MM-dd"),
-                EndDate3 = currentDate.ToString("yyyy-MM-dd")
-            };
+            var queryMonth3 = @"SELECT
+    'Dokončano' AS Name,
+    COUNT(*) FILTER (WHERE (""ItemStatus"" = 1 OR ""ItemStatus"" = 2) AND ""Active"" = 0) AS Count
+FROM ""Items""
+WHERE ""CreatedDate"" >= current_date - 31 AND ""CreatedDate"" <= current_date
+UNION ALL
+SELECT
+    'Preteklo' AS Name,
+    COUNT(*) FILTER (WHERE ""ItemStatus"" = 2 AND ""Active"" <> 0) AS Count
+FROM ""Items""
+WHERE ""CreatedDate"" >= current_date - 31 AND ""CreatedDate"" <= current_date
+UNION ALL
+SELECT
+    'Še ne dokončano' AS Name,
+    COUNT(*) FILTER (WHERE ""ItemStatus"" = 1 AND ""Active"" = 1) AS Count
+FROM ""Items""
+WHERE ""CreatedDate"" >= current_date - 31 AND ""CreatedDate"" <= current_date;
+";
 
-            var dataMonth3 = (await connection.QueryAsync(queryMonth3, parameters3))
-                .Where(row => row.Status != null && row.Count != null)
-                .ToDictionary(row => row.Status, row => (int)row.Count);
 
-            // Ensure zero counts for Month3
-            foreach (var status in new[] { "Dokončano", "Še ne dokončano", "Preteklo" })
+            var dataMonth3 = await connection.QueryAsync(queryMonth3);
+            foreach (var row in dataMonth3)
             {
-                if (!dataMonth3.ContainsKey(status))
-                {
-                    dataMonth3[status] = 0;
-                }
+                _logger.LogInformation($"Status: {row.Status}, Count: {row.Count}");
             }
 
             data.Add(new Dictionary<string, object>
