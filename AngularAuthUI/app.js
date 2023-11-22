@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, globalShortcut } = require('electron');
 
 let appWindow;
 
@@ -7,11 +7,19 @@ function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
+      devTools: false,
       nodeIntegration: true, // Enable Node.js integration in the renderer process
     },
   });
 
-  appWindow.loadFile(`dist/angular-auth-ui/index.html`); // Load your Angular app's index.html file
+  mainWindow.loadURL('https://opravila-7f9581a718fe.herokuapp.com');
+
+  app.on('ready', () => {
+    // Register a shortcut listener for Ctrl + Shift + I
+    globalShortcut.register('Control+Shift+I', () => {
+        return false;
+    });
+});
 
   appWindow.on('closed', function () {
     appWindow = null;

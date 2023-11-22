@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { Router } from '@angular/router';
-import { ListService } from './list.service';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { TokenServiceService } from './token-service.service';
 import { TokenValidationService } from './token-validation.service';
 import { environment } from 'src/environments/environment';
+import { NgToastService } from 'ng-angular-popup';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class AuthService {
 
   private baseUrl:string = environment.apiUrl+'User/';
   private tokenCheckInterval: any; // Timer reference
-  constructor(private http : HttpClient, private router: Router, private tokenService: TokenServiceService, private tokenValidationService: TokenValidationService) { }
+  constructor(private http : HttpClient, private router: Router, private tokenService: TokenServiceService, private tokenValidationService: TokenValidationService, private toast: NgToastService) { }
 
   startTokenCheck() {
     // Check token validity every X seconds
@@ -45,6 +45,7 @@ export class AuthService {
   signOut(){
     localStorage.removeItem('token');
     this.router.navigate(['login']);
+    this.showToast('Odjava', 'Uspešno ste se odjavili.');
   }
   user:any;
   getAll()
@@ -62,5 +63,9 @@ export class AuthService {
 
   isLoggedIn():boolean{
     return !!localStorage.getItem('token')
+  }
+
+  private showToast(detail: string, message: string) {
+    this.toast.success({detail: 'ODJAVA', summary: message, duration: 3500 });
   }
 }

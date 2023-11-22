@@ -10,7 +10,7 @@
                         <i class="fa-solid fa-image-portrait fa-5x"></i>
                     </div>
                 </div>
-                <div class="column is-fullwidth-mobile">
+                <div class="column">
                     <!--Logged out users-->
                     <span *ngIf="!userCheck()">
                         <h3 class="subtitle is-5">Uporabnik</h3>
@@ -22,7 +22,7 @@
                         <h2 class="title is-4"><b>{{userEmail}}</b></h2>
                     </span>
                 </div>
-                <div class="column is-1 is-2-mobile" *ngIf="userCheck()">
+                <div class="column is-2" *ngIf="userCheck()">
                     <div class="tooltip" data-tooltip="Uporabniške nastavitve">
                         <button class="button is-info is-inverted is-rounded" (click)="navigateToUserSettings()">
                             <div class="icon">

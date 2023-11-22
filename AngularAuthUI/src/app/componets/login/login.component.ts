@@ -25,7 +25,7 @@ export class LoginComponent {
     this.loginForm = this.fb.group({
       email: ['',Validators.compose([Validators.required,Validators.email])],
       password: ['',Validators.required]
-    })
+    });
   }
 
   hideShowPassword()
