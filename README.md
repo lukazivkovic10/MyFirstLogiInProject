@@ -14,3 +14,5 @@
         2) Na gui pri vpisu dodelaj še, da lahko pogleda vsak svoj password
       iv. Tam se nato, ko si vpisan pokaže samo naslov Welcome in spodaj prikaži vsa uporabniška imena kadarkoli vpisanih (simple get function)
         1) Lahko se prikaže nato še toaster Dobrodošli v programu
+
+http://opravila-7f9581a718fe.herokuapp.com/home
